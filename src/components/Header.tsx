@@ -11,7 +11,8 @@ const Header: FC = () => {
           alt="Logo"
           className="h-10 mr-4" // Adjust height as needed
         />
-        <span className="text-text text-2xl font-bold">电影手</span>
+        {/* Apply font size class for logo text */}
+        <span className="text-text text-lg font-bold">电影手</span>
       </div>
 
       {/* Search Bar */}
@@ -20,7 +21,7 @@ const Header: FC = () => {
           <input
             type="text"
             placeholder="觉醒年代"
-            className="bg-transparent text-text placeholder-gray-400 w-full focus:outline-none"
+            className="bg-transparent text-text placeholder-gray-400 text-base w-full focus:outline-none" // Apply font size for input text
           />
           <button className="absolute right-2 top-1/2 transform -translate-y-1/2">
             <svg
