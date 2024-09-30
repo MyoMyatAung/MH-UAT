@@ -7,7 +7,7 @@ const Footer: FC = () => {
      const { t } = useTranslation();
      const [selectedMenu, setSelectedMenu] = useState('home');
     return (
-      <footer className={`bg-footer fixed bottom-0 left-0 w-full rounded-t-3xl shadow-lg`}>
+      <footer className={`bg-footer fixed bottom-0 left-0 w-full shadow-lg`}>
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <Link to="/" className="flex flex-col items-center" onClick={() => setSelectedMenu('home')}
           >
