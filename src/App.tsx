@@ -12,23 +12,23 @@ import FooterNav from './components/FooterNav';
 const App: React.FC = () => {
   return (
     <Router>
-    <div className="flex flex-col min-h-screen"> {/* Full height wrapper */}
-      <Header />
-      
-      <div className="flex-grow"> {/* Dynamic page content with background */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/explorer" element={<Explorer />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/player" element={<Player />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </div>
+      <div className="flex flex-col min-h-screen"> {/* Full height wrapper */}
+        <Header />
 
-      <FooterNav />
-    </div>
-  </Router>
+        <div className="flex-grow overflow-auto"> {/* Main content with dynamic height */}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/explorer" element={<Explorer />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/player" element={<Player />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </div>
+
+        <FooterNav />
+      </div>
+    </Router>
   );
 };
 
