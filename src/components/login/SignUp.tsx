@@ -44,6 +44,7 @@ const SignUp: React.FC<SignUpProps> = ({ handleBack }) => {
   const handleBack2 = () => {
     setIsVisible(true); // Show the login component
     setEmailVisible(false); // Hide the LoginEmail component
+    setPhoneVisible(false); // Hide the LoginEmail component
   };
 
   const variants = {

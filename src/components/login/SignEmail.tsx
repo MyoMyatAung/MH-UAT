@@ -5,12 +5,15 @@ import eye from "../../assets/login/eye.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import Opt from "./Opt";
 import Captch from "./Captch";
+import { useDispatch, useSelector } from "react-redux";
+import { setCaptchaOpen } from "../../features/login/ModelSlice";
 interface SignEmailProps {
   handleBack2: () => void; // Accept handleBack as a prop
 }
 
 const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
-    const [showCapt, setShowCapt] = useState(false);
+  const dispatch = useDispatch();
+  const { openCaptcha } = useSelector((state: any) => state.model);
   const [showOtp, setShowOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -51,9 +54,14 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setShowCapt(true)
-    setShowOtp(true);
-    setIsVisible(false);
+    try {
+      dispatch(setCaptchaOpen(true));
+      console.log("Login successful");
+      setShowOtp(true);
+      setIsVisible(false);
+    } catch (err) {
+      setError("Login failed. Please check your credentials.");
+    }
   };
 
   const handleClose = () => {
@@ -62,8 +70,9 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-         {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
-      {showCapt && <Captch showCapt={showCapt} setShowCapt={setShowCapt} />}
+      {openCaptcha && <Captch />}
+
+      {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -108,7 +117,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                     onChange={(e) => setEmail(e.target.value)}
                     onFocus={() => setIsFocusedEmail(true)}
                     onBlur={() => setIsFocusedEmail(email !== "")}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-gray-500 focus:border-blue-500 focus:outline-none text-white transition-colors duration-300"
+                    className="w-full px-4 py-2 bg-transparent input_border focus:outline-none text-white placeholder-transparen"
                     required
                     placeholder=""
                   />
@@ -163,12 +172,10 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                   disabled={!validatePassword(password)}
                   type="submit"
                   className={`w-full  mt-[20px] py-2 px-4 rounded-lg ${
-                    validatePassword(password)
-                      ? "login_button"
-                      : "next_button"
+                    validatePassword(password) ? "login_button" : "next_button"
                   } transition duration-300 ease-in-out`}
                 >
-                 Sign Up
+                  Sign Up
                 </button>
               </form>
 

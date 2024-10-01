@@ -1,4 +1,3 @@
-// Login.tsx
 import React, { useState } from "react";
 import { loginUser } from "../../services/userService";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,41 +7,32 @@ import Button from "../../components/login/Button";
 import blue from "../../assets/login/blue.png";
 import eye from "../../assets/login/eye.png";
 import weChat from "../../assets/login/weChat.png";
-import LoginEmail from "../../components/login/LoginEmail"; // Import your LoginEmail component
+import LoginEmail from "../../components/login/LoginEmail";
 import SignUp from "../../components/login/SignUp";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoginOpen, setSignupOpen } from "../../features/login/ModelSlice";
+import Captch from "../../components/login/Captch";
+
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+    const [showCapt, setShowCapt] = useState(true);
+
+  const dispatch = useDispatch();
+  const { openLoginModel, openSignupModel,openCaptcha } = useSelector(
+    (state: any) => state.model
+  );
   const [isVisible, setIsVisible] = useState(true);
-  const [isEmailVisible, setEmailVisible] = useState(false);
-  const [isSignVisible, setSignVisible] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const result = await loginUser(username, password);
-      console.log("Login success:", result);
-    } catch (err) {
-      setError("Login failed. Please check your credentials.");
-    }
-  };
-
-  const handleShowLoginEmail = () => {
-    setIsVisible(false); // Hide the login component
-    setEmailVisible(true); // Show the LoginEmail component
-  };
-
-  const handleShowSignUp = () => {
-    setIsVisible(false); // Hide the login component
-    setSignVisible(true); // Show the LoginEmail component
+  const toggleVisibility = (login: boolean, signup: boolean) => {
+    setIsVisible(false);
+    dispatch(setLoginOpen(login));
+    dispatch(setSignupOpen(signup));
   };
 
   const handleBack = () => {
-    setIsVisible(true); // Show the login component
-    setEmailVisible(false); // Hide the LoginEmail component
-    setSignVisible(false); // Show the LoginEmail component
+    setIsVisible(true);
+    dispatch(setLoginOpen(false));
+    dispatch(setSignupOpen(false));
   };
 
   const variants = {
@@ -59,13 +49,12 @@ const Login: React.FC = () => {
   };
 
   const handleDragEnd = (event: any, info: any) => {
-    if (info.offset.y > 100) {
-      setIsVisible(false);
-    }
+    if (info.offset.y > 100) setIsVisible(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center overflow-hidden">
+    <div className="h-screen whole flex items-center justify-center overflow-hidden">
+      {openCaptcha && <Captch /> }
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -74,17 +63,23 @@ const Login: React.FC = () => {
             animate="visible"
             exit="exit"
             variants={variants}
-            drag="y" // Allow dragging only in the vertical direction
+            drag="y"
             dragConstraints={{ top: 0 }}
             dragElastic={0.2}
             onDragEnd={handleDragEnd}
           >
             <div className="flex flex-col justify-center items-center gap-[32px]">
-              <motion.p className="w-[60px] h-[4px] drag_line mt-[12px] cursor-pointer"></motion.p>
+              <motion.p className="w-[60px] h-[4px] drag_line mt-[12px] cursor-pointer" />
               <img src={logo} className="w-[168px] h-[60px]" alt="Logo" />
               <div className="flex flex-col gap-[10px]">
-                <Button onClick={handleShowLoginEmail} text={"Login"} />
-                <Button onClick={handleShowSignUp} text={"Sign Up"} />
+                <Button
+                  onClick={() => toggleVisibility(true, false)}
+                  text={"Login"}
+                />
+                <Button
+                  onClick={() => toggleVisibility(false, true)}
+                  text={"Sign Up"}
+                />
               </div>
               <p className="text-[#888] text-[12px] font-[500] leading-[18px]">
                 Link account with
@@ -95,12 +90,11 @@ const Login: React.FC = () => {
                 <img className="w-[50px] h-[50px]" src={eye} alt="Eye" />
               </div>
             </div>
-            {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
           </motion.div>
         )}
 
-        {isEmailVisible && <LoginEmail handleBack={handleBack} />}
-        {isSignVisible && <SignUp handleBack={handleBack} />}
+        {openLoginModel && <LoginEmail handleBack={handleBack} />}
+        {openSignupModel && <SignUp handleBack={handleBack} />}
       </AnimatePresence>
     </div>
   );

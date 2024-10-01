@@ -4,13 +4,16 @@ import close from "../../assets/login/close.svg";
 import eye from "../../assets/login/eye.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import ForgotPass from "./ForgotPass";
+import { useDispatch, useSelector } from "react-redux";
+import { setCaptchaOpen } from "../../features/login/ModelSlice";
 
 interface LoginEmailProps {
   handleBack: () => void; // Accept handleBack as a prop
 }
 
 const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
-  const [forgot, setForgot] = useState(false); // Track whether the user is on the "Forgot Password" page
+  const dispatch = useDispatch();
+  const [forgot, setForgot] = useState(false); 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +32,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.log("Logging in with", email, password);
+      dispatch(setCaptchaOpen(true));
       console.log("Login successful");
     } catch (err) {
       setError("Login failed. Please check your credentials.");
@@ -114,13 +117,13 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
                       onChange={(e) => setEmail(e.target.value)}
                       onFocus={() => setIsFocusedEmail(true)}
                       onBlur={() => setIsFocusedEmail(email !== "")}
-                      className="w-full px-4 py-2 bg-transparent border-b-2 border-gray-500 focus:border-blue-500 focus:outline-none text-white transition-colors duration-300"
+                      className="w-full px-4 py-2 bg-transparent border-b-2 border-gray-500 focus:outline-none text-white transition-colors duration-300"
                       required
                       placeholder=""
                     />
                     <label
                       htmlFor="email"
-                      className={`absolute text-[14px] left-4 text-gray-500 transition-all duration-300 pointer-events-none ${
+                      className={`absolute text-[12px] left-4 text-[#5B5B5B] transition-all duration-300 pointer-events-none ${
                         isFocusedEmail || email
                           ? "top-[-8px] text-xs text-blue-500"
                           : "top-1/2 transform -translate-y-1/2"
@@ -143,7 +146,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
                     />
                     <label
                       htmlFor="password"
-                      className={`absolute text-[14px] left-4 transition-all text-[#5B5B5B] pointer-events-none ${
+                      className={`absolute text-[12px] left-4 transition-all text-[#5B5B5B] pointer-events-none ${
                         isFocusedPassword || password
                           ? "top-0 text-xs text-blue-500 -translate-y-full"
                           : "top-1/2 -translate-y-1/2"

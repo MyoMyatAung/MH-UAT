@@ -5,12 +5,16 @@ import eye from "../../assets/login/eye.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import Opt from "./Opt";
 import Captch from "./Captch";
+import { useDispatch, useSelector } from "react-redux";
+import { setCaptchaOpen } from "../../features/login/ModelSlice";
+
 interface SignPhoneProps {
   handleBack2: () => void; // Accept handleBack as a prop
 }
 
 const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
-  const [showCapt, setShowCapt] = useState(false);
+  const dispatch = useDispatch();
+  const { openCaptcha } = useSelector((state: any) => state.model);
   const [showOtp, setShowOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -51,9 +55,14 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setShowCapt(true);
-    setShowOtp(true);
-    setIsVisible(false);
+    try {
+      dispatch(setCaptchaOpen(true));
+      console.log("Login successful");
+      setShowOtp(true);
+      setIsVisible(false);
+    } catch (err) {
+      setError("Login failed. Please check your credentials.");
+    }
   };
 
   const handleClose = () => {
@@ -63,7 +72,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
       {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
-      {showCapt && <Captch showCapt={showCapt} setShowCapt={setShowCapt} />}
+      {openCaptcha && <Captch />}
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -108,7 +117,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
                     onChange={(e) => setEmail(e.target.value)}
                     onFocus={() => setIsFocusedEmail(true)}
                     onBlur={() => setIsFocusedEmail(email !== "")}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-gray-500 focus:border-blue-500 focus:outline-none text-white transition-colors duration-300"
+                    className="w-full px-4 py-2 bg-transparent input_border focus:outline-none text-white placeholder-transparent"
                     required
                     placeholder=""
                   />
@@ -120,7 +129,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
                         : "top-1/2 transform -translate-y-1/2"
                     }`}
                   >
-                   Please Enter Your Phone number
+                    Please Enter Your Phone number
                   </label>
                 </div>
 

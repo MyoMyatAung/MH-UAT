@@ -3,6 +3,8 @@ import back from "../../assets/login/back.svg";
 import eye from "../../assets/login/eye.svg";
 import Captch from "./Captch";
 import Opt from "./Opt";
+import { useDispatch, useSelector } from "react-redux";
+import { setCaptchaOpen } from "../../features/login/ModelSlice";
 
 interface ForgotPassProps {
   setForgot: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,6 +12,8 @@ interface ForgotPassProps {
 }
 
 const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
+  const dispatch = useDispatch();
+  const { openCaptcha } = useSelector((state: any) => state.model);
   const [showCapt, setShowCapt] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -37,14 +41,20 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setShowCapt(true)
-    setShowOtp(true);
+    try {
+      dispatch(setCaptchaOpen(true));
+      console.log("Login successful");
+      setShowOtp(true);
+      setIsVisible(false);
+    } catch (err) {
+      setError("Login failed. Please check your credentials.");
+    }
   };
 
   return (
     <div className=" w-screen h-screen bg-[#161619]">
       {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
-      {showCapt && <Captch showCapt={showCapt} setShowCapt={setShowCapt} />}
+      {openCaptcha && <Captch />}
 
       <div className="p-[20px]">
         {/* head */}

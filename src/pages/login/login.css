@@ -3,6 +3,10 @@
   background: #161619;
 }
 
+.whole {
+  background: rgba(16, 16, 16, 0.9);
+}
+
 .drag_line {
   border-radius: 100px;
   background: rgba(255, 255, 255, 0.8);
