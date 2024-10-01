@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 // Import SVG files directly
-import homeIcon from '../assets/home.svg';
+import homeIcon from '../assets/home.png';
 import homeSelectedIcon from '../assets/homeSelected.png';
 import explorerIcon from '../assets/explorer.png';
 import explorerSelectedIcon from '../assets/explorerSelected.png';
