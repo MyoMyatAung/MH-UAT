@@ -9,7 +9,7 @@ const Search: React.FC = () => {
   const [query, setQuery] = useState("");
   return (
     <div className="search-bg">
-      <Navbar query={query} setQuery={setQuery} />
+      {/* <Navbar query={query} setQuery={setQuery} /> */}
       <Ads />
       <History />
       <Everyone />

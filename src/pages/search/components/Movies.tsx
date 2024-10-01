@@ -1,80 +1,22 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import img from "../../profile/images/historyImg.png";
 
-const Movies = () => {
-  const [movies, setMovies] = useState([
-    {
-      id: 1,
-      img: img,
-      title: "夏日友晴天 Luca",
-      date: "动漫 / 2021 / 剧情",
-      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
-      content:
-        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
-    },
-    {
-      id: 2,
-      img: img,
-      title: "夏日友晴天 Luca",
-      date: "动漫 / 2021 / 剧情",
-      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
-      content:
-        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
-    },
-    {
-      id: 3,
-      img: img,
-      title: "夏日友晴天 Luca",
-      date: "动漫 / 2021 / 剧情",
-      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
-      content:
-        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
-    },
-    {
-      id: 4,
-      img: img,
-      title: "夏日友晴天 Luca",
-      date: "动漫 / 2021 / 剧情",
-      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
-      content:
-        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
-    },
-
-    {
-      id: 5,
-      img: img,
-      title: "夏日友晴天 Luca",
-      date: "动漫 / 2021 / 剧情",
-      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
-      content:
-        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
-    },
-    {
-      id: 6,
-      img: img,
-      title: "夏日友晴天 Luca",
-      date: "动漫 / 2021 / 剧情",
-      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
-      content:
-        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
-    },
-  ]);
-
+const Movies = ({ movies }: { movies: any }) => {
   return (
     <div className="mb-5">
-      <div className="movie_title px-3 py-1">共 4 条搜索结果</div>
-      {movies?.map((movie) => (
+      <div className="movie_title px-3 py-1">
+        共 {movies?.length} 条搜索结果
+      </div>
+      {movies?.map((movie: any) => (
         <div className="space-y-1.5 p-3" key={movie.id}>
           <div className="flex items-stretch gap-5 relative">
             <Link to={`/`} className="relative">
               <img
-                src={movie?.img}
-                alt={``}
+                src={movie?.cover}
+                alt={movie?.name}
                 className="rounded-md max-w-[92px] h-[127px] object-cover object-center"
               />
               <div className="top-0 right-0 search_card_score z-1 absolute">
-                <span>独播</span>
+                <span>{movie?.dynamic}</span>
               </div>
             </Link>
 
@@ -84,21 +26,35 @@ const Movies = () => {
                 <div className="flex justify-between items-center">
                   <Link to={`/`}>
                     <h1 className="detail-head-text truncate w-full">
-                      {movie.title}
+                      {movie?.name}
                     </h1>
                   </Link>
                 </div>
 
+                {/* Render members */}
                 <div className="detail-text mt-1 truncate w-full">
-                  {movie.date}
+                  <strong>成员: </strong>
+                  {movie?.members?.map((member: any, idx: number) => (
+                    <span key={member.member_id}>
+                      {member.name}
+                      {idx < movie.members.length - 1 && " / "}
+                    </span>
+                  ))}
                 </div>
 
+                {/* Render tags */}
                 <div className="detail-text mt-1 truncate w-full">
-                  {movie.tags}
+                  <strong>标签: </strong>
+                  {movie?.tags?.map((tag: any, idx: number) => (
+                    <span key={tag.tag_id}>
+                      {tag.name}
+                      {idx < movie.tags.length - 1 && " / "}
+                    </span>
+                  ))}
                 </div>
 
                 <p className="truncate detail-text mt-1 w-full">
-                  {movie.content}
+                  {movie.blurb}
                 </p>
               </div>
 

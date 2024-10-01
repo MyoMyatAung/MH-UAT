@@ -15,16 +15,21 @@ export const searchApi = createApi({
   endpoints: (builder) => ({
     getSearchMovie: builder.query<any, any>({
       query: (data) => {
-        const { keyword } = data;
+        const { keyword, page, sort, type_id, res_type } = data;
         return {
-          url: `movie/search?keyword=${keyword}`,
+          url: `movie/search?keyword=${keyword}&&page=${page}&&sort=${sort}&&type_id=${type_id}&&res_type=${res_type}`,
         };
       },
       providesTags: (result, error, arg): any[] => [
         { type: "SearchMovie", id: arg },
       ],
     }),
+    getTags: builder.query<any, void>({
+      query: () => {
+        return `/app/config`;
+      },
+    }),
   }),
 });
 
-export const { useGetSearchMovieQuery } = searchApi;
+export const { useGetSearchMovieQuery, useGetTagsQuery } = searchApi;

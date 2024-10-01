@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface NavbarProps {
   query: string;
   setQuery: (query: string) => void;
+  onSearch: () => void; // Add onSearch prop to trigger search
 }
 
-const Navbar: React.FC<NavbarProps> = ({ query, setQuery }) => {
-  const handleSearch = () => {};
+const Navbar: React.FC<NavbarProps> = ({ query, setQuery, onSearch }) => {
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.length !== 0) {
+      onSearch(); // Trigger the search
+    } else {
+      console.log("need query");
+    }
+  };
+
   return (
     <div className="relative">
-      <div className="flex gap-4 w-full py-2 pt-3 px-5 z-10 input-bg fixed items-center justify-between">
+      <form
+        onSubmit={handleSearch}
+        className="flex gap-4 w-full py-2 pt-3 px-5 z-10 input-bg fixed items-center justify-between"
+      >
         <div className="absolute left-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -28,19 +40,19 @@ const Navbar: React.FC<NavbarProps> = ({ query, setQuery }) => {
 
         <div className="w-full">
           <input
+            value={query}
             type="text"
             className="search-input"
             placeholder="觉醒年代"
-            onChange={() => setQuery(query)}
-            value={query}
+            onChange={(e) => setQuery(e.target.value)} // Update the query state on input change
           />
         </div>
         <div className="w-[40px]">
-          <button className="search-btn" type="submit" onClick={handleSearch}>
-            取消
+          <button className="search-btn" type="submit">
+            搜索
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
