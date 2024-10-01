@@ -1,10 +1,12 @@
-import React from 'react';
+import React from "react";
+import TopNav from "../../components/explorer/TopNav";
 
 const Explorer: React.FC = () => {
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold">Explorer</h1>
-      {/* Add movie filters, cards, etc., here */}
+    <div className="">
+      <div className="">
+        <TopNav />
+      </div>
     </div>
   );
 };
