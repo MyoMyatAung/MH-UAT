@@ -15,13 +15,10 @@ import Notifications from "./pages/profile/Notifications";
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
-        {" "}
-        {/* Full height wrapper */}
-        {/* <Header /> */}
-        <div className="flex-grow">
-          {" "}
-          {/* Dynamic page content with background */}
+      <div className="flex flex-col min-h-screen"> {/* Full height wrapper */}
+        <Header />
+
+        <div className="flex-grow overflow-auto"> {/* Main content with dynamic height */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
