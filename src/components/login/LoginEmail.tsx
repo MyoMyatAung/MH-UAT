@@ -10,7 +10,7 @@ interface LoginEmailProps {
 }
 
 const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
-  const [forgot,setForgot] = useState(false)
+  const [forgot, setForgot] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,13 +51,13 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
       setIsVisible(false);
     }
   };
-const show = () => {
-  console.log('show')
-  setShowPassword(!showPassword)
-}
+  const show = () => {
+    console.log("show");
+    setShowPassword(!showPassword);
+  };
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-      {forgot && <ForgotPass forgot={forgot} setForgot={setForgot} /> }
+      {forgot && <ForgotPass forgot={forgot} setForgot={setForgot} />}
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -131,28 +131,31 @@ const show = () => {
                   />
                   <label
                     htmlFor="password"
-                    className={`absolute text-[14px] left-4 top-1/2 transform -translate-y-1/2 transition-all text-[#5B5B5B] pointer-events-none ${
+                    className={`absolute text-[14px] left-4 transition-all text-[#5B5B5B] pointer-events-none ${
                       isFocusedPassword || password
-                        ? "top-0 text-xs text-blue-500"
-                        : "top-1/2"
+                        ? "top-0 text-xs text-blue-500 -translate-y-full"
+                        : "top-1/2 -translate-y-1/2"
                     }`}
                   >
                     Please Enter Your Password
                   </label>
                   <img
                     onClick={show}
-                    className=" absolute right-0 bottom-[15px]"
+                    className="absolute right-0 bottom-[15px]"
                     src={eye}
-                    alt=""
+                    alt="Show Password"
                   />
                 </div>
 
-                <div onClick={() => setForgot(true)} className="text-left mt-[-10px] text-blue-500 text-sm cursor-pointer">
+                <div
+                  onClick={() => setForgot(true)}
+                  className="text-left mt-[-10px] text-blue-500 text-sm cursor-pointer"
+                >
                   Forgot Your Password?
                 </div>
 
                 <button
-                disabled
+                  disabled
                   type="submit"
                   className="w-full next_button mt-[20px] text-white/20 py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
                 >
