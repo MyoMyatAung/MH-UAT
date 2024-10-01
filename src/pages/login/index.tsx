@@ -9,13 +9,15 @@ import blue from "../../assets/login/blue.png";
 import eye from "../../assets/login/eye.png";
 import weChat from "../../assets/login/weChat.png";
 import LoginEmail from "../../components/login/LoginEmail"; // Import your LoginEmail component
+import SignUp from "../../components/login/SignUp";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isVisible, setIsVisible] = useState(true);
-  const [isEmailVisible, setEmailVisible] = useState(false); // State for LoginEmail visibility
+  const [isEmailVisible, setEmailVisible] = useState(false);
+  const [isSignVisible, setSignVisible] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,9 +34,15 @@ const Login: React.FC = () => {
     setEmailVisible(true); // Show the LoginEmail component
   };
 
+  const handleShowSignUp = () => {
+    setIsVisible(false); // Hide the login component
+    setSignVisible(true); // Show the LoginEmail component
+  };
+
   const handleBack = () => {
     setIsVisible(true); // Show the login component
     setEmailVisible(false); // Hide the LoginEmail component
+    setSignVisible(false); // Show the LoginEmail component
   };
 
   const variants = {
@@ -76,7 +84,7 @@ const Login: React.FC = () => {
               <img src={logo} className="w-[168px] h-[60px]" alt="Logo" />
               <div className="flex flex-col gap-[10px]">
                 <Button onClick={handleShowLoginEmail} text={"Login"} />
-                <Button onClick={() => console.log("click")} text={"Sign Up"} />
+                <Button onClick={handleShowSignUp} text={"Sign Up"} />
               </div>
               <p className="text-[#888] text-[12px] font-[500] leading-[18px]">
                 Link account with
@@ -92,6 +100,7 @@ const Login: React.FC = () => {
         )}
 
         {isEmailVisible && <LoginEmail handleBack={handleBack} />}
+        {isSignVisible && <SignUp handleBack={handleBack} />}
       </AnimatePresence>
     </div>
   );

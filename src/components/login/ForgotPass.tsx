@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import back from "../../assets/login/back.svg";
 import eye from "../../assets/login/eye.svg";
+import Captch from "./Captch";
+import Opt from "./Opt";
 
 interface ForgotPassProps {
   setForgot: React.Dispatch<React.SetStateAction<boolean>>;
@@ -8,6 +10,8 @@ interface ForgotPassProps {
 }
 
 const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
+  const [showCapt, setShowCapt] = useState(false);
+  const [showOtp, setShowOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,12 +23,29 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
   const [isFocusedConfirmPassword, setIsFocusedConfirmPassword] =
     useState(false); // Focus state for confirm password
 
+    const validatePassword = (password: string) => {
+      const lengthValid = password.length >= 8 && password.length <= 25;
+      const containsLetters = /[a-zA-Z]/.test(password);
+      const containsNumbers = /\d/.test(password);
+      return lengthValid && (containsLetters || containsNumbers);
+    };
+  
+
   const show = () => {
     setShowPassword(!showPassword);
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setShowCapt(true)
+    setShowOtp(true);
+  };
+
   return (
-    <div className="z-[11111111] w-screen h-screen bg-[#161619]">
+    <div className=" w-screen h-screen bg-[#161619]">
+      {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
+      {showCapt && <Captch showCapt={showCapt} setShowCapt={setShowCapt} />}
+
       <div className="p-[20px]">
         {/* head */}
         <div className="flex justify-between w-2/3">
@@ -33,7 +54,10 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
             Forgot Password
           </h1>
         </div>
-        <form className="w-full flex flex-col gap-[40px] pt-[40px] px-[10px]">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full flex flex-col gap-[40px] pt-[40px] px-[10px]"
+        >
           <div className="relative">
             <input
               type="email"
@@ -127,12 +151,16 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
           </div>
 
           <button
-            disabled
-            type="submit"
-            className="w-full next_button mt-[20px] text-white/20 py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
-          >
-            Next
-          </button>
+                  disabled={!validatePassword(password)}
+                  type="submit"
+                  className={`w-full  mt-[20px] py-2 px-4 rounded-lg ${
+                    validatePassword(password)
+                      ? "login_button"
+                      : "next_button"
+                  } transition duration-300 ease-in-out`}
+                >
+                  Next
+                </button>
         </form>
       </div>
     </div>
