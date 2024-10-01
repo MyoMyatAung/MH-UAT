@@ -1,25 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const episodes = ['第1集', '第2集', '第3集', '第4集', '第5集'];
+interface Episode {
+  episode_id: number | null;
+  episode_name: string;
+  play_url: string;
+}
 
-const EpisodeSelector: React.FC = () => {
-  const [selectedEpisode, setSelectedEpisode] = useState<number>(2); // Default to 第3集
+interface EpisodeSelectorProps {
+  episodes: Episode[]; // Accept episodes as a prop
+}
 
+const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({ episodes }) => {
   return (
-    <div className="flex space-x-2 px-4 pb-4 overflow-x-auto">
-      {episodes.map((episode, index) => (
-        <button
-          key={index}
-          className={`px-4 py-2 text-sm rounded ${
-            selectedEpisode === index
-              ? 'bg-[#D26F36] text-white'
-              : 'bg-[#3B3B3B] text-gray-300'
-          }`}
-          onClick={() => setSelectedEpisode(index)}
-        >
-          {episode}
-        </button>
-      ))}
+    <div className="mt-4 px-4 py-2 bg-[#2b2b2b] text-white">
+      <div className="flex justify-between items-center">
+        <span>选集</span>
+        <button className="text-sm text-gray-400">展开全部</button>
+      </div>
+      <div className="flex gap-2 mt-2 overflow-x-scroll">
+        {episodes.map((episode) => (
+          <button key={episode.episode_id} className="px-3 py-1 rounded-md">
+            {episode.episode_name}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
