@@ -11,8 +11,8 @@ interface ForgotPassProps {
 
 const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
   const [showCapt, setShowCapt] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
@@ -22,6 +22,14 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [isFocusedConfirmPassword, setIsFocusedConfirmPassword] =
     useState(false); // Focus state for confirm password
+
+    const validatePassword = (password: string) => {
+      const lengthValid = password.length >= 8 && password.length <= 25;
+      const containsLetters = /[a-zA-Z]/.test(password);
+      const containsNumbers = /\d/.test(password);
+      return lengthValid && (containsLetters || containsNumbers);
+    };
+  
 
   const show = () => {
     setShowPassword(!showPassword);
@@ -143,12 +151,16 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
           </div>
 
           <button
-            // disabled
-            type="submit"
-            className="w-full next_button mt-[20px] text-white/20 py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
-          >
-            Next
-          </button>
+                  disabled={!validatePassword(password)}
+                  type="submit"
+                  className={`w-full  mt-[20px] py-2 px-4 rounded-lg ${
+                    validatePassword(password)
+                      ? "login_button"
+                      : "next_button"
+                  } transition duration-300 ease-in-out`}
+                >
+                  Next
+                </button>
         </form>
       </div>
     </div>
