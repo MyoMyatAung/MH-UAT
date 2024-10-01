@@ -26,3 +26,12 @@
   border-radius: var(--Height-And-Sizes-80, 80px);
   background: rgba(255, 255, 255, 0.08);
 }
+
+.otp_button {
+  border-radius: var(--Height-And-Sizes-80, 80px);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.capt_box {
+  background: rgba(255, 255, 255, 0.04);
+}

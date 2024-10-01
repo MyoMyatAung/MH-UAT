@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import back from "../../assets/login/back.svg";
 import eye from "../../assets/login/eye.svg";
+import Captch from "./Captch";
+import Opt from "./Opt";
 
 interface ForgotPassProps {
   setForgot: React.Dispatch<React.SetStateAction<boolean>>;
@@ -8,7 +10,9 @@ interface ForgotPassProps {
 }
 
 const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
+  const [showCapt, setShowCapt] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showOtp, setShowOtp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
@@ -23,8 +27,17 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
     setShowPassword(!showPassword);
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setShowCapt(true)
+    setShowOtp(true);
+  };
+
   return (
-    <div className="z-[11111111] w-screen h-screen bg-[#161619]">
+    <div className=" w-screen h-screen bg-[#161619]">
+      {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
+      {showCapt && <Captch showCapt={showCapt} setShowCapt={setShowCapt} />}
+
       <div className="p-[20px]">
         {/* head */}
         <div className="flex justify-between w-2/3">
@@ -33,7 +46,10 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
             Forgot Password
           </h1>
         </div>
-        <form className="w-full flex flex-col gap-[40px] pt-[40px] px-[10px]">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full flex flex-col gap-[40px] pt-[40px] px-[10px]"
+        >
           <div className="relative">
             <input
               type="email"
@@ -127,7 +143,7 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
           </div>
 
           <button
-            disabled
+            // disabled
             type="submit"
             className="w-full next_button mt-[20px] text-white/20 py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
           >
