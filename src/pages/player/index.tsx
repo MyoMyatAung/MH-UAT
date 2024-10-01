@@ -62,7 +62,7 @@ const DetailPage: React.FC = () => {
   return (
     <div className="bg-[#1b1b1b] overflow-y-scroll" style={{ height: 'calc(100vh - 166px)' }}>
       {/* VideoPlayer plays the current episode */}
-      <VideoPlayer videoUrl={selectedEpisode?.play_url || ''} />
+      <VideoPlayer videoUrl={selectedEpisode?.play_url || currentEpisode?.play_url || ''} />
       {/* Details Section */}
       <DetailSection />
 
