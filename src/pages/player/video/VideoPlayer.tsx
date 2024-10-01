@@ -1,77 +1,99 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import Hls from 'hls.js';
 
-interface MovieDetail {
-  name: string;
-  area: string;
-  year: string;
-  score: string;
-  cover: string;
-  tags: { tag_id: number | null; name: string }[];
-  play_from: {
-    name: string;
-    code: string;
-    list: { episode_id: number | null; episode_name: string; play_url: string }[];
-  }[];
+interface VideoPlayerProps {
+  videoUrl: string;
 }
 
-const VideoPlayer: React.FC = () => {
-  const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null); // Store the resolved video URL
-
-  const getMovieDetail = async () => {
-    const id = '204269';
-    const res = await fetch(
-      `https://cc3e497d.qdhgtch.com:2345/api/v1/movie/detail?id=${id}`
-    );
-    const data = await res.json();
-    console.log(data?.data, 'movie data');
-    setMovieDetail(data?.data);
-
-    // Assume there's an endpoint or function to resolve the play_url
-    const resolvedUrl = await resolvePlayUrl(data?.data?.play_from?.[0]?.list?.[0]?.play_url);
-    setVideoUrl(resolvedUrl);
-  };
-
-  // Mock function to resolve the play_url, replace with actual parsing logic or API call
-  const resolvePlayUrl = async (encodedUrl: string | undefined): Promise<string | null> => {
-    if (!encodedUrl) return null;
-    
-    // Assuming there's an API or service to decode the play_url
-    const res = await fetch(`https://example.com/parse?url=${encodedUrl}`);
-    const data = await res.json();
-    return data?.resolvedUrl; // Assuming the resolved URL comes back here
-  };
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const hlsRef = useRef<Hls | null>(null);
 
   useEffect(() => {
-    getMovieDetail();
-  }, []);
+    const initHls = () => {
+      if (Hls.isSupported()) {
+        // Destroy the previous instance if it exists
+        if (hlsRef.current) {
+          hlsRef.current.destroy();
+        }
+
+        const hls = new Hls({
+          // Buffer and Bitrate Tuning for High-Quality Streams
+          maxBufferLength: 8, // Reduced buffer length for smoother performance
+          maxMaxBufferLength: 20, // Maximum buffer length
+          lowLatencyMode: true, // Enable low latency for better responsiveness
+          maxBufferSize: 50 * 1000 * 1000, // Reduce buffer size to avoid memory overload
+          maxBufferHole: 0.2, // Reduced buffer hole tolerance for quicker seeking
+
+          // Start at a lower quality to allow for smoother playback initially
+          startLevel: 1, // Start at a lower level for faster playback
+          autoStartLoad: true, // Automatically start loading the video
+
+          // Cap the maximum bitrate for smoother performance with high-quality videos
+          abrMaxWithRealBitrate: true, // Use real bitrate instead of theoretical to cap
+          capLevelToPlayerSize: true, // Cap quality level to the size of the player
+        });
+
+        hls.loadSource(videoUrl);
+        hls.attachMedia(videoRef.current as HTMLMediaElement);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          console.log('Video is ready to play');
+        });
+
+        // Error handling to recover from media or network errors
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          if (data.fatal) {
+            switch (data.type) {
+              case Hls.ErrorTypes.NETWORK_ERROR:
+                console.error("A network error occurred", data);
+                hls.startLoad();
+                break;
+              case Hls.ErrorTypes.MEDIA_ERROR:
+                console.error("A media error occurred", data);
+                hls.recoverMediaError();
+                break;
+              default:
+                hls.destroy();
+                console.error("A fatal error occurred", data);
+                break;
+            }
+          }
+        });
+
+        hlsRef.current = hls; // Store the hls instance
+      } else if (videoRef.current?.canPlayType('application/vnd.apple.mpegurl')) {
+        // For Safari and native HLS support
+        videoRef.current.src = videoUrl;
+      }
+    };
+
+    if (videoUrl && videoRef.current) {
+      initHls();
+    }
+
+    return () => {
+      // Cleanup HLS.js when the component is unmounted or the URL changes
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+      }
+    };
+  }, [videoUrl]);
 
   return (
-    <div className="p-4">
-      {/* Video Player */}
+    <div>
       {videoUrl ? (
-        <video width="100%" height="auto" controls controlsList="nodownload">
-          <source src={videoUrl} type="video/mp4" />
+        <video
+          ref={videoRef}
+          width="100%"
+          height="auto"
+          controls
+          controlsList="nodownload"
+          style={{ objectFit: 'fill' }}
+        >
           Your browser does not support the video tag.
         </video>
       ) : (
         <p>No video available.</p>
-      )}
-
-      {/* Movie Details */}
-      {movieDetail && (
-        <div className="mt-4">
-          <h1 className="text-2xl font-bold">{movieDetail.name}</h1>
-          <p className="text-gray-600">Year: {movieDetail.year}</p>
-          <p className="text-gray-600">Score: {movieDetail.score}</p>
-          <div className="flex gap-2 mt-2">
-            {movieDetail.tags.map((tag) => (
-              <span key={tag.tag_id} className="px-2 py-1 bg-gray-800 text-white rounded">
-                {tag.name}
-              </span>
-            ))}
-          </div>
-        </div>
       )}
     </div>
   );
