@@ -1,0 +1,157 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import img from "../../profile/images/historyImg.png";
+
+const Movies = () => {
+  const [movies, setMovies] = useState([
+    {
+      id: 1,
+      img: img,
+      title: "夏日友晴天 Luca",
+      date: "动漫 / 2021 / 剧情",
+      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
+      content:
+        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
+    },
+    {
+      id: 2,
+      img: img,
+      title: "夏日友晴天 Luca",
+      date: "动漫 / 2021 / 剧情",
+      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
+      content:
+        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
+    },
+    {
+      id: 3,
+      img: img,
+      title: "夏日友晴天 Luca",
+      date: "动漫 / 2021 / 剧情",
+      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
+      content:
+        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
+    },
+    {
+      id: 4,
+      img: img,
+      title: "夏日友晴天 Luca",
+      date: "动漫 / 2021 / 剧情",
+      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
+      content:
+        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
+    },
+
+    {
+      id: 5,
+      img: img,
+      title: "夏日友晴天 Luca",
+      date: "动漫 / 2021 / 剧情",
+      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
+      content:
+        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
+    },
+    {
+      id: 6,
+      img: img,
+      title: "夏日友晴天 Luca",
+      date: "动漫 / 2021 / 剧情",
+      tags: "吴京 / 刘德华 / 李雪健 / 沙溢 / 宁理 / 王智 / 王智",
+      content:
+        "故事发生在意大利里维埃拉地区的一个美丽海滨小镇，讲述了男孩卢卡（雅各布·特伦布",
+    },
+  ]);
+
+  return (
+    <div className="mb-5">
+      <div className="movie_title px-3 py-1">共 4 条搜索结果</div>
+      {movies?.map((movie) => (
+        <div className="space-y-1.5 p-3" key={movie.id}>
+          <div className="flex items-stretch gap-5 relative">
+            <Link to={`/`} className="relative">
+              <img
+                src={movie?.img}
+                alt={``}
+                className="rounded-md max-w-[92px] h-[127px] object-cover object-center"
+              />
+              <div className="top-0 right-0 search_card_score z-1 absolute">
+                <span>独播</span>
+              </div>
+            </Link>
+
+            {/* Ensure flex-grow and min-width-0 to handle truncation properly */}
+            <div className="card-content flex-grow min-w-0">
+              <div className="flex flex-col">
+                <div className="flex justify-between items-center">
+                  <Link to={`/`}>
+                    <h1 className="detail-head-text truncate w-full">
+                      {movie.title}
+                    </h1>
+                  </Link>
+                </div>
+
+                <div className="detail-text mt-1 truncate w-full">
+                  {movie.date}
+                </div>
+
+                <div className="detail-text mt-1 truncate w-full">
+                  {movie.tags}
+                </div>
+
+                <p className="truncate detail-text mt-1 w-full">
+                  {movie.content}
+                </p>
+              </div>
+
+              <div className="watch-main mt-2 flex gap-3">
+                <Link to={`/`} className="watch flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="17"
+                    viewBox="0 0 16 17"
+                    fill="none"
+                  >
+                    <path
+                      d="M12.9174 8.77722L5.85137 13.4879C5.80118 13.5213 5.74286 13.5404 5.68264 13.5433C5.62241 13.5462 5.56253 13.5327 5.50937 13.5042C5.45622 13.4758 5.41178 13.4334 5.38078 13.3817C5.34979 13.33 5.33341 13.2708 5.33337 13.2105V3.78922C5.33341 3.72892 5.34979 3.66976 5.38078 3.61804C5.41178 3.56633 5.45622 3.52398 5.50937 3.49552C5.56253 3.46706 5.62241 3.45355 5.68264 3.45644C5.74286 3.45932 5.80118 3.47848 5.85137 3.51188L12.9174 8.22255C12.963 8.25299 13.0005 8.29423 13.0263 8.34261C13.0522 8.39099 13.0658 8.44501 13.0658 8.49988C13.0658 8.55475 13.0522 8.60878 13.0263 8.65716C13.0005 8.70553 12.963 8.74678 12.9174 8.77722Z"
+                      fill="white"
+                    />
+                  </svg>
+                  <span>查看详情</span>
+                </Link>
+                <Link to={`/`} className="star_watch flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="17"
+                    viewBox="0 0 16 17"
+                    fill="none"
+                  >
+                    <g clip-path="url(#clip0_4_2162)">
+                      <path
+                        d="M8.00002 12.6735L3.29802 15.3055L4.34802 10.0202L0.391357 6.3615L5.74269 5.72683L8.00002 0.833496L10.2574 5.72683L15.6087 6.3615L11.652 10.0202L12.702 15.3055L8.00002 12.6735ZM8.00002 11.1455L10.8314 12.7302L10.1987 9.54816L12.5807 7.34483L9.35869 6.96283L8.00002 4.01683L6.64136 6.9635L3.41936 7.34483L5.80136 9.54816L5.16869 12.7302L8.00002 11.1455Z"
+                        fill="white"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_4_2162">
+                        <rect
+                          width="16"
+                          height="16"
+                          fill="white"
+                          transform="translate(0 0.5)"
+                        />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <span>收藏</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Movies;

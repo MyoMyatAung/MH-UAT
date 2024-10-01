@@ -11,17 +11,22 @@ import FooterNav from "./components/FooterNav";
 import History from "./pages/profile/History";
 import Settings from "./pages/profile/Settings";
 import Notifications from "./pages/profile/Notifications";
+import Main from "./pages/search/Main";
 
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen"> {/* Full height wrapper */}
-        <Header />
-
-        <div className="flex-grow overflow-auto"> {/* Main content with dynamic height */}
+      <div className="flex flex-col min-h-screen">
+        {" "}
+        {/* Full height wrapper */}
+        {/* <Header /> */}
+        <div className="flex-grow overflow-auto">
+          {" "}
+          {/* Main content with dynamic height */}
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
+            <Route path="/search_overlay" element={<Search />} />
+            <Route path="/search" element={<Main />} />
             <Route path="/explorer" element={<Explorer />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/player" element={<Player />} />
@@ -31,7 +36,7 @@ const App: React.FC = () => {
             <Route path="/notifications" element={<Notifications />} />
           </Routes>
         </div>
-        <FooterNav />
+        {/* <FooterNav /> */}
       </div>
     </Router>
   );
