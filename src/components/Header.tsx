@@ -3,29 +3,28 @@ import logo from '../assets/logo.svg';
 
 const Header: FC = () => {
   return (
-    <header className="bg-header py-4 px-8 flex items-center">
-      {/* Logo */}
-      <div className="flex items-center">
+    <header className="bg-gray-900 py-5 px-4 flex items-center justify-between shadow-md">
+      {/* Logo Section */}
+      <div className="flex items-center flex-shrink-0 space-x-2"> {/* Flexbox for horizontal alignment */}
         <img
           src={logo}
           alt="Logo"
-          className="h-10 mr-4" // Adjust height as needed
+          className="h-10" // Reduced size to fit better on mobile screens
         />
-        {/* Apply font size class for logo text */}
-        <span className="text-text text-lg font-bold">电影手</span>
+        <span className="text-white text-lg font-semibold leading-none">电影手</span> {/* Adjusted text size for mobile */}
       </div>
 
       {/* Search Bar */}
-      <div className="flex-1 ml-8">
-        <div className="relative rounded-full bg-white bg-opacity-20 px-4 py-2">
+      <div className="w-full max-w-xs ml-4"> {/* Adjust max-width to make it responsive on mobile */}
+        <div className="relative rounded-full bg-gray-800 px-3 py-2 shadow-inner">
           <input
             type="text"
-            placeholder="觉醒年代"
-            className="bg-transparent text-text placeholder-gray-400 text-base w-full focus:outline-none" // Apply font size for input text
+            placeholder="搜索影片..."
+            className="bg-transparent text-white placeholder-gray-400 text-sm w-full focus:outline-none"
           />
           <button className="absolute right-2 top-1/2 transform -translate-y-1/2">
             <svg
-              className="h-6 w-6 text-text"
+              className="h-5 w-5 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

@@ -6,7 +6,7 @@ import EpisodeSelector from './video/EpisodeSelector';
 
 const DetailPage: React.FC = () => {
   return (
-    <div className="bg-[#141414] min-h-screen overflow-y-scroll">
+    <div className="bg-[#141414] overflow-y-scroll" style={{height: 'calc(100vh - 166px)'}}>
       {/* Video Player Section */}
       <VideoPlayer />
 
