@@ -34,7 +34,7 @@ const DetailSection: React.FC = () => {
       </div>
 
       {/* Ads Section */}
-      <div className="bg-[#3B3B3B] text-white text-center p-4 rounded-lg flex items-center justify-center">
+      <div className="bg-[#3B3B3B] text-white text-center p-10 rounded-lg flex items-center justify-center">
         Ads
       </div>
     </div>
