@@ -55,7 +55,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({ movieDetail }) => {
         </div>
 
         {/* Buttons aligned to the right */}
-        <div className="flex mr-2 space-x-1">
+        <div className="flex mr-2 space-x-1 mt-3">
           <button className="px-4 py-2 bg-gray-800 text-white font-bold rounded-l-3xl">
             发起申
           </button>
