@@ -1,41 +1,142 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faShareAlt, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from "react";
+import share from "../../../assets/share.png";
+import star from "../../../assets/star.png";
+import info from "../../../assets/info.png";
 
-const DetailSection: React.FC = () => {
+interface DetailSectionProps {
+  movieDetail: {
+    name: string;
+    area: string;
+    year: string;
+    score: string;
+    content: string;
+    cover: string;
+    type_name: string;
+    tags: { name: string }[];
+    comments_count: string;
+    popularity_score: number;
+  };
+}
+
+const DetailSection: React.FC<DetailSectionProps> = ({ movieDetail }) => {
+  const [activeTab, setActiveTab] = useState("tab-1");
+  console.log("movieDetail is=>", movieDetail);
   return (
-    <div className="p-4 text-white bg-[#1C1C1C]">
-      {/* Title and Basic Info */}
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-lg font-bold">双城之战 第一季</h2>
-        <p className="text-xs text-gray-400">简介</p>
-      </div>
-      <p className="text-sm text-gray-400 mb-4">电视剧 / 2021 / 剧情 / 动作</p>
+    <div className="flex flex-col w-full bg-black">
+      {/* Tabs */}
+      <div className="flex px-2 justify-between items-center">
+        <div className="flex">
+          <div
+            className={`px-4 py-3 bg-black text-gray-400 rounded-t-lg cursor-pointer relative ${
+              activeTab === "tab-1" ? "text-white z-10" : ""
+            }`}
+            onClick={() => setActiveTab("tab-1")}
+          >
+            <span className="text-white">详情</span>
+            {activeTab === "tab-1" && (
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-orange-500"></div>
+            )}
+          </div>
+          <div
+            className={`px-4 py-3 bg-black text-gray-400 rounded-t-lg cursor-pointer relative ${
+              activeTab === "tab-2" ? "text-white z-10" : ""
+            }`}
+            onClick={() => setActiveTab("tab-2")}
+          >
+            <span>评论</span>
+            <span className="text-gray-500">
+              {" "}
+              {movieDetail.comments_count || "0"}
+            </span>
+            {activeTab === "tab-2" && (
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-orange-500"></div>
+            )}
+          </div>
+        </div>
 
-      {/* Action Buttons */}
-      <div className="flex justify-between mb-4">
-        <button className="flex items-center space-x-1">
-          <FontAwesomeIcon icon={faBookmark} />
-          <span className="text-sm">收藏</span>
-        </button>
-        <button className="flex items-center space-x-1">
-          <FontAwesomeIcon icon={faStar} />
-          <span className="text-sm">反馈/求片</span>
-        </button>
-        <button className="flex items-center space-x-1">
-          <FontAwesomeIcon icon={faShareAlt} />
-          <span className="text-sm">分享</span>
-        </button>
+        {/* Buttons aligned to the right */}
+        <div className="flex mr-2 space-x-1 mt-3">
+          <button className="px-4 py-2 bg-gray-800 text-white font-bold rounded-l-3xl">
+            发起申
+          </button>
+          <button className="px-4 py-2 bg-gray-800 text-white font-bold rounded-r-3xl flex items-center">
+            弹<span className="text-sm text-orange-600">✔</span>
+          </button>
+        </div>
       </div>
 
-      {/* Warning Banner */}
-      <div className="bg-[#3B3B3B] text-gray-400 text-xs p-2 rounded mb-4">
-        切勿相信视频中任何广告，谨防上当受骗！
-      </div>
+      {/* Tab content */}
+      <div className="bg-black p-5 rounded-b-lg">
+        {activeTab === "tab-1" && (
+          <div id="tab-1" className="block">
+            {/* Movie Title and Info */}
+            <div className="movie-info mb-4">
+              <h2 className="text-2xl font-bold text-white">
+                {movieDetail.name || "暂无标题"}
+              </h2>
+              <div className="info text-gray-400 text-sm flex flex-wrap items-center space-x-2 mt-2">
+                {/* Rating (Dynamic flame based on score or popularity) */}
+                <div className="rating flex items-center">
+                  <div className="flames flex">
+                    {/* Show flames based on the popularity score */}
+                    {Array(Math.max(1, movieDetail.popularity_score))
+                      .fill("🔥")
+                      .map((flame, index) => (
+                        <span key={index} className="text-xl mr-1">
+                          {flame}
+                        </span>
+                      ))}
+                  </div>
+                </div>
+                <span>{movieDetail.year}</span>
+                <span>/</span>
+                <span>{movieDetail.area}</span>
+                <span>/</span>
+                <span>{movieDetail.type_name}</span>
+                {movieDetail.tags && movieDetail.tags.length > 0 && (
+                  <>
+                    {movieDetail.tags.map((tag, index) => (
+                      <React.Fragment key={index}>
+                        <span>/</span>
+                        <span>{tag.name || "暂无标签"}</span>
+                      </React.Fragment>
+                    ))}
+                  </>
+                )}
+              </div>
+            </div>
 
-      {/* Ads Section */}
-      <div className="bg-[#3B3B3B] text-white text-center p-4 rounded-lg flex items-center justify-center">
+            {/* Action Buttons */}
+            <div className="actions flex justify-between my-4">
+              <button className="action-btn px-4 py-2 rounded-md">
+                <img src={star} alt="" className="h-7" />
+                <span className="text-gray-200">收藏</span>
+              </button>
+              <button className="px-4 py-2 rounded-md">
+                <img src={info} alt="" className="h-7" />
+                <span className="text-gray-200">求片</span>反馈/
+              </button>
+              <button className="action-btn px-4 py-2 rounded-md">
+                <img src={share} alt="" className="h-7" />
+                <span className="text-gray-200">分享</span>
+              </button>
+            </div>
+
+            {/* Warning Message */}
+            <div className="warning p-2 bg-gray-800 rounded-md text-sm text-white text-center">
+              切勿相信视频中的任何广告，谨防上当受骗！
+            </div>
+          </div>
+        )}
+
+        {activeTab === "tab-2" && (
+          <div id="tab-2" className="block">
+            {/* Comment section or other content */}
+          </div>
+        )}
+        <div className="bg-gray-800 text-white text-center p-10 rounded-lg flex items-center mt-5 justify-center">
         Ads
+      </div>
       </div>
     </div>
   );

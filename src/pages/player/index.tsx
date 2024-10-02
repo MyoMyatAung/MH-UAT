@@ -1,30 +1,95 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import VideoPlayer from './video/VideoPlayer';
-import DetailSection from './video/DetailSection';
 import SourceSelector from './video/SourceSelector';
+import DetailSection from './video/DetailSection';
 import EpisodeSelector from './video/EpisodeSelector';
 
+interface Episode {
+  episode_id: number | null;
+  episode_name: string;
+  play_url: string;
+}
+
+interface MovieDetail {
+  name: string;
+  area: string;
+  year: string;
+  score: string;
+  content: string;
+  cover: string;
+  type_name: string;
+  tags: { name: string }[];
+  comments_count: string;
+  popularity_score: number;
+  play_from: {
+    name: string;
+    code: string;
+    list: Episode[];
+  }[];
+}
+
 const DetailPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
+  const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
+  const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
+
+  const navigate = useNavigate();
+
+  // Fetch the movie details based on the provided id
+  const getMovieDetail = async () => {
+    const res = await fetch(`https://cc3e497d.qdhgtch.com:2345/api/v1/movie/detail?id=${id}`);
+    const data = await res.json();
+    setMovieDetail(data?.data);
+
+    if (data?.data?.play_from?.[0]?.list?.[0]) {
+      setCurrentEpisode(data.data.play_from[0].list[0]); // Set the first episode as default
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      getMovieDetail();
+    }
+  }, [id]);
+
+  const handleEpisodeChange = (episode: Episode) => {
+    setCurrentEpisode(episode);
+  };
+
+  const handleEpisodeSelect = (episode: Episode) => {
+    setSelectedEpisode(episode);
+  };
+
+  const navigateBackFunction = () => {
+    navigate(-1); // Go back to the previous page
+  };
+
+  if (!movieDetail || !currentEpisode) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="bg-[#141414] min-h-screen overflow-y-scroll">
-      {/* Video Player Section */}
-      <VideoPlayer />
-
-      {/* Tab Navigation */}
-      <div className="flex justify-around border-b border-gray-700 text-white text-sm py-3">
-        <button className="border-b-2 border-[#D26F36] py-2">详情</button>
-        <button>评论 99+</button>
-        <button>发弹幕</button>
-      </div>
-
-      {/* Details Section */}
-      <DetailSection />
-
-      {/* Source Selector */}
-      <SourceSelector />
-
-      {/* Episode Selector */}
-      <EpisodeSelector />
+    <div className="bg-black overflow-y-scroll min-h-screen">
+      <VideoPlayer
+        videoUrl={selectedEpisode?.play_url || currentEpisode?.play_url || ''}
+        onBack={navigateBackFunction}
+      />
+      <DetailSection
+        movieDetail={movieDetail} // Pass movie details to DetailSection
+      />
+      <SourceSelector
+        episodes={movieDetail.play_from[0]?.list || []}
+        onEpisodeChange={handleEpisodeChange}
+        onEpisodeSelect={handleEpisodeSelect}
+        selectedEpisode={selectedEpisode}
+      />
+      <EpisodeSelector
+        episodes={movieDetail.play_from[0]?.list || []}
+        onEpisodeSelect={handleEpisodeSelect}
+        selectedEpisode={selectedEpisode}
+      />
     </div>
   );
 };

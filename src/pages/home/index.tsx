@@ -1,34 +1,35 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { increment, decrement, incrementByAmount } from '../../features/counter/counterSlice';
+import { useEffect, useState } from "react";
+import Movies from "../../components/home/Movies";
+import Banner from "../../components/home/Banner";
 
 const Home: React.FC = () => {
-  const dispatch = useDispatch();
-  const count = useSelector((state: any) => state.counter.value);
+  const [baseMovieData, setBaseMovieData] = useState([]);
+  const [carouselMovieData, setCarouselMovieData] = useState([]);
 
+  const getRecommendedList = async () => {
+    const res = await fetch(
+      "https://cc3e497d.qdhgtch.com:2345/api/v1/movie/index_recommend"
+    );
+    const data = await res.json();
+    const filteredBaseData = data?.data?.filter(
+      (list: any) => list?.layout === "base"
+    );
+    const filteredCarouselData = data?.data?.filter(
+      (list: any) => list?.layout === "index_recommend_carousel"
+    );
+    setBaseMovieData(filteredBaseData);
+    setCarouselMovieData(filteredCarouselData);
+  };
+  // console.log(carouselMovieData, "cmd");
+  useEffect(() => {
+    getRecommendedList();
+  }, []);
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-background text-text">
-      <h1 className="text-4xl font-bold mb-6">Counter: {count}</h1>
-      <div className="flex space-x-4">
-        <button
-          onClick={() => dispatch(increment())}
-          className="px-4 py-2 bg-accent text-background rounded-md shadow hover:bg-opacity-80 transition"
-        >
-          Increment
-        </button>
-        <button
-          onClick={() => dispatch(decrement())}
-          className="px-4 py-2 bg-accent text-background rounded-md shadow hover:bg-opacity-80 transition"
-        >
-          Decrement
-        </button>
-        <button
-          onClick={() => dispatch(incrementByAmount(5))}
-          className="px-4 py-2 bg-accent text-background rounded-md shadow hover:bg-opacity-80 transition"
-        >
-          Increment by 5
-        </button>
-      </div>
+    <div className="bg-background text-text min-h-screen pb-32 flex flex-col gap-10">
+      {carouselMovieData && <Banner list={carouselMovieData} />}
+      {baseMovieData?.map((movieData: any, index: any) => (
+        <Movies key={index} movieData={movieData} />
+      ))}
     </div>
   );
 };

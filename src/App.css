@@ -36,3 +36,35 @@
     transform: rotate(360deg);
   }
 }
+
+@layer base {
+  /* Remove scrollbar */
+  .remove-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    border-radius: 0px;
+  }
+
+  .remove-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .remove-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 0px;
+  }
+
+  .remove-scrollbar::-webkit-scrollbar-thumb:hover {
+    /* background: #1e2238; */
+    background: transparent;
+  }
+}
+
+.topic-bg {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.gradient-bg {
+  border-radius: 4px 0px;
+  background: linear-gradient(180deg, #ff1f47 0%, #ff326f 100%);
+}

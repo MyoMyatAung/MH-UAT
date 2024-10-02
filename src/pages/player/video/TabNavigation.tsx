@@ -1,23 +1,50 @@
 import React, { useState } from 'react';
 
-const tabs = ['详情', '评论 99+', '发弹幕'];
+const ProductTab: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'详情' | '评论'>('详情');
 
-const TabNavigation: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<number>(0);
+  const handleTabClick = (tab: '详情' | '评论') => {
+    setActiveTab(tab);
+  };
 
   return (
-    <div className="flex justify-around border-b border-gray-700 text-white">
-      {tabs.map((tab, index) => (
+    <div>
+      <div className="flex border-b border-gray-300">
         <button
-          key={index}
-          className={`py-2 px-4 ${activeTab === index ? 'border-b-2 border-orange-500' : ''}`}
-          onClick={() => setActiveTab(index)}
+          className={`px-4 py-2 text-sm font-medium focus:outline-none ${
+            activeTab === '详情'
+              ? 'border-b-2 border-orange-500 text-orange-500'
+              : 'text-gray-600'
+          }`}
+          onClick={() => handleTabClick('详情')}
         >
-          {tab}
+          详情
         </button>
-      ))}
+        <button
+          className={`px-4 py-2 ml-4 text-sm font-medium focus:outline-none ${
+            activeTab === '评论'
+              ? 'border-b-2 border-orange-500 text-orange-500'
+              : 'text-gray-600'
+          }`}
+          onClick={() => handleTabClick('评论')}
+        >
+          评论 99+
+        </button>
+      </div>
+      <div className="mt-4">
+        {activeTab === '详情' && (
+          <div>
+            {/* Your code for product details goes here */}
+          </div>
+        )}
+        {activeTab === '评论' && (
+          <div>
+            {/* Your code for product reviews goes here */}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default TabNavigation;
+export default ProductTab;
