@@ -1,78 +1,97 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import Hls from 'hls.js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import floatingScreen from '../../../assets/floatingScreen.png';
 
-interface MovieDetail {
-  name: string;
-  area: string;
-  year: string;
-  score: string;
-  cover: string;
-  tags: { tag_id: number | null; name: string }[];
-  play_from: {
-    name: string;
-    code: string;
-    list: { episode_id: number | null; episode_name: string; play_url: string }[];
-  }[];
+interface VideoPlayerProps {
+  videoUrl: string;
+  onBack: () => void;
 }
 
-const VideoPlayer: React.FC = () => {
-  const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null); // Store the resolved video URL
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const hlsRef = useRef<Hls | null>(null);
 
-  const getMovieDetail = async () => {
-    const id = '204269';
-    const res = await fetch(
-      `https://cc3e497d.qdhgtch.com:2345/api/v1/movie/detail?id=${id}`
-    );
-    const data = await res.json();
-    console.log(data?.data, 'movie data');
-    setMovieDetail(data?.data);
-
-    // Assume there's an endpoint or function to resolve the play_url
-    const resolvedUrl = await resolvePlayUrl(data?.data?.play_from?.[0]?.list?.[0]?.play_url);
-    setVideoUrl(resolvedUrl);
-  };
-
-  // Mock function to resolve the play_url, replace with actual parsing logic or API call
-  const resolvePlayUrl = async (encodedUrl: string | undefined): Promise<string | null> => {
-    if (!encodedUrl) return null;
-    
-    // Assuming there's an API or service to decode the play_url
-    const res = await fetch(`https://example.com/parse?url=${encodedUrl}`);
-    const data = await res.json();
-    return data?.resolvedUrl; // Assuming the resolved URL comes back here
-  };
-
+  // Set up HLS for .m3u8 files
   useEffect(() => {
-    getMovieDetail();
-  }, []);
+    const initHls = () => {
+      if (Hls.isSupported()) {
+        if (hlsRef.current) {
+          hlsRef.current.destroy();
+        }
+
+        const hls = new Hls();
+        hls.loadSource(videoUrl);
+        hls.attachMedia(videoRef.current as HTMLMediaElement);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          console.log('Video is ready to play');
+        });
+
+        hlsRef.current = hls;
+      } else if (videoRef.current?.canPlayType('application/vnd.apple.mpegurl')) {
+        // For Safari or browsers with native HLS support
+        videoRef.current.src = videoUrl;
+      }
+    };
+
+    if (videoUrl && videoRef.current) {
+      initHls();
+    }
+
+    return () => {
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+      }
+    };
+  }, [videoUrl]);
+
+  // Function to enable Picture-in-Picture (PiP)
+  const handlePictureInPicture = () => {
+    if (videoRef.current) {
+      if (document.pictureInPictureElement) {
+        document.exitPictureInPicture().catch((error) => {
+          console.error("Failed to exit PiP:", error);
+        });
+      } else {
+        videoRef.current.requestPictureInPicture().catch((error) => {
+          console.error("Failed to enter PiP:", error);
+        });
+      }
+    }
+  };
 
   return (
-    <div className="p-4">
-      {/* Video Player */}
-      {videoUrl ? (
-        <video width="100%" height="auto" controls controlsList="nodownload">
-          <source src={videoUrl} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      ) : (
-        <p>No video available.</p>
-      )}
+    <div className="relative bg-player">
+      <video
+        ref={videoRef}
+        width="100%"
+        height="auto"
+        controls
+        controlsList="nodownload"
+        style={{ objectFit: 'contain', minHeight: '40vh'}}
+      >
+        Your browser does not support the video tag.
+      </video>
 
-      {/* Movie Details */}
-      {movieDetail && (
-        <div className="mt-4">
-          <h1 className="text-2xl font-bold">{movieDetail.name}</h1>
-          <p className="text-gray-600">Year: {movieDetail.year}</p>
-          <p className="text-gray-600">Score: {movieDetail.score}</p>
-          <div className="flex gap-2 mt-2">
-            {movieDetail.tags.map((tag) => (
-              <span key={tag.tag_id} className="px-2 py-1 bg-gray-800 text-white rounded">
-                {tag.name}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Back button */}
+      <div className="absolute top-0 left-0 p-4">
+        <button onClick={onBack} className="text-white">
+          <FontAwesomeIcon icon={faArrowLeft} size="1x" />
+        </button>
+      </div>
+
+      {/* Picture-in-Picture button */}
+      <div className="absolute top-0 right-0 p-4">
+        <button onClick={handlePictureInPicture} className="text-white">
+          {/* <FontAwesomeIcon icon={faExternalLinkAlt} size="1x" /> */}
+          <img
+              src={floatingScreen}
+              alt=""
+              className="h-5 w-5"
+            />
+        </button>
+      </div>
     </div>
   );
 };
