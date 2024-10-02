@@ -9,7 +9,6 @@ import {
 import Header from "./components/Header";
 import FooterNav from "./components/FooterNav";
 
-
 // Lazy load the pages
 const Home = React.lazy(() => import("./pages/home"));
 const Search = React.lazy(() => import("./pages/search"));
@@ -35,7 +34,14 @@ const App: React.FC = () => {
 
   // Hide header and footer when the current path is "/player/:id" or "/login"
   const hideHeaderFooter =
-    location.pathname.startsWith("/player") || location.pathname === "/login";
+    location.pathname.startsWith("/player") ||
+    location.pathname === "/login" ||
+    location.pathname.startsWith("/search") ||
+    location.pathname === "/search_overlay" ||
+    location.pathname === "/profile" ||
+    location.pathname === "/settings" ||
+    location.pathname === "/notifications" ||
+    location.pathname === "/history";
 
   useEffect(() => {
     // Redirect to login if not logged in and trying to access any route other than login
@@ -48,8 +54,8 @@ const App: React.FC = () => {
     <div className="flex flex-col min-h-screen">
       {/* Conditionally render Header */}
       {!hideHeaderFooter && <Header />}
-      
-      <div className="flex-grow overflow-auto bg-black">
+
+      <div className="flex-grow overflow-auto ">
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -73,20 +79,20 @@ const App: React.FC = () => {
             <Route
               path="/search"
               element={
-                <ProtectedRoute>
-                  <Main />
-                </ProtectedRoute>
+                // <ProtectedRoute>
+                <Main />
+                // </ProtectedRoute>
               }
             />
-             <Route
+            <Route
               path="/search_overlay"
               element={
-                <ProtectedRoute>
-                  <Search />
-                </ProtectedRoute>
+                // <ProtectedRoute>
+                <Search />
+                // </ProtectedRoute>
               }
             />
->
+
             <Route
               path="/explorer"
               element={
@@ -149,6 +155,7 @@ const App: React.FC = () => {
 
       {/* Conditionally render FooterNav */}
       {!hideHeaderFooter && <FooterNav />}
+      {location.pathname === "/profile" && <FooterNav />}
     </div>
   );
 };
