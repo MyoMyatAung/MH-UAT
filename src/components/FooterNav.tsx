@@ -15,7 +15,7 @@ const Footer: FC = () => {
   const [selectedMenu, setSelectedMenu] = useState('home');
 
   return (
-    <footer className={`bg-gray-900 fixed bottom-0 left-0 w-full shadow-lg`}>
+    <footer className={`bg-gray-900 fixed bottom-0 left-0 w-full shadow-lg z-50`}>
       <div className="container mx-auto px-4 py-1 flex justify-between items-center">
         
         {/* Home Icon */}
