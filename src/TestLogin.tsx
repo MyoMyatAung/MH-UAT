@@ -3,7 +3,7 @@ import {
   encryptWithRsa,
   generateSignature,
   decryptWithAes,
-} from "./src/services/newEncryption";
+} from "./services/newEncryption";
 
 const API_URL = "https://cc3e497d.qdhgtch.com:2345/api/";
 const PUBLIC_KEY = `-----BEGIN RSA PUBLIC KEY-----

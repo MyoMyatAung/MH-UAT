@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import ForgotPass from "./ForgotPass";
 import { useDispatch, useSelector } from "react-redux";
 import { setCaptchaOpen } from "../../features/login/ModelSlice";
+import Captch from "./Captch";
+import { useNavigate } from "react-router-dom";
 
 interface LoginEmailProps {
   handleBack: () => void; // Accept handleBack as a prop
@@ -13,6 +15,7 @@ interface LoginEmailProps {
 
 const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
   const dispatch = useDispatch();
+  const { openCaptcha } = useSelector((state: any) => state.model);
   const [forgot, setForgot] = useState(false); 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -21,6 +24,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+  const navigate = useNavigate();
 
   const validatePassword = (password: string) => {
     const lengthValid = password.length >= 8 && password.length <= 25;
@@ -34,6 +38,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
     try {
       dispatch(setCaptchaOpen(true));
       console.log("Login successful");
+      // navigate('home');
     } catch (err) {
       setError("Login failed. Please check your credentials.");
     }
@@ -70,6 +75,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
       {/* Conditionally render the ForgotPass component if `forgot` is true */}
+      {openCaptcha && <Captch username={email} password={password} />}
       {forgot ? (
         <ForgotPass forgot={forgot} setForgot={setForgot} />
       ) : (
@@ -81,10 +87,10 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
               animate="visible"
               exit="exit"
               variants={variants}
-              drag="y"
-              dragConstraints={{ top: 0 }}
-              dragElastic={0.2}
-              onDragEnd={handleDragEnd}
+              // drag="y"
+              // dragConstraints={{ top: 0 }}
+              // dragElastic={0.2}
+              // onDragEnd={handleDragEnd}
             >
               <div className="flex flex-col justify-center items-center gap-[16px]">
                 <motion.p className="w-[60px] h-[4px] drag_line mt-[12px] cursor-pointer bg-gray-400"></motion.p>
@@ -112,7 +118,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
                 >
                   <div className="relative ">
                     <input
-                      type="email"
+                      type="text"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       onFocus={() => setIsFocusedEmail(true)}

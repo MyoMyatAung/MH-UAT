@@ -70,7 +70,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-      {openCaptcha && <Captch />}
+      {openCaptcha && <Captch  username={email} password={password} />}
 
       {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
       <AnimatePresence>

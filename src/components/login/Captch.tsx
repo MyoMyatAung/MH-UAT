@@ -1,36 +1,22 @@
 import React, { useState, useEffect } from "react";
 import capClose from "../../assets/login/capClose.svg";
-import {
-  encryptWithRsa,
-  generateSignature,
-  decryptWithAes,
-} from "../../services/newEncryption";
 import { useDispatch } from "react-redux";
 import { setCaptchaOpen } from "../../features/login/ModelSlice";
+import { getCaptcha, login } from "../../services/userService"; // Importing service methods
+import { useNavigate } from "react-router-dom";
 
-const API_URL = "https://cc3e497d.qdhgtch.com:2345/api/";
-const PUBLIC_KEY = `-----BEGIN RSA PUBLIC KEY-----
-MIIBCgKCAQEA02F/kPg5A2NX4qZ5JSns+bjhVMCC6JbTiTKpbgNgiXU+Kkorg6Dj
-76gS68gB8llhbUKCXjIdygnHPrxVHWfzmzisq9P9awmXBkCk74Skglx2LKHa/mNz
-9ivg6YzQ5pQFUEWS0DfomGBXVtqvBlOXMCRxp69oWaMsnfjnBV+0J7vHbXzUIkqB
-LdXSNfM9Ag5qdRDrJC3CqB65EJ3ARWVzZTTcXSdMW9i3qzEZPawPNPe5yPYbMZIo
-XLcrqvEZnRK1oak67/ihf7iwPJqdc+68ZYEmmdqwunOvRdjq89fQMVelmqcRD9RY
-e08v+xDxG9Co9z7hcXGTsUquMxkh29uNawIDAQAB
------END RSA PUBLIC KEY-----`;
-
-interface CaptchProps {}
-
-const Captch: React.FC<CaptchProps> = ({}) => {
+const Captch: React.FC<{username: string, password: string}> = ({username, password}) => {
   const dispatch = useDispatch();
   const [captchaCode, setCaptchaCode] = useState("");
   const [captchaImage, setCaptchaImage] = useState<string | null>(null);
-  const [keyStatus, setkeyStatus] = useState("");
+  const [keyStatus, setKeyStatus] = useState("");
   const [error, setError] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const navigate = useNavigate();
 
   // Fetch captcha when the component loads
   useEffect(() => {
-    getCaptcha();
+    fetchCaptcha();
   }, []);
 
   // Update button state based on captcha input
@@ -38,22 +24,39 @@ const Captch: React.FC<CaptchProps> = ({}) => {
     setIsButtonDisabled(captchaCode.length !== 4);
   }, [captchaCode]);
 
-  const getCaptcha = async () => {
+  // Function to fetch captcha using userService
+  const fetchCaptcha = async () => {
     try {
-      const result = await fetch(`${API_URL}v1/user/get_captcha`, {
-        method: "GET",
-      });
-      const captcha = await result.json();
-      setCaptchaImage(captcha.data.base64);
-      setkeyStatus(captcha.data.key);
+      const { captchaImage, keyStatus } = await getCaptcha();
+      setCaptchaImage(captchaImage);
+      setKeyStatus(keyStatus);
     } catch (err) {
       setError("Failed to load captcha");
       console.error("Captcha error:", err);
     }
   };
 
+  // Handle login after verifying the captcha
   const handleLogin = async () => {
-    // Login logic here
+    try {
+      // Call login from userService with captcha verification
+      const loginResponse = await login(username, password, captchaCode, keyStatus);
+      console.log("Login Success:", loginResponse);
+  
+      // Set the token in localStorage
+      localStorage.setItem("authToken", JSON.stringify(loginResponse));
+  
+      // Close the captcha modal and redirect to home (or the desired route)
+      dispatch(setCaptchaOpen(false));
+  
+      // Manually redirect to the home page after login
+      setTimeout(() => {
+        navigate('/home');
+      }, 1000);
+    } catch (err) {
+      setError("Login failed");
+      console.error("Login error:", err);
+    }
   };
 
   return (
@@ -88,6 +91,7 @@ const Captch: React.FC<CaptchProps> = ({}) => {
           >
             Sure
           </button>
+          {error && <div className="text-red-500 mt-2 text-center">{error}</div>}
         </div>
       )}
     </div>

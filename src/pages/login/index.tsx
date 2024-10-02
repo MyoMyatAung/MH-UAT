@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { loginUser } from "../../services/userService";
 import { motion, AnimatePresence } from "framer-motion";
 import "./login.css";
 import logo from "../../assets/login/logo.png";
@@ -53,8 +52,8 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="h-screen whole flex items-center justify-center overflow-hidden">
-      {openCaptcha && <Captch /> }
+    <div className="h-screen whole flex items-center justify-center overflow-hidden ">
+      {/* {openCaptcha && <Captch /> } */}
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -63,10 +62,10 @@ const Login: React.FC = () => {
             animate="visible"
             exit="exit"
             variants={variants}
-            drag="y"
-            dragConstraints={{ top: 0 }}
-            dragElastic={0.2}
-            onDragEnd={handleDragEnd}
+            // drag="y"
+            // dragConstraints={{ top: 0 }}
+            // dragElastic={0.2}
+            // onDragEnd={handleDragEnd}
           >
             <div className="flex flex-col justify-center items-center gap-[32px]">
               <motion.p className="w-[60px] h-[4px] drag_line mt-[12px] cursor-pointer" />
