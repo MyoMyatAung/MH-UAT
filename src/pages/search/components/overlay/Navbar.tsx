@@ -1,25 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setHistoryData } from "../../slice/HistorySlice";
 
-interface NavbarProps {
-  query: string;
-  setQuery: (query: string) => void;
-  onSearch: () => void; // Add onSearch prop to trigger search
-}
+const Navbar: React.FC = () => {
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
 
-const Navbar: React.FC<NavbarProps> = ({ query, setQuery, onSearch }) => {
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query.length !== 0) {
-      onSearch(); // Trigger the search
-    } else {
-      console.log("need query");
+    if (query.trim()) {
+      dispatch(setHistoryData({ data: query.trim() }));
+      navigate(`/search?query=${encodeURIComponent(query.trim())}`);
     }
   };
 
   return (
     <div className="relative">
       <form
-        onSubmit={handleSearch}
+        onSubmit={handleSubmit}
         className="flex gap-4 w-full py-3 pt-3 px-3 z-10 input-bg fixed items-center justify-between"
       >
         <div className="absolute left-6">

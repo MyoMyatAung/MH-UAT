@@ -37,7 +37,7 @@
   display: flex;
   height: 36px;
   padding: 8.062px 16.123px;
-  padding-left: 35px;
+  padding-left: 37px;
   align-items: center;
   gap: 4px;
   flex: 1 0 0;
@@ -60,7 +60,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.16);
+  /* background: rgba(255, 255, 255, 0.16); */
 }
 
 .history-tab,
@@ -226,4 +226,81 @@
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+.image-container {
+  position: relative;
+  background-image: url("../search/images/cardSkeleton.png");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  opacity: 1;
+  border-radius: 8.934px;
+}
+
+.image-placeholder {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.image-loaded {
+  opacity: 1;
+}
+
+.rank {
+  display: flex;
+  width: 230px; /* Fixed width for all rank divs */
+  min-width: 230px; /* Ensures a minimum width */
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--White-10, rgba(255, 255, 255, 0.1));
+  background: linear-gradient(180deg, #1b2a34 0%, #1f1f22 46%);
+  /* background: linear-gradient(180deg, #341b1b 0%, #1f1f22 46%); */
+  flex-shrink: 0; /* Prevent shrinking when space is limited */
+  word-wrap: break-word; /* Wrap long words */
+  white-space: normal; /* Allow text to wrap normally */
+  overflow: hidden; /* Prevents text overflow */
+  height: auto; /* Allow the height to adjust based on content */
+}
+
+.rank h1 {
+  color: var(--Secondary-Orange, #ff6a33);
+  font-family: "PingFang SC";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.number {
+  text-align: center;
+  font-family: "PingFang SC";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.rank_word {
+  color: var(--White-100, #fff);
+  font-family: "PingFang SC";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.container_scroll {
+  display: flex;
+  gap: 16px; /* Ensure space between columns */
+  overflow-x: auto; /* Enable horizontal scroll */
+  white-space: nowrap; /* Prevent line breaks in columns */
+  align-items: flex-start; /* Align to the top to avoid equal height */
+}
+
+.container_scroll::-webkit-scrollbar {
+  display: none; /* Hide the scrollbar */
 }

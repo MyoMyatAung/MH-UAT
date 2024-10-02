@@ -1,20 +1,43 @@
 import { Link } from "react-router-dom";
+import ImageWithPlaceholder from "./ImgPlaceholder";
+import Ads from "./Ads";
 
-const Movies = ({ movies }: { movies: any }) => {
+const Movies = ({
+  movies,
+  advert,
+  adLoading,
+  adFetching,
+}: {
+  movies: any;
+  advert: any;
+  adLoading: any;
+  adFetching: any;
+}) => {
   return (
     <div className="mb-5">
       <div className="movie_title px-3 py-1">
         共 {movies?.length} 条搜索结果
       </div>
-      {movies?.map((movie: any) => (
-        <div className="space-y-1.5 p-3" key={movie.id}>
+      {adLoading || adFetching ? (
+        <div className="ads text-white">Ads Loading...</div>
+      ) : (
+        <div className="my-5">
+          <Ads advert={advert} />
+        </div>
+      )}
+
+      {movies?.map((movie: any, index: any) => (
+        <div className="space-y-1.5 p-3" key={index}>
           <div className="flex items-stretch gap-5 relative">
             <Link to={`/`} className="relative">
-              <img
+              <ImageWithPlaceholder
                 src={movie?.cover}
-                alt={movie?.name}
-                className="rounded-md max-w-[92px] h-[127px] object-cover object-center"
+                alt={`Picture of ${movie?.name}`}
+                width={92}
+                height={127}
+                className="rounded-md w-[92px] h-[127px] object-cover object-center"
               />
+
               <div className="top-0 right-0 search_card_score z-1 absolute">
                 <span>{movie?.dynamic}</span>
               </div>
@@ -23,13 +46,19 @@ const Movies = ({ movies }: { movies: any }) => {
             {/* Ensure flex-grow and min-width-0 to handle truncation properly */}
             <div className="card-content flex-grow min-w-0">
               <div className="flex flex-col">
-                <div className="flex justify-between items-center">
-                  <Link to={`/`}>
-                    <h1 className="detail-head-text truncate w-full">
-                      {movie?.name}
-                    </h1>
-                  </Link>
-                </div>
+                <div className="flex justify-between items-center"></div>
+                <Link to={`/`}>
+                  <h1
+                    className="detail-head-text truncate w-full"
+                    // Apply the highlighted text with color
+                    dangerouslySetInnerHTML={{
+                      __html: movie?.highlight.replace(
+                        /<em>(.*?)<\/em>/g,
+                        '<span style="color: #F54100;">$1</span>'
+                      ),
+                    }}
+                  />
+                </Link>
 
                 {/* Render members */}
                 <div className="detail-text mt-1 truncate w-full">

@@ -1,9 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const Ads = () => {
+const Ads = ({ advert }: { advert: any }) => {
   return (
     <div className="px-3">
-      <div className="ads">Ads</div>
+      <Link className="ads" to={advert?.url}>
+        <img src={advert?.image} alt="" />
+      </Link>
     </div>
   );
 };

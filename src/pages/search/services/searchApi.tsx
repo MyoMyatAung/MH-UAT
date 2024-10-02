@@ -24,12 +24,35 @@ export const searchApi = createApi({
         { type: "SearchMovie", id: arg },
       ],
     }),
+
     getTags: builder.query<any, void>({
       query: () => {
         return `/app/config`;
       },
     }),
+
+    getAds: builder.query<any, void>({
+      query: () => {
+        return `/advert/config`;
+      },
+    }),
+    getSearchLate: builder.query<any, void>({
+      query: () => {
+        return `/movie/search_lately_words`;
+      },
+    }),
+    getSearchRanking: builder.query<any, void>({
+      query: () => {
+        return `/movie/search_ranking`;
+      },
+    }),
   }),
 });
 
-export const { useGetSearchMovieQuery, useGetTagsQuery } = searchApi;
+export const {
+  useGetSearchMovieQuery,
+  useGetTagsQuery,
+  useGetAdsQuery,
+  useGetSearchLateQuery,
+  useGetSearchRankingQuery,
+} = searchApi;
