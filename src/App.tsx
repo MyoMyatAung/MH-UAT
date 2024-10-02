@@ -79,17 +79,17 @@ const App: React.FC = () => {
             <Route
               path="/search"
               element={
-                // <ProtectedRoute>
-                <Main />
-                // </ProtectedRoute>
+                <ProtectedRoute>
+                  <Main />
+                </ProtectedRoute>
               }
             />
             <Route
               path="/search_overlay"
               element={
-                // <ProtectedRoute>
-                <Search />
-                // </ProtectedRoute>
+                <ProtectedRoute>
+                  <Search />
+                </ProtectedRoute>
               }
             />
 
