@@ -9,9 +9,11 @@ import {
 import Header from "./components/Header";
 import FooterNav from "./components/FooterNav";
 
+
 // Lazy load the pages
 const Home = React.lazy(() => import("./pages/home"));
 const Search = React.lazy(() => import("./pages/search"));
+const Main = React.lazy(() => import("./pages/search/Main"));
 const Explorer = React.lazy(() => import("./pages/explorer"));
 const Profile = React.lazy(() => import("./pages/profile"));
 const Player = React.lazy(() => import("./pages/player"));
@@ -72,10 +74,19 @@ const App: React.FC = () => {
               path="/search"
               element={
                 <ProtectedRoute>
+                  <Main />
+                </ProtectedRoute>
+              }
+            />
+             <Route
+              path="/search_overlay"
+              element={
+                <ProtectedRoute>
                   <Search />
                 </ProtectedRoute>
               }
             />
+>
             <Route
               path="/explorer"
               element={
