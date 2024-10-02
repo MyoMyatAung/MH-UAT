@@ -9,7 +9,7 @@ interface EpisodeSelectorProps {
 
 const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({ episodes, selectedEpisode, onEpisodeSelect }) => {
   return (
-    <div className="overflow-x-auto whitespace-nowrap py-3"> {/* Horizontal scroll container */}
+    <div className="overflow-x-auto whitespace-nowrap m-4 bg-black"> {/* Horizontal scroll container */}
       <div className="inline-flex space-x-3"> {/* Inline flex for horizontal layout */}
         {episodes.map((episode) => (
           <button
@@ -17,8 +17,8 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({ episodes, selectedEpi
             onClick={() => onEpisodeSelect(episode)}
             className={`py-2 px-4 rounded-lg focus:outline-none relative ${
               selectedEpisode?.episode_id === episode.episode_id
-                ? 'bg-[#2D2D2D] text-orange-500'
-                : 'bg-[#3B3B3B] text-gray-300'
+                ? 'bg-gray-800 text-white'
+                : 'bg-gray-700 text-gray-300'
             }`}
             style={{ minWidth: '100px', maxWidth: '120px' }}  // Adjust width for uniformity
           >

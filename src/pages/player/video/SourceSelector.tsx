@@ -27,7 +27,7 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({ episodes, onEpisodeChan
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className="bg-[#1C1C1C] p-4 mb-4">
+    <div className="bg-black p-4 mb-4">
       {/* Section header with title and expand all */}
       <div className="flex justify-between items-center mb-2">
         <h4 className="text-white text-base font-bold">Episodes</h4>
@@ -42,15 +42,15 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({ episodes, onEpisodeChan
       </div>
 
       {/* Source Selector Area */}
-      <div className="bg-[#C8A370] p-4 flex justify-between items-center rounded-lg shadow-sm">
+      <div className="bg-[#C8A370] p-4 flex justify-between items-center rounded-lg shadow-sm mt-5">
         <div className="text-black leading-tight">
-          <h4 className="font-bold text-base">Duo Duo Source</h4>
-          <p className="text-sm">29 videos</p>
+          <span className="text-sm"><span className="font-bold">Duo Duo Source</span> 29 videos</span>
+          
         </div>
 
         {/* Right Side: Switch resource (切换资源) button triggers the modal */}
         <button className="text-[#4B4B4B] flex items-center" onClick={() => { openModal(); setSource('sources'); }}>
-          <span className="text-base font-semibold">Switch Resource</span>
+          <span className="font-semibold text-sm">Switch Resource</span>
           <FontAwesomeIcon icon={faChevronRight} className="ml-2 text-md" />
         </button>
       </div>

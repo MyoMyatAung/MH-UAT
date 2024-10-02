@@ -62,14 +62,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack }) => {
   };
 
   return (
-    <div className="relative bg-gray-800">
+    <div className="relative bg-player">
       <video
         ref={videoRef}
         width="100%"
         height="auto"
         controls
         controlsList="nodownload"
-        style={{ objectFit: 'contain'}}
+        style={{ objectFit: 'contain', minHeight: '40vh'}}
       >
         Your browser does not support the video tag.
       </video>

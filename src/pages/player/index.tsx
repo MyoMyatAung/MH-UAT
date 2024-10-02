@@ -16,6 +16,12 @@ interface MovieDetail {
   area: string;
   year: string;
   score: string;
+  content: string;
+  cover: string;
+  type_name: string;
+  tags: { name: string }[];
+  comments_count: string;
+  popularity_score: number;
   play_from: {
     name: string;
     code: string;
@@ -65,20 +71,25 @@ const DetailPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-[#1b1b1b] overflow-y-scroll min-h-screen">
+    <div className="bg-black overflow-y-scroll min-h-screen">
       <VideoPlayer
         videoUrl={selectedEpisode?.play_url || currentEpisode?.play_url || ''}
         onBack={navigateBackFunction}
       />
-      <DetailSection />
+      <DetailSection
+        movieDetail={movieDetail} // Pass movie details to DetailSection
+      />
       <SourceSelector
         episodes={movieDetail.play_from[0]?.list || []}
         onEpisodeChange={handleEpisodeChange}
         onEpisodeSelect={handleEpisodeSelect}
         selectedEpisode={selectedEpisode}
       />
-      <EpisodeSelector episodes={movieDetail.play_from[0]?.list || []} onEpisodeSelect={handleEpisodeSelect}
-        selectedEpisode={selectedEpisode}/>
+      <EpisodeSelector
+        episodes={movieDetail.play_from[0]?.list || []}
+        onEpisodeSelect={handleEpisodeSelect}
+        selectedEpisode={selectedEpisode}
+      />
     </div>
   );
 };

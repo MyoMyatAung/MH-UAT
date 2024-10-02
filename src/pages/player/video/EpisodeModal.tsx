@@ -85,11 +85,11 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
 
 {episode.episode_name}
                     {episode?.episode_id === selectedEpisodeId && (
-                      <div className="absolute left-5/1 transform -translate-x-1/2 loader">
+                      <span className="transform -translate-x-1/2 loader ml-5 -mt-1.5">
                         <div></div>
                         <div></div>
                         <div></div>
-                      </div>
+                      </span>
                     )}
                   </button>
                 ))}

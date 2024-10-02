@@ -13,6 +13,7 @@ module.exports = {
         accent: '#FFAB40',
         selected: '#FF5722',
         unselected: '#4B5563',
+        player: 'black',
       },
       fontSize: {
         'xs': '0.75rem',   // Extra small text
