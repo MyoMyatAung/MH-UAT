@@ -23,13 +23,12 @@ const Everyone = ({
     }
   };
   return (
-    <div className="px-3 mt-8">
+    <div className="px-3 mt-5">
       <div className="flex justify-between items-center">
         <h1 className="history-title">大家都在搜</h1>
         <a
           className="cursor-pointer "
           onClick={() => {
-            console.log("con");
             refetch();
           }}
         >
@@ -49,7 +48,7 @@ const Everyone = ({
         </a>
       </div>
       {Loading || Fetching ? (
-        <div className="text-white text-center pt-12">Loading...</div>
+        <div className="text-white text-center pt-12"></div>
       ) : (
         <div className="flex flex-wrap gap-3 py-3">
           {lists?.map((list: any, index: any) => (

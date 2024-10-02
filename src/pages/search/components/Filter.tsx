@@ -8,6 +8,9 @@ interface FilterProps {
   sortActive: string;
   settypeActive: React.Dispatch<React.SetStateAction<string>>;
   typeActive: string;
+  res_type: any;
+  sort: any;
+  type: any;
 }
 
 const Filter: React.FC<FilterProps> = ({
@@ -17,9 +20,10 @@ const Filter: React.FC<FilterProps> = ({
   sortActive,
   settypeActive,
   typeActive,
+  res_type,
+  sort,
+  type,
 }) => {
-  const { data, isLoading, isFetching } = useGetTagsQuery();
-
   const [showTabs, setShowTabs] = useState(false);
 
   const handleFilterClick = () => {
@@ -44,10 +48,6 @@ const Filter: React.FC<FilterProps> = ({
     };
   }, []);
 
-  const res_type = data?.data?.movie_search_screen?.res_type;
-  const sort = data?.data?.movie_search_screen?.sort;
-  const type = data?.data?.movie_search_screen?.type;
-
   useEffect(() => {
     if (res_type && sort && type) {
       setresActive(res_type[0]?.value);
@@ -59,8 +59,6 @@ const Filter: React.FC<FilterProps> = ({
   useEffect(() => {
     setShowTabs(false);
   }, [resActive, sortActive, typeActive]);
-
-  if (isLoading || isFetching) return <></>;
 
   return (
     <div>

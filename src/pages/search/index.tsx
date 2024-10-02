@@ -6,6 +6,7 @@ import History from "./components/History";
 import Everyone from "./components/Everyone";
 import { useGetAdsQuery, useGetSearchLateQuery } from "./services/searchApi";
 import Rankings from "./components/Rankings";
+import Loader from "./components/Loader";
 
 const Search: React.FC = () => {
   const {
@@ -26,22 +27,25 @@ const Search: React.FC = () => {
     <>
       <div className="search-bg"></div>
       <Navbar />
-      <div className="mt-[90px]">
-        {adLoading || adFetching ? (
-          <div className="ads text-white">Ads Loading...</div>
-        ) : (
-          <Ads advert={advert} />
-        )}
+      <div className="lg:container lg:mx-auto lg:px-[100px]">
+        <div className="mt-[70px]">
+          {adLoading || adFetching ? (
+            <div className="ads h-[100px] text-white">
+              <Loader />
+            </div>
+          ) : (
+            <Ads advert={advert} />
+          )}
+        </div>
+        <History />
+        <Everyone
+          lists={search_late?.data}
+          Loading={lateLoading}
+          Fetching={lateFetching}
+          refetch={refetch}
+        />
+        <Rankings />
       </div>
-
-      <History />
-      <Everyone
-        lists={search_late?.data}
-        Loading={lateLoading}
-        Fetching={lateFetching}
-        refetch={refetch}
-      />
-      <Rankings />
     </>
   );
 };

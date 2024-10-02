@@ -1,11 +1,17 @@
-import { useState } from "react";
 import "../search.css";
 import { useDispatch, useSelector } from "react-redux";
-import { clearData, selectHistoryData } from "../slice/HistorySlice";
+import {
+  clearData,
+  selectHistoryData,
+  setHistoryData,
+} from "../slice/HistorySlice";
+import { useNavigate } from "react-router-dom";
 
 const History = () => {
   const historys = useSelector(selectHistoryData);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   if (historys.length === 0) {
     return <div className="mt-12"></div>;
@@ -15,8 +21,15 @@ const History = () => {
     dispatch(clearData({}));
   };
 
+  const handleSearch = (query: any) => {
+    if (query.trim()) {
+      dispatch(setHistoryData({ data: query.trim() }));
+      navigate(`/search?query=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
   return (
-    <div className="px-3 mt-12">
+    <div className="px-3 mt-5">
       <div className="flex justify-between items-center">
         <h1 className="history-title">搜索历史</h1>
         <button onClick={handleDelete}>
@@ -36,8 +49,14 @@ const History = () => {
         </button>
       </div>
       <div className="flex flex-wrap gap-3 py-3">
-        {historys?.map((history: any) => (
-          <div className="history-tab">{history}</div>
+        {historys?.map((history: any, index: any) => (
+          <button
+            className="history-tab"
+            key={index}
+            onClick={() => handleSearch(history)}
+          >
+            {history}
+          </button>
         ))}
       </div>
     </div>

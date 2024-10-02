@@ -2,10 +2,15 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Movies from "./components/Movies";
 import Filter from "./components/Filter";
-import { useGetAdsQuery, useGetSearchMovieQuery } from "./services/searchApi";
+import {
+  useGetAdsQuery,
+  useGetSearchMovieQuery,
+  useGetTagsQuery,
+} from "./services/searchApi";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setHistoryData } from "./slice/HistorySlice";
+import Loader from "./components/Loader";
 
 const Main = () => {
   const [searchParams] = useSearchParams();
@@ -15,6 +20,15 @@ const Main = () => {
     isLoading: adLoading,
     isFetching: adFetching,
   } = useGetAdsQuery();
+  const {
+    data: tabs,
+    isLoading: tabLoading,
+    isFetching: tabFetching,
+  } = useGetTagsQuery();
+
+  const res_type = tabs?.data?.movie_search_screen?.res_type;
+  const sort = tabs?.data?.movie_search_screen?.sort;
+  const type = tabs?.data?.movie_search_screen?.type;
 
   const advert = ads?.data?.search_result_up?.data;
 
@@ -63,7 +77,6 @@ const Main = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data.data.list);
       if (currentPage === 1) {
         setMovies([]);
         setMovies(data.data.list); // Replace movies for a new search
@@ -82,7 +95,6 @@ const Main = () => {
       ) {
         if (!isFetching && !isLoading) {
           if (data?.data?.list.length !== 0) {
-            console.log("a");
             loadMoreMovies();
           }
         }
@@ -97,35 +109,40 @@ const Main = () => {
     <>
       <div className="search-bg"></div>
       <Navbar query={query} setQuery={setQuery} onSearch={handleSearch} />
-      <Filter
-        resActive={resActive}
-        setresActive={setresActive}
-        sortActive={sortActive}
-        setsortActive={setsortActive}
-        typeActive={typeActive}
-        settypeActive={settypeActive}
-      />
+      <div className="lg:container lg:mx-auto lg:px-[100px]">
+        <Filter
+          res_type={res_type}
+          sort={sort}
+          type={type}
+          resActive={resActive}
+          setresActive={setresActive}
+          sortActive={sortActive}
+          setsortActive={setsortActive}
+          typeActive={typeActive}
+          settypeActive={settypeActive}
+        />
 
-      {/* Display the Movies or Loading/Error state */}
-      {isFetching && currentPage === 1 ? (
-        <div className="flex justify-center items-center text-center text-white">
-          Loading...
-        </div>
-      ) : error ? (
-        <div>Error fetching data</div>
-      ) : (
-        <>
-          <Movies
-            movies={movies}
-            advert={advert}
-            adFetching={adFetching}
-            adLoading={adLoading}
-          />
-          {isFetching && (
-            <div className="text-white text-center">Loading more...</div>
-          )}
-        </>
-      )}
+        {/* Display the Movies or Loading/Error state */}
+        {(tabLoading && tabFetching) || (isFetching && currentPage === 1) ? (
+          <div className="flex justify-center h-[80vh] items-center text-center text-white">
+            <Loader />
+          </div>
+        ) : (
+          <>
+            <Movies
+              movies={movies}
+              advert={advert}
+              adFetching={adFetching}
+              adLoading={adLoading}
+            />
+            {isFetching && (
+              <div className="text-white flex justify-center pb-4 items-center text-center">
+                <Loader />
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </>
   );
 };
