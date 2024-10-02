@@ -29,3 +29,34 @@ button {
 button:hover {
   opacity: 0.8;  /* Add a hover effect */
 }
+
+.loader {
+  display: flex;
+  justify-content: space-between;
+  width: 12px;
+  height: 10px;
+}
+
+.loader div {
+  width: 2px;
+  height: 90%;
+  background-color: #ff5500; /* Adjust color to match the design */
+  animation: grow 1s infinite ease-in-out;
+}
+
+.loader div:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.loader div:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes grow {
+  0%, 100% {
+    transform: scaleY(0.5); /* Start small */
+  }
+  50% {
+    transform: scaleY(1); /* Grow to full height */
+  }
+}

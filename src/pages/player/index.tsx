@@ -77,7 +77,8 @@ const DetailPage: React.FC = () => {
         onEpisodeSelect={handleEpisodeSelect}
         selectedEpisode={selectedEpisode}
       />
-      <EpisodeSelector episodes={movieDetail.play_from[0]?.list || []} />
+      <EpisodeSelector episodes={movieDetail.play_from[0]?.list || []} onEpisodeSelect={handleEpisodeSelect}
+        selectedEpisode={selectedEpisode}/>
     </div>
   );
 };

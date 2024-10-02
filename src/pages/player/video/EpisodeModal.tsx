@@ -79,11 +79,18 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                   <button
                     key={episode.episode_id || index}
                     onClick={() => handleEpisodeClick(episode)} // Handle episode selection
-                    className={`py-2 text-center rounded-lg ${
-                      episode.episode_id === selectedEpisodeId ? 'bg-orange-500 text-white' : 'bg-[#3B3B3B] text-gray-300'
-                    }`}
+                    className={`py-2 text-center rounded-lg ${episode.episode_id !== selectedEpisodeId ? 'bg-[#3B3B3B] text-white' : 'bg-[#3B3B3B] text-orange-400'
+                      }`}
                   >
-                    {episode.episode_name}
+
+{episode.episode_name}
+                    {episode?.episode_id === selectedEpisodeId && (
+                      <div className="absolute left-5/1 transform -translate-x-1/2 loader">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                      </div>
+                    )}
                   </button>
                 ))}
               </div>

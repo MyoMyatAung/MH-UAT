@@ -1,26 +1,37 @@
 import React from 'react';
-
-interface Episode {
-  episode_id: number | null;
-  episode_name: string;
-  play_url: string;
-}
+import { Episode } from '../../../model/videoModel';
 
 interface EpisodeSelectorProps {
-  episodes: Episode[]; // Accept episodes as a prop
+  episodes: Episode[];
+  selectedEpisode: Episode | null;
+  onEpisodeSelect: (episode: Episode) => void;
 }
 
-const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({ episodes }) => {
+const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({ episodes, selectedEpisode, onEpisodeSelect }) => {
   return (
-    <div className="mt-4 px-4 py-2 bg-[#2b2b2b] text-white">
-      <div className="flex justify-between items-center">
-        <span>选集</span>
-        <button className="text-sm text-gray-400">展开全部</button>
-      </div>
-      <div className="flex gap-2 mt-2 overflow-x-scroll">
+    <div className="overflow-x-auto whitespace-nowrap py-3"> {/* Horizontal scroll container */}
+      <div className="inline-flex space-x-3"> {/* Inline flex for horizontal layout */}
         {episodes.map((episode) => (
-          <button key={episode.episode_id} className="px-3 py-1 rounded-md">
-            {episode.episode_name}
+          <button
+            key={episode.episode_id}
+            onClick={() => onEpisodeSelect(episode)}
+            className={`py-2 px-4 rounded-lg focus:outline-none relative ${
+              selectedEpisode?.episode_id === episode.episode_id
+                ? 'bg-[#2D2D2D] text-orange-500'
+                : 'bg-[#3B3B3B] text-gray-300'
+            }`}
+            style={{ minWidth: '100px', maxWidth: '120px' }}  // Adjust width for uniformity
+          >
+            <span>{episode.episode_name}</span>
+
+            {/* Loader animation under the selected episode */}
+            {selectedEpisode?.episode_id === episode.episode_id && (
+                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-[2px] loader">
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            )}
           </button>
         ))}
       </div>
