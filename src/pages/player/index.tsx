@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import VideoPlayer from './video/VideoPlayer';  // Assuming you have this component
+import { useParams, useNavigate } from 'react-router-dom';
+import VideoPlayer from './video/VideoPlayer';
 import SourceSelector from './video/SourceSelector';
 import DetailSection from './video/DetailSection';
 import EpisodeSelector from './video/EpisodeSelector';
@@ -24,53 +24,60 @@ interface MovieDetail {
 }
 
 const DetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Get id from URL params
+  const { id } = useParams<{ id: string }>();
   const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
-  const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null); // Track the current episode
+  const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
   const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
+
+  const navigate = useNavigate();
 
   // Fetch the movie details based on the provided id
   const getMovieDetail = async () => {
     const res = await fetch(`https://cc3e497d.qdhgtch.com:2345/api/v1/movie/detail?id=${id}`);
     const data = await res.json();
-    setMovieDetail(data?.data); // Save fetched movie data
+    setMovieDetail(data?.data);
 
-    // Set the first episode as the default episode to play
     if (data?.data?.play_from?.[0]?.list?.[0]) {
-      setCurrentEpisode(data.data.play_from[0].list[0]);
+      setCurrentEpisode(data.data.play_from[0].list[0]); // Set the first episode as default
     }
   };
 
   useEffect(() => {
     if (id) {
-      getMovieDetail(); // Fetch movie details when id changes
+      getMovieDetail();
     }
   }, [id]);
 
-  // Function to handle episode change from Modal
   const handleEpisodeChange = (episode: Episode) => {
-    setCurrentEpisode(episode); // Update the current episode
+    setCurrentEpisode(episode);
   };
 
   const handleEpisodeSelect = (episode: Episode) => {
-    setSelectedEpisode(episode); // Set the selected episode
+    setSelectedEpisode(episode);
   };
+
+  const navigateBackFunction = () => {
+    navigate(-1); // Go back to the previous page
+  };
+
   if (!movieDetail || !currentEpisode) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="bg-[#1b1b1b] overflow-y-scroll" style={{ height: 'calc(100vh - 166px)' }}>
-      {/* VideoPlayer plays the current episode */}
-      <VideoPlayer videoUrl={selectedEpisode?.play_url || currentEpisode?.play_url || ''} />
-      {/* Details Section */}
+    <div className="bg-[#1b1b1b] overflow-y-scroll min-h-screen">
+      <VideoPlayer
+        videoUrl={selectedEpisode?.play_url || currentEpisode?.play_url || ''}
+        onBack={navigateBackFunction}
+      />
       <DetailSection />
-
-      {/* Pass episode data to EpisodeSelector */}
+      <SourceSelector
+        episodes={movieDetail.play_from[0]?.list || []}
+        onEpisodeChange={handleEpisodeChange}
+        onEpisodeSelect={handleEpisodeSelect}
+        selectedEpisode={selectedEpisode}
+      />
       <EpisodeSelector episodes={movieDetail.play_from[0]?.list || []} />
-      {/* Pass the episode list and callback to change episodes */}
-      <SourceSelector episodes={movieDetail.play_from[0]?.list || []} onEpisodeChange={handleEpisodeChange} onEpisodeSelect={handleEpisodeSelect}
-      selectedEpisode={selectedEpisode}/>
     </div>
   );
 };

@@ -15,3 +15,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.video-player {
+  max-height: 100%;  /* Ensure the video fits properly */
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;  /* Add a hover effect */
+}
