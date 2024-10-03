@@ -1,6 +1,5 @@
 // src/store.ts
 
-
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import counterReducer from "../features/counter/counterSlice";
 import playerReducer from "../features/player/playerSlice";
@@ -10,29 +9,31 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import FavoriteSlice from "../pages/search/slice/FavoriteSlice";
 
-import modelReducer from '..//features/login/ModelSlice';
-
+import modelReducer from "..//features/login/ModelSlice";
+import { homeApi } from "../pages/home/services/homeApi";
+import { explorerAPi } from "../pages/explorer/services/explorerAPi";
 
 // Define persist config
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["history","favorite"], // Reducers you want to persist
+  whitelist: ["history", "favorite"], // Reducers you want to persist
 };
 
 // Combine all reducers
 const rootReducer = combineReducers({
   counter: counterReducer,
   episode: playerReducer,
-  model : modelReducer,
+  model: modelReducer,
   history: HistorySlice,
   favorite: FavoriteSlice,
   [searchApi.reducerPath]: searchApi.reducer,
+  [homeApi.reducerPath]: homeApi.reducer,
+  [explorerAPi.reducerPath]: explorerAPi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
-
   reducer: persistedReducer,
 
   middleware: (getDefaultMiddleware) =>
@@ -40,8 +41,10 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: ["persist/PERSIST"],
       },
-    }).concat(searchApi.middleware),
-
+    })
+      .concat(searchApi.middleware)
+      .concat(homeApi.middleware)
+      .concat(explorerAPi.middleware),
 });
 
 export const persistor = persistStore(store);
