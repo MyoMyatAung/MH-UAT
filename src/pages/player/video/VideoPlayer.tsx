@@ -216,7 +216,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
               value={progress}
               onChange={handleProgressChange}
               style={{
-                background: `linear-gradient(to right, orange ${progress}%, gray 0%)`
+                background: `linear-gradient(to right, #F54100 ${progress}%, gray 0%)`
               }}
             />
             {/* Fullscreen button */}
