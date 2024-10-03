@@ -30,11 +30,24 @@ interface MovieDetail {
   }[];
 }
 
+interface AdsData {
+  [key: string]: {
+    type: number;
+    location_id: number;
+    channel: string;
+    remarks: string;
+    data: {
+      image: string;
+      url: string;
+    };
+  };
+}
 const DetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
   const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
   const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
+  const [adsData, setAdsData] = useState<AdsData | null>(null);
 
   const navigate = useNavigate();
 
@@ -52,9 +65,18 @@ const DetailPage: React.FC = () => {
   useEffect(() => {
     if (id) {
       getMovieDetail();
+      getAdsData();
     }
   }, [id]);
 
+  const getAdsData = async () => {
+    const res = await fetch(
+      "https://cc3e497d.qdhgtch.com:2345/api/v1/advert/config"
+    );
+    const data = await res.json();
+    setAdsData(data);
+    console.log('data is=>', data);
+  }
   const handleEpisodeChange = (episode: Episode) => {
     setCurrentEpisode(episode);
   };
@@ -86,7 +108,8 @@ const DetailPage: React.FC = () => {
         selectedEpisode={selectedEpisode || currentEpisode}
       />
       <DetailSection
-        movieDetail={movieDetail} // Pass movie details to DetailSection
+        adsData = {adsData}
+        movieDetail = {movieDetail} // Pass movie details to DetailSection
       />
       <SourceSelector
         episodes={movieDetail.play_from[0]?.list || []}

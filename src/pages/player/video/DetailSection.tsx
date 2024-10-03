@@ -16,9 +16,25 @@ interface DetailSectionProps {
     comments_count: string;
     popularity_score: number;
   };
+  adsData: {
+    [key: string]: {
+      type: number;
+      location_id: number;
+      channel: string;
+      remarks: string;
+      data: {
+        image: string;
+        url: string;
+      };
+    };
+  } | null;
 }
 
-const DetailSection: React.FC<DetailSectionProps> = ({ movieDetail }) => {
+const DetailSection: React.FC<DetailSectionProps> = ({
+  movieDetail,
+  adsData,
+}) => {
+  const adEntries = adsData && adsData.data ? Object.values(adsData.data) : []; // Extracting all the ads
   const [activeTab, setActiveTab] = useState("tab-1");
   console.log("movieDetail is=>", movieDetail);
   return (
@@ -134,9 +150,25 @@ const DetailSection: React.FC<DetailSectionProps> = ({ movieDetail }) => {
             {/* Comment section or other content */}
           </div>
         )}
-        <div className="bg-gray-800 text-white text-center p-10 rounded-lg flex items-center mt-5 justify-center">
-        Ads
-      </div>
+        <div className="bg-gray-800 text-white text-center rounded-lg flex flex-col items-center mt-5 justify-center  overflow-y-scroll h-52">
+          {adEntries.map((ad: any, index) =>
+            ad.data && ad.data.image && ad.data.url ? ( // Check if ad has data, image, and url
+              <a
+                key={index}
+                href={ad.data.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                // className=""
+              >
+                <img
+                  src={ad.data.image}
+                  alt={`Ad ${index}`}
+                  className="w-auto h-52 rounded-md"
+                />
+              </a>
+            ) : null // Don't render if no ad data
+          )}
+        </div>
       </div>
     </div>
   );
