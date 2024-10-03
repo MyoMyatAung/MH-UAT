@@ -6,19 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import Opt from "./Opt";
 import Captch from "./Captch";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setAuthModel,
-  setCaptchaOpen,
-  setLoginOpen,
-  setSignupOpen,
-} from "../../features/login/ModelSlice";
+import { setCaptchaOpen } from "../../features/login/ModelSlice";
 interface SignEmailProps {
   handleBack2: () => void; // Accept handleBack as a prop
 }
 
 const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
   const dispatch = useDispatch();
-  const { openCaptcha } = useSelector((state: any) => state.model);
+  const { openCaptcha, openOtp } = useSelector((state: any) => state.model);
   const [showOtp, setShowOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -61,8 +56,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
     e.preventDefault();
     try {
       dispatch(setCaptchaOpen(true));
-      console.log("Login successful");
-      setShowOtp(true);
+      // setShowOtp(true);
       setIsVisible(false);
     } catch (err) {
       setError("Login failed. Please check your credentials.");
@@ -70,17 +64,14 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
   };
 
   const handleClose = () => {
-    dispatch(setLoginOpen(false));
-    dispatch(setSignupOpen(false));
-    dispatch(setAuthModel(false));
     setIsVisible(false);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-      {openCaptcha && <Captch username={email} password={password} />}
+      {openCaptcha && <Captch isLogin={false} username={email} password={password} />}
 
-      {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
+      {openOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -125,7 +116,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                     onChange={(e) => setEmail(e.target.value)}
                     onFocus={() => setIsFocusedEmail(true)}
                     onBlur={() => setIsFocusedEmail(email !== "")}
-                    className="w-full px-4 py-2 bg-transparent input_border focus:outline-none text-white placeholder-transparen"
+                    className="w-full px-4 py-2 bg-[#161619] input_border focus:outline-none text-white placeholder-transparen"
                     required
                     placeholder=""
                   />
@@ -148,7 +139,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                     onChange={(e) => setPassword(e.target.value)}
                     onFocus={() => setIsFocusedPassword(true)}
                     onBlur={() => setIsFocusedPassword(password !== "")}
-                    className="w-full px-4 py-2 bg-transparent input_border focus:outline-none text-white placeholder-transparent"
+                    className="w-full px-4 py-2 bg-[#161619] input_border focus:outline-none text-white placeholder-transparent"
                     required
                     placeholder=""
                   />

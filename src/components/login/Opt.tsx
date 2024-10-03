@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import back from "../../assets/login/back.svg";
+import { useDispatch } from "react-redux";
+import { setOtpOpen } from "../../features/login/ModelSlice";
 
 interface OptProps {
   setShowOtp: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,11 +18,13 @@ const Opt: React.FC<OptProps> = ({ setShowOtp, showOtp }) => {
     "",
   ]);
   const [timer, setTimer] = useState<number>(10); 
+  const dispatch = useDispatch()
   const [buttonText, setButtonText] = useState<string>("59 s"); 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Countdown logic
   useEffect(() => {
+    console.log('appear')
     if (timer > 0) {
       const countdown = setInterval(() => {
         setTimer((prev) => prev - 1);
@@ -50,16 +54,16 @@ const Opt: React.FC<OptProps> = ({ setShowOtp, showOtp }) => {
   };
 
   return (
-    <div className=" w-screen h-screen bg-[#161619] p-[20px]">
+    <div className=" w-screen absolute z-[9090909] h-screen bg-[#161619] p-[20px]">
       <div className="flex justify-between w-2/3">
-        <img onClick={() => setShowOtp(false)} src={back} alt="Back" />
+        <img onClick={() => dispatch(setOtpOpen(false))} src={back} alt="Back" />
         <h1 className="text-white text-[16px] font-[600] leading-[20px]">
           OTP Verification
         </h1>
       </div>
 
       {/* OTP Input Fields */}
-      <div className="py-20 flex flex-col justify-center">
+      <div className="py-20 flex flex-col justify-center items-center">
         <div className="">
           {otpDigits.map((digit, index) => (
             <input
