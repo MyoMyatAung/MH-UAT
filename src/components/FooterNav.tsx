@@ -1,5 +1,5 @@
-import { FC, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { FC, useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 // Import SVG files directly
@@ -12,8 +12,18 @@ import profileSelectedIcon from '../assets/profileSelected.png';
 
 const Footer: FC = () => {
   const { t } = useTranslation();
+  const location = useLocation(); // Hook to get the current URL
   const [selectedMenu, setSelectedMenu] = useState('home');
-
+  useEffect(() => {
+    // Update the selected menu based on the current location path
+    if (location.pathname === '/' || location.pathname === '/home') {
+      setSelectedMenu('home');
+    } else if (location.pathname === '/explorer') {
+      setSelectedMenu('explorer');
+    } else if (location.pathname === '/profile') {
+      setSelectedMenu('profile');
+    }
+  }, [location.pathname]);
   return (
     <footer className={`bg-gray-900 fixed bottom-0 left-0 w-full shadow-lg z-50`}>
       <div className="container mx-auto px-4 py-1 flex justify-between items-center">

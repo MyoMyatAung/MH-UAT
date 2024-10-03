@@ -1,12 +1,11 @@
-import { Link } from "react-router-dom";
 import he from "he";
 // import videoIcon from "../../assets/videoIcon.svg";
 import LazyLoadImage from "./LazyLoadImage";
 
 const MovieCard = ({ movie, height }) => {
   return (
-    <div className="movie-item max-sm:h-auto cursor-default relative">
-      <Link className="block relative zoom-effect" to={`/player/${movie?.id}`}>
+    <div className="movie-item max-sm:h-auto cursor-default relative mb-3">
+      <div className="block relative zoom-effect">
         <div
           className={`relative img_a h-[180px] border-none ${
             height ? `max-sm:h-[${height}]` : "max-sm:h-[160px]"
@@ -29,11 +28,11 @@ const MovieCard = ({ movie, height }) => {
         <div className="overlay">
           {/* <img className="h-[40px]" src={videoIcon} alt="" /> */}
         </div>
-      </Link>
+      </div>
 
       <div className="text-container">
         <div className="movie-info">
-          <h2 className="text-[12px] mt-3 leading-[18px] font-confortFont font-[400] text-white two-line-truncate">
+          <h2 className="text-[12px] mt-3 leading-[18px] font-confortFont font-[400] text-white truncate">
             {he.decode(movie?.name || "Unknown Title")}
           </h2>
         </div>

@@ -5,9 +5,6 @@ const Banner = ({ list }: { list: any }) => {
   const [configData, setConfigData] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
 
-  const carouselData = list[0]?.list;
-  console.log(carouselData, "cmd");
-
   const getConfigData = async () => {
     const res = await fetch(
       "https://cc3e497d.qdhgtch.com:2345/api/v1/app/config"
@@ -24,7 +21,7 @@ const Banner = ({ list }: { list: any }) => {
     <div className="">
       <div className="relative">
         <Carousel showThumbs={false} showArrows={false} showStatus={false}>
-          {carouselData?.map((banner: any) => (
+          {list?.map((banner: any) => (
             <div key={banner?.image}>
               <img className="relative" src={banner?.image} alt="" />
               <p className="absolute text-white z-50 bottom-8 pl-5 text-[16px] font-semibold">

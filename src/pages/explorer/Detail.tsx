@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import MovieCard from "../../components/explorer/MovieCard";
+import backArrow from "../../assets/back.svg";
 
 const Detail = () => {
   const [details, setDetails] = useState<any>({});
   const { id } = useParams();
-  const navigation = useNavigate();
+  const navigate = useNavigate();
 
   const getDetails = async () => {
     const res = await fetch(
@@ -28,6 +30,14 @@ const Detail = () => {
         <h1 className="text-[16px] font-semibold absolute bottom-2 left-2">
           {details?.name}
         </h1>
+        <div className="absolute top-2 left-2">
+          <img
+            onClick={() => navigate(-1)}
+            src={backArrow}
+            alt=""
+            className="cursor-pointer"
+          />
+        </div>
       </div>
       <p className="px-3 text-[12px] text-[#aaa] my-3">
         {details?.description}
@@ -37,14 +47,17 @@ const Detail = () => {
       </p>
       <div className="grid grid-cols-3 gap-3 px-3">
         {details?.movies?.map((movie: any) => (
-          <div className="">
-            <img
-              src={movie?.cover}
-              className="w-full h-[153px] object-cover rounded-[8px]"
-              alt=""
-            />
-            <p className="text-[12px]">{movie?.name}</p>
-          </div>
+          <Link key={movie} to={`/player/${movie.id}`}>
+            <MovieCard movie={movie} height={""} />
+          </Link>
+          // <div className="">
+          //   <img
+          //     src={movie?.cover}
+          //     className="w-full h-[153px] object-cover rounded-[8px]"
+          //     alt=""
+          //   />
+          //   <p className="text-[12px]">{movie?.name}</p>
+          // </div>
         ))}
       </div>
     </div>
