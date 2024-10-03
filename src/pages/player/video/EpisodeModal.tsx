@@ -6,21 +6,26 @@ interface Episode {
   episode_id: number | null;
   episode_name: string;
   play_url: string;
+  from_code: string;
 }
 
-interface Source {
+interface PlayFrom {
   name: string;
-  videos: string;
-  description: string;
+  total: number | null;
+  tips: string;
+  code: string;
 }
 
 interface ModalComponentProps {
   onClose: () => void;
+  changeSource: (playfrom: PlayFrom) => void;
   source: "episodes" | "sources";
   episodes: Episode[];
   onEpisodeSelect: (episode: Episode) => void;
-  sources: Source[];
+  playFrom: PlayFrom[]; // Updated to accept channels data (play_from)
   defaultEpisodeId: number | null; // Pass the default selected episode ID
+  selectedSource: number;
+  setSelectedSource: (source: number) => void; 
 }
 
 const ModalComponent: React.FC<ModalComponentProps> = ({
@@ -28,8 +33,11 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   source,
   episodes,
   onEpisodeSelect,
-  sources,
+  changeSource,
+  playFrom, // Channels data
   defaultEpisodeId,
+  selectedSource,
+  setSelectedSource
 }) => {
   const [activeTab, setActiveTab] = useState<"episodes" | "sources">(
     source || "episodes"
@@ -37,7 +45,6 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   const [selectedEpisodeId, setSelectedEpisodeId] = useState<number | null>(
     defaultEpisodeId
   ); // Track the selected episode based on ID
-  const [selectedSource, setSelectedSource] = useState(0); // Track the selected source
 
   // Handle episode selection and update the state
   const handleEpisodeClick = (episode: Episode) => {
@@ -113,19 +120,23 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
 
           {activeTab === "sources" && (
             <div>
-              {sources.map((source, index) => (
+              {playFrom && playFrom.map((source, index) => (
                 <div
                   key={index}
-                  className={`flex justify-between items-center bg-[#3B3B3B] p-3 rounded-lg mb-2 cursor-pointer ${
+                  className={`flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-2 cursor-pointer ${
                     index === selectedSource ? "border border-orange-500" : ""
                   }`}
-                  onClick={() => setSelectedSource(index)}
+                  onClick={() => {setSelectedSource(index); changeSource(source)}}
                 >
                   <div>
                     <h4 className="text-white">{source.name}</h4>
-                    <p className="text-gray-400 text-xs">{source.videos}</p>
+                    {/* Display total videos if available */}
+                    {source.total && (
+                      <p className="text-gray-400 text-xs">{source.total} 个视频</p>
+                    )}
+                    {/* Display tips if available */}
                     <p className="text-gray-400 text-xs">
-                      {source.description}
+                      {source.tips || "No description available"}
                     </p>
                   </div>
                   {index === selectedSource && (
