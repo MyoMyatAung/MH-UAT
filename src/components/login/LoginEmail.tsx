@@ -5,7 +5,12 @@ import eye from "../../assets/login/eye.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import ForgotPass from "./ForgotPass";
 import { useDispatch, useSelector } from "react-redux";
-import { setCaptchaOpen } from "../../features/login/ModelSlice";
+import {
+  setAuthModel,
+  setCaptchaOpen,
+  setLoginOpen,
+  setSignupOpen,
+} from "../../features/login/ModelSlice";
 import Captch from "./Captch";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +21,7 @@ interface LoginEmailProps {
 const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
   const dispatch = useDispatch();
   const { openCaptcha } = useSelector((state: any) => state.model);
-  const [forgot, setForgot] = useState(false); 
+  const [forgot, setForgot] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,6 +50,9 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
   };
 
   const handleClose = () => {
+    dispatch(setLoginOpen(false));
+    dispatch(setSignupOpen(false));
+    dispatch(setAuthModel(false));
     setIsVisible(false);
   };
 
