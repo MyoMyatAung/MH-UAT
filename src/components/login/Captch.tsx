@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import capClose from "../../assets/login/capClose.svg";
 import { useDispatch } from "react-redux";
-import { setCaptchaOpen, setOtpOpen } from "../../features/login/ModelSlice";
+import { setCapCode, setCaptchaOpen, setOCapKey, setOtpOpen } from "../../features/login/ModelSlice";
 import { getCaptcha, login } from "../../services/userService"; // Importing service methods
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +32,7 @@ const Captch: React.FC<{
   const fetchCaptcha = async () => {
     try {
       const { captchaImage, keyStatus } = await getCaptcha();
+      console.log(keyStatus)
       setCaptchaImage(captchaImage);
       setKeyStatus(keyStatus);
     } catch (err) {
@@ -77,6 +78,8 @@ const Captch: React.FC<{
   };
 
   const handleOtp = () => {
+    dispatch(setCapCode(captchaCode))
+    dispatch(setOCapKey(keyStatus))
     dispatch(setCaptchaOpen(false));
     dispatch(setOtpOpen(true));
   };

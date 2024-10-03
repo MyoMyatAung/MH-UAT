@@ -79,7 +79,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-      {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
+      {/* {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />} */}
       {openCaptcha && <Captch isLogin={false} username={email} password={password} />}
       <AnimatePresence>
         {isVisible && (

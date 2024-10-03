@@ -6,6 +6,8 @@ interface model {
   openSignupModel: boolean;
   openCaptcha: boolean;
   openOtp: boolean;
+  captchaCode: string;
+  captchaKey: string;
 }
 
 const initialState: model = {
@@ -14,6 +16,8 @@ const initialState: model = {
   openSignupModel: false,
   openCaptcha: false,
   openOtp: false,
+  captchaCode: "",
+  captchaKey: "",
 };
 
 export const modelSlice = createSlice({
@@ -35,6 +39,12 @@ export const modelSlice = createSlice({
     setOtpOpen: (state, action) => {
       state.openOtp = action.payload;
     },
+    setCapCode: (state, action) => {
+      state.captchaCode = action.payload;
+    },
+    setOCapKey: (state, action) => {
+      state.captchaKey = action.payload;
+    },
   },
 });
 
@@ -44,6 +54,8 @@ export const {
   setCaptchaOpen,
   setAuthModel,
   setOtpOpen,
+  setCapCode,
+  setOCapKey,
 } = modelSlice.actions;
 
 export default modelSlice.reducer;

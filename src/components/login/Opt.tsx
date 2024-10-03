@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import back from "../../assets/login/back.svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setOtpOpen } from "../../features/login/ModelSlice";
+import { getOtp } from "../../services/userService";
 
 interface OptProps {
-  setShowOtp: React.Dispatch<React.SetStateAction<boolean>>;
-  showOtp: boolean;
+  email: string;
 }
 
-const Opt: React.FC<OptProps> = ({ setShowOtp, showOtp }) => {
+const Opt: React.FC<OptProps> = ({ email }) => {
   const [otpDigits, setOtpDigits] = useState<string[]>([
     "",
     "",
@@ -17,14 +17,18 @@ const Opt: React.FC<OptProps> = ({ setShowOtp, showOtp }) => {
     "",
     "",
   ]);
-  const [timer, setTimer] = useState<number>(10); 
-  const dispatch = useDispatch()
-  const [buttonText, setButtonText] = useState<string>("59 s"); 
+  const [timer, setTimer] = useState<number>(59);
+  const { captchaCode, captchaKey } = useSelector((state: any) => state.model);
+  // console.log(captchaCode, captchaKey, email);
+  const dispatch = useDispatch();
+  const [buttonText, setButtonText] = useState<string>("59 s");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Countdown logic
   useEffect(() => {
-    console.log('appear')
+    if (timer > 0) {
+      setButtonText(`${timer} s`);
+    }
     if (timer > 0) {
       const countdown = setInterval(() => {
         setTimer((prev) => prev - 1);
@@ -37,10 +41,8 @@ const Opt: React.FC<OptProps> = ({ setShowOtp, showOtp }) => {
   }, [timer]);
 
   useEffect(() => {
-    if (timer > 0) {
-      setButtonText(`${timer} s`);
-    }
-  }, [timer]);
+    getOtp(captchaCode, email);
+  }, []);
 
   const handleOTPChange = (index: number, value: string) => {
     const updatedOTP = [...otpDigits];
@@ -53,10 +55,21 @@ const Opt: React.FC<OptProps> = ({ setShowOtp, showOtp }) => {
     }
   };
 
+  const resend = () => {
+    setTimer(59);
+    setOtpDigits(["", "", "", "", "", ""]);
+
+    getOtp(captchaCode, email);
+  };
+
   return (
     <div className=" w-screen absolute z-[9090909] h-screen bg-[#161619] p-[20px]">
       <div className="flex justify-between w-2/3">
-        <img onClick={() => dispatch(setOtpOpen(false))} src={back} alt="Back" />
+        <img
+          onClick={() => dispatch(setOtpOpen(false))}
+          src={back}
+          alt="Back"
+        />
         <h1 className="text-white text-[16px] font-[600] leading-[20px]">
           OTP Verification
         </h1>
@@ -89,8 +102,12 @@ const Opt: React.FC<OptProps> = ({ setShowOtp, showOtp }) => {
       <div className="w-full py-[0px]">
         <button
           disabled={timer > 0}
-          onClick={() => console.log('otp')}
-          className={` px-[15px] py-[10px] w-full text-[16px] font-[600] leading-[22px]  ${timer > 0 ? "otp_button text-white" : " bg-white rounded-[80px] text-black"} `}
+          onClick={resend}
+          className={` px-[15px] py-[10px] w-full text-[16px] font-[600] leading-[22px]  ${
+            timer > 0
+              ? "otp_button text-white"
+              : " bg-white rounded-[80px] text-black"
+          } `}
         >
           {buttonText}
         </button>
