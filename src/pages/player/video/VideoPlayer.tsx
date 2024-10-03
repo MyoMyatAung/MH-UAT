@@ -91,6 +91,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
   // Set up HLS for .m3u8 files and handle auto play with progress loading
   useEffect(() => {
     const initHls = () => {
+      setIsBuffering(true);
       if (Hls.isSupported()) {
         if (hlsRef.current) {
           hlsRef.current.destroy();
@@ -231,7 +232,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
       </video>
 
       {/* Back button */}
-      <div className={`absolute top-0 left-0 p-4 z-10 ${controlsVisible ? '' : 'hidden'}`}>
+      <div className={`absolute top-0 left-0 p-4 z-10`}>
         <button onClick={handleBack} className="text-white">
           <FontAwesomeIcon icon={faArrowLeft} size="1x" />
         </button>
@@ -240,7 +241,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
       {/* Buffering Icon */}
       {isBuffering && (
         <div className="absolute inset-0 flex justify-center items-center">
-          <FontAwesomeIcon icon={faSpinner} size="1x" spin className="text-white" />
+          <FontAwesomeIcon icon={faSpinner} size="1x" spin className="text-playerNavigator" />
         </div>
       )}
 
@@ -248,7 +249,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
       {controlsVisible && (
         <div className="absolute inset-0 flex justify-center items-center">
           <button onClick={handlePlayPause} className="text-white/60 text-3xl">
-            {isPlaying ? '❚❚' : '►'}
+            {!isBuffering && (isPlaying ? '❚❚' : '►')}
           </button>
         </div>
       )}

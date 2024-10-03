@@ -14,6 +14,7 @@ module.exports = {
         selected: '#FF5722',
         unselected: '#4B5563',
         player: 'black',
+        playerNavigator: '#F54100',
       },
       fontSize: {
         'xs': '0.75rem',   // Extra small text
