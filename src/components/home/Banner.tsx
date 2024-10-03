@@ -18,12 +18,12 @@ const Banner = ({ list }: { list: any }) => {
     getConfigData();
   }, []);
   return (
-    <div className="">
+    <div className="pt-28">
       <div className="relative">
         <Carousel showThumbs={false} showArrows={false} showStatus={false}>
           {list?.map((banner: any) => (
             <div key={banner?.image}>
-              <img className="relative" src={banner?.image} alt="" />
+              <img className="relative" src={banner?.image}  alt="" />
               <p className="absolute text-white z-50 bottom-8 pl-5 text-[16px] font-semibold">
                 {banner?.title}
               </p>
@@ -31,7 +31,7 @@ const Banner = ({ list }: { list: any }) => {
             </div>
           ))}
         </Carousel>
-        <div className="w-full absolute top-0 bg-gradient-to-b from-transparent via-black/5 to-gray-50/15">
+        {/* <div className="w-full absolute top-0 bg-gradient-to-b from-transparent via-black/5 to-gray-50/15">
           <nav className="flex overflow-x-scroll no-scrollbar px-3 gap-3">
             {configData.map((item: any, index) => (
               <div
@@ -49,7 +49,7 @@ const Banner = ({ list }: { list: any }) => {
               </div>
             ))}
           </nav>
-        </div>
+        </div> */}
       </div>
     </div>
     // <div className="overflow-hidden relative">

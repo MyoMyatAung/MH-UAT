@@ -25,47 +25,47 @@ const Footer: FC = () => {
     }
   }, [location.pathname]);
   return (
-    <footer className={`bg-gray-900 fixed bottom-0 left-0 w-full shadow-lg z-50`}>
-      <div className="container mx-auto px-4 py-1 flex justify-between items-center">
+    <footer className={`bg-[#1f1f21] fixed bottom-0 w-full shadow-lg z-50`}>
+      <div className="flex justify-around items-center py-2">
         
         {/* Home Icon */}
         <Link to="/" className="flex flex-col items-center" onClick={() => setSelectedMenu('home')}>
-          <div className="rounded-full pt-2">
+          <div className="rounded-full">
             <img
               src={selectedMenu === 'home' ? homeSelectedIcon : homeIcon}
               alt="Home"
-              className="h-12 w-12"  // Adjust size as needed
+              className="h-8 w-8"  // Adjust size as needed
             />
           </div>
-          <span className={`${selectedMenu === 'home' ? 'text-white' : 'text-white'} text-xs mb-1`}>
+          <span className={`${selectedMenu === 'home' ? 'text-white' : 'text-white/80'} text-[10px]`}>
             {t('footer.home')}
           </span>
         </Link>
 
         {/* Explorer Icon */}
         <Link to="/explorer" className="flex flex-col items-center" onClick={() => setSelectedMenu('explorer')}>
-          <div className="rounded-full pt-2">
+          <div className="rounded-full">
             <img
               src={selectedMenu === 'explorer' ? explorerSelectedIcon : explorerIcon}
               alt="Explorer"
-              className="h-12 w-12"
+              className="h-8 w-8"
             />
           </div>
-          <span className={`${selectedMenu === 'explorer' ? 'text-white' : 'text-white'} text-xs mb-1`}>
+          <span className={`${selectedMenu === 'explorer' ? 'text-white' : 'text-white/80'} text-[10px]`}>
             {t('footer.explorer')}
           </span>
         </Link>
 
         {/* Profile Icon */}
         <Link to="/profile" className="flex flex-col items-center" onClick={() => setSelectedMenu('profile')}>
-          <div className="rounded-full pt-2">
+          <div className="rounded-full">
             <img
               src={selectedMenu === 'profile' ? profileSelectedIcon : profileIcon}
               alt="Profile"
-              className="h-12 w-12"
+              className="h-8 w-8"
             />
           </div>
-          <span className={`${selectedMenu === 'profile' ? 'text-white' : 'text-white'} text-xs mb-1`}>
+          <span className={`${selectedMenu === 'profile' ? 'text-white' : 'text-white/80'} text-[10px]`}>
             {t('footer.profile')}
           </span>
         </Link>

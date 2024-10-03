@@ -1,44 +1,72 @@
-import { FC } from 'react';
-import logo from '../assets/logo.svg';
+import { FC, useEffect, useState } from "react";
+import logo from "../assets/logo.svg";
 
 const Header: FC = () => {
-  return (
-    <header className="bg-gray-900 py-5 px-4 flex items-center justify-between shadow-md">
-      {/* Logo Section */}
-      <div className="flex items-center flex-shrink-0 space-x-2"> {/* Flexbox for horizontal alignment */}
-        <img
-          src={logo}
-          alt="Logo"
-          className="h-10" // Reduced size to fit better on mobile screens
-        />
-        <span className="text-white text-lg font-semibold leading-none">电影手</span> {/* Adjusted text size for mobile */}
-      </div>
+  const [configData, setConfigData] = useState([]);
+  const [activeTab, setActiveTab] = useState(0);
 
-      {/* Search Bar */}
-      <div className="w-full max-w-xs ml-4"> {/* Adjust max-width to make it responsive on mobile */}
-        <div className="relative rounded-full bg-gray-800 px-3 py-2 shadow-inner">
+  const getConfigData = async () => {
+    const res = await fetch(
+      "https://cc3e497d.qdhgtch.com:2345/api/v1/app/config"
+    );
+    const data = await res.json();
+    console.log(data?.data?.index_top_nav);
+    setConfigData(data?.data?.index_top_nav);
+  };
+
+  useEffect(() => {
+    getConfigData();
+  }, []);
+  return (
+    <header className="w-full z-50 fixed top-0 bg-gradient-to-b from-[#151722] via-[#151722] to-[#161619]/80 py-4">
+      <div className="flex items-center px-3 gap-3">
+        <div className="flex items-center gap-1">
+          <img src={logo} alt="" className="h-8 w-auto object-contain" />
+          <span className="text-white text-md font-semibold leading-none">
+            电影手
+          </span>
+        </div>
+        <div className="flex-1 relative">
           <input
+            placeholder="觉醒年代"
             type="text"
-            placeholder="搜索影片..."
-            className="bg-transparent text-white placeholder-gray-400 text-sm w-full focus:outline-none"
+            className="rounded-[18.138px] bg-[#444B56] py-[8.062px] px-[16.123px] w-full text-white outline-none"
           />
-          <button className="absolute right-2 top-1/2 transform -translate-y-1/2">
+          <div className="absolute top-2 right-2">
             <svg
-              className="h-5 w-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
+              width="21"
+              height="22"
+              viewBox="0 0 21 22"
+              fill="none"
             >
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                d="M14.0482 14.0737L17 17.0248L16.0248 18L13.0737 15.0482C11.9757 15.9285 10.6099 16.4072 9.20262 16.4052C5.77877 16.4052 3 13.6265 3 10.2026C3 6.77877 5.77877 4 9.20262 4C12.6265 4 15.4052 6.77877 15.4052 10.2026C15.4072 11.6099 14.9285 12.9757 14.0482 14.0737ZM12.6657 13.5624C13.5404 12.6629 14.0289 11.4572 14.0269 10.2026C14.0269 7.53687 11.8677 5.37836 9.20262 5.37836C6.53687 5.37836 4.37836 7.53687 4.37836 10.2026C4.37836 12.8677 6.53687 15.0269 9.20262 15.0269C10.4572 15.0289 11.6629 14.5404 12.5624 13.6657L12.6657 13.5624Z"
+                fill="white"
+                fillOpacity="0.6"
               />
             </svg>
-          </button>
+          </div>
         </div>
+      </div>
+      <div className="w-full">
+        <nav className="flex overflow-x-scroll no-scrollbar px-3 gap-3">
+          {configData.map((item: any, index) => (
+            <div
+              className="relative"
+              onClick={() => setActiveTab(index)}
+              key={index}
+            >
+              <p
+                className={`${
+                  activeTab === index ? "text-white" : "text-gray-500"
+                } whitespace-nowrap py-2 rounded-lg hover:text-white transition-colors`}
+              >
+                {item?.name}
+              </p>
+            </div>
+          ))}
+        </nav>
       </div>
     </header>
   );
