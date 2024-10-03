@@ -6,10 +6,15 @@ import back from "../../assets/login/back.svg";
 import close from "../../assets/login/close.svg";
 import SignEmail from "./SignEmail";
 import SignPhone from "./SignPhone";
+import { useDispatch } from "react-redux";
+import { setLoginOpen } from "../../features/login/ModelSlice";
+import { setSignupOpen } from "../../features/login/ModelSlice";
+import { setAuthModel } from "../../features/login/ModelSlice";
 interface SignUpProps {
   handleBack: () => void; // Accept handleBack as a prop
 }
 const SignUp: React.FC<SignUpProps> = ({ handleBack }) => {
+  const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,6 +33,9 @@ const SignUp: React.FC<SignUpProps> = ({ handleBack }) => {
   };
 
   const handleClose = () => {
+    dispatch(setLoginOpen(false));
+    dispatch(setSignupOpen(false));
+    dispatch(setAuthModel(false));
     setIsVisible(false);
   };
 
@@ -68,8 +76,8 @@ const SignUp: React.FC<SignUpProps> = ({ handleBack }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-      {isEmailVisible && <SignEmail handleBack2={handleBack2} /> }
-      {isPhoneVisible && <SignPhone handleBack2={handleBack2} /> }
+      {isEmailVisible && <SignEmail handleBack2={handleBack2} />}
+      {isPhoneVisible && <SignPhone handleBack2={handleBack2} />}
       <AnimatePresence>
         {isVisible && (
           <motion.div

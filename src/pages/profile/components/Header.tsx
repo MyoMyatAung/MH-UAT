@@ -1,9 +1,22 @@
-import React from "react";
+import { startTransition } from "react";
+import { setAuthModel } from "../../../features/login/ModelSlice";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
+  const dispatch = useDispatch();
+
+  const handleLoginClick = () => {
+    startTransition(() => {
+      dispatch(setAuthModel(true)); // Open the login modal
+    });
+  };
+
   return (
     <div className="profile-header">
-      <div className="flex gap-4 bg-red-400 w-full profile-card">
+      <div
+        onClick={handleLoginClick}
+        className="flex gap-4 bg-red-400 w-full profile-card cursor-pointer"
+      >
         <div className="profile-p">
           <svg
             xmlns="http://www.w3.org/2000/svg"
