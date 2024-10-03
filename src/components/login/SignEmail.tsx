@@ -6,7 +6,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import Opt from "./Opt";
 import Captch from "./Captch";
 import { useDispatch, useSelector } from "react-redux";
-import { setCaptchaOpen } from "../../features/login/ModelSlice";
+import {
+  setAuthModel,
+  setCaptchaOpen,
+  setLoginOpen,
+  setSignupOpen,
+} from "../../features/login/ModelSlice";
 interface SignEmailProps {
   handleBack2: () => void; // Accept handleBack as a prop
 }
@@ -65,12 +70,15 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
   };
 
   const handleClose = () => {
+    dispatch(setLoginOpen(false));
+    dispatch(setSignupOpen(false));
+    dispatch(setAuthModel(false));
     setIsVisible(false);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-      {openCaptcha && <Captch  username={email} password={password} />}
+      {openCaptcha && <Captch username={email} password={password} />}
 
       {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
       <AnimatePresence>
