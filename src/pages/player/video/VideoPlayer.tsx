@@ -8,6 +8,7 @@ interface Episode {
   episode_id: number | null;
   episode_name: string;
   play_url: string;
+  from_code: string;
 }
 
 interface MovieDetail {
@@ -25,6 +26,8 @@ interface MovieDetail {
     name: string;
     code: string;
     list: Episode[];
+    total: number | null;
+    tips: string;
   }[];
 }
 

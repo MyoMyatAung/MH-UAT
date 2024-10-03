@@ -10,9 +10,18 @@ interface Episode {
   episode_id: number | null;
   episode_name: string;
   play_url: string;
+  from_code: string;
+}
+
+interface PlayFrom {
+  name: string;
+  total: number | null;
+  tips: string;
+  code: string;
 }
 
 interface MovieDetail {
+  code: string;
   name: string;
   area: string;
   year: string;
@@ -27,7 +36,10 @@ interface MovieDetail {
     name: string;
     code: string;
     list: Episode[];
+    total: number | null;
+    tips: string;
   }[];
+  members: {name: string, type: number}[]
 }
 
 interface AdsData {
@@ -48,6 +60,8 @@ const DetailPage: React.FC = () => {
   const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
   const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
   const [adsData, setAdsData] = useState<AdsData | null>(null);
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [selectedSource, setSelectedSource] = useState(0); // Track the selected source
 
   const navigate = useNavigate();
 
@@ -62,6 +76,18 @@ const DetailPage: React.FC = () => {
     }
   };
 
+  const getEpisodes = async (code: string) => {
+    const res = await fetch(`https://cc3e497d.qdhgtch.com:2345/api/v1/movie_addr/list?from_code=${code}&movie_id=${id}`);
+    const data = await res.json();
+    console.log('data is=>', data);
+    setCurrentEpisode(data.data[0]);
+    setEpisodes(data.data);
+    // setMovieDetail(data?.data);
+
+    // if (data?.data?.play_from?.[0]?.list?.[0]) {
+    //   setCurrentEpisode(data.data.play_from[0].list[0]); // Set the first episode as default
+    // }
+  };
   useEffect(() => {
     if (id) {
       getMovieDetail();
@@ -95,6 +121,17 @@ const DetailPage: React.FC = () => {
   // </div>;
   // }
 
+  const changeSource = (playfrom: PlayFrom) => {
+    console.log('playfrom is=>', playfrom, movieDetail);
+    const ind: number = movieDetail?.play_from.findIndex(x => x.code === playfrom.code) || -1;
+    console.log('ind is=>', ind);
+    if(ind >= 0) {
+      getEpisodes(movieDetail?.play_from[ind]?.code || '');
+      if (movieDetail?.play_from[ind]?.list?.[0]) {
+        setCurrentEpisode(movieDetail.play_from[0].list[0]); // Set the first episode as default
+      }
+    }
+  }
   return (
     <div className="bg-black overflow-y-scroll min-h-screen">
       {!movieDetail || !currentEpisode ? <div className="flex justify-center items-center mt-52 bg-black">
@@ -112,15 +149,19 @@ const DetailPage: React.FC = () => {
         movieDetail = {movieDetail} // Pass movie details to DetailSection
       />
       <SourceSelector
-        episodes={movieDetail.play_from[0]?.list || []}
+        changeSource={changeSource}
+        episodes={episodes && episodes.length > 0 ? episodes : (movieDetail.play_from[0]?.list || [])}
         onEpisodeChange={handleEpisodeChange}
         onEpisodeSelect={handleEpisodeSelect}
-        selectedEpisode={selectedEpisode || selectedEpisode || currentEpisode }
+        selectedEpisode={selectedEpisode || currentEpisode }
+        movieDetail = {movieDetail} // Pass movie details to DetailSection
+        selectedSource={selectedSource}
+        setSelectedSource={setSelectedSource}
       />
       <EpisodeSelector
-        episodes={movieDetail.play_from[0]?.list || []}
+        episodes={episodes && episodes.length > 0 ? episodes : (movieDetail.play_from[0]?.list || [])}
         onEpisodeSelect={handleEpisodeSelect}
-        selectedEpisode={selectedEpisode || selectedEpisode || currentEpisode }
+        selectedEpisode={selectedEpisode || currentEpisode }
       />
       </>}
     </div>
