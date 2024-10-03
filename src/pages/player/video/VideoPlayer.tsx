@@ -43,11 +43,49 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
   const [currentTime, setCurrentTime] = useState("0:00");
   const [duration, setDuration] = useState("0:00");
   const [controlsVisible, setControlsVisible] = useState(true);
-  const controlsTimeoutRef = useRef<number | null>(null);
 
-  const STORAGE_KEY = `movie_${movieDetail.name}_episode_${selectedEpisode?.episode_id || ''}_progress`;
+  const STORAGE_KEY = 'watchHistory'; // Main key for storing watch history
 
-  // Set up HLS for .m3u8 files
+  // Helper function to format time (e.g., 1:05)
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
+
+  // Save the movie progress when back button or episode change happens
+  const saveProgress = () => {
+    if (videoRef.current) {
+      const currentTime = videoRef.current.currentTime; // Get the correct time
+      const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
+      if (!savedHistory[movieDetail.name]) {
+        savedHistory[movieDetail.name] = {};
+      }
+
+      savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`] = {
+        progressTime: currentTime,
+        movieDetail: movieDetail
+      };
+
+      console.log('Saving progress:', currentTime); // Log to verify
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(savedHistory));
+    }
+  };
+
+  // Load saved progress if available
+  const loadProgress = () => {
+    const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (savedHistory[movieDetail.name] && savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`]) {
+      const savedTime = savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`].progressTime;
+      if (videoRef.current && savedTime) {
+        console.log('Resuming from:', savedTime);
+        videoRef.current.currentTime = savedTime || 0;
+      }
+    }
+  };
+
+  // Set up HLS for .m3u8 files and handle auto play with progress loading
   useEffect(() => {
     const initHls = () => {
       if (Hls.isSupported()) {
@@ -61,22 +99,34 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           setDuration(formatTime(videoRef.current?.duration || 0));
 
-          // Resume from saved progress if available
-          const savedTime = localStorage.getItem(STORAGE_KEY);
-          if (savedTime && videoRef.current) {
-            videoRef.current.currentTime = Number(savedTime);
-          }
+          // Load the saved progress after HLS manifest is parsed
+          loadProgress();
 
-          // Autoplay the video after loading
-          if (videoRef.current) {
-            videoRef.current.play();
-            setIsPlaying(true);
-          }
+          // Ensure video plays after it can play
+          videoRef.current?.addEventListener('canplay', () => {
+            if (videoRef.current) {
+              videoRef.current.play().then(() => {
+                console.log('Video started playing');
+                setIsPlaying(true);
+              }).catch((error) => {
+                console.error('Video play failed:', error);
+              });
+            }
+          });
         });
 
         hlsRef.current = hls;
       } else if (videoRef.current?.canPlayType('application/vnd.apple.mpegurl')) {
         videoRef.current.src = videoUrl;
+        videoRef.current?.addEventListener('canplay', () => {
+          loadProgress();
+          videoRef.current?.play().then(() => {
+            console.log('Video started playing');
+            setIsPlaying(true);
+          }).catch((error) => {
+            console.error('Video play failed:', error);
+          });
+        });
       }
     };
 
@@ -88,60 +138,42 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
       if (hlsRef.current) {
         hlsRef.current.destroy();
       }
+      // Save progress when switching episodes or unmounting the component
+      saveProgress();
     };
-  }, [videoUrl]);
+  }, [videoUrl, selectedEpisode]); // Re-run when selectedEpisode changes
 
-  // Helper function to format time (e.g., 1:05)
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  };
-
-  // Update progress bar and save watch progress
+  // Update progress bar without saving every second
   const handleTimeUpdate = () => {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
       const duration = videoRef.current.duration;
       setProgress((currentTime / duration) * 100);
       setCurrentTime(formatTime(currentTime));
-
-      // Save the current progress in localStorage
-      localStorage.setItem(STORAGE_KEY, currentTime.toString());
     }
+  };
+
+  // Save progress on back button click
+  const handleBack = () => {
+    saveProgress();
+    onBack();
   };
 
   // Toggle play/pause state
   const handlePlayPause = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
-        videoRef.current.play();
-        setIsPlaying(true);
+        videoRef.current.play().then(() => {
+          setIsPlaying(true);
+        }).catch((error) => {
+          console.error('Video play failed:', error);
+        });
       } else {
         videoRef.current.pause();
         setIsPlaying(false);
+        saveProgress(); // Save progress on pause
       }
     }
-  };
-
-  // Hide controls after 5 seconds of inactivity
-  const resetControlsTimeout = () => {
-    if (controlsTimeoutRef.current) {
-      clearTimeout(controlsTimeoutRef.current);
-    }
-
-    controlsTimeoutRef.current = window.setTimeout(() => {
-      setControlsVisible(false); // Hide controls after 5 seconds
-    }, 5000);
-  };
-
-  useEffect(() => {
-    resetControlsTimeout();
-  }, []);
-
-  const showControls = () => {
-    setControlsVisible(true);
-    resetControlsTimeout();
   };
 
   // Seek video using custom progress bar
@@ -149,9 +181,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
     if (videoRef.current) {
       const newTime = (Number(e.target.value) / 100) * videoRef.current.duration;
       videoRef.current.currentTime = newTime;
-
-      // Save the updated time to localStorage
-      localStorage.setItem(STORAGE_KEY, newTime.toString());
     }
   };
 
@@ -169,8 +198,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
   return (
     <div
       className="relative bg-black h-full w-full"
-      onMouseMove={showControls} // Show controls on mouse move or touch
-      onTouchStart={showControls} // Show controls on touch
+      onMouseMove={() => setControlsVisible(true)} // Show controls on mouse move or touch
+      onTouchStart={() => setControlsVisible(true)} // Show controls on touch
     >
       {/* The video player */}
       <video
@@ -187,11 +216,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
       </video>
 
       {/* Back button */}
-        <div className="absolute top-0 left-0 p-4 z-10">
-          <button onClick={onBack} className="text-white">
-            <FontAwesomeIcon icon={faArrowLeft} size="1x" />
-          </button>
-        </div>
+      <div className="absolute top-0 left-0 p-4 z-10">
+        <button onClick={handleBack} className="text-white">
+          <FontAwesomeIcon icon={faArrowLeft} size="1x" />
+        </button>
+      </div>
 
       {/* Custom Play/Pause Button */}
       {controlsVisible && (
@@ -228,11 +257,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
       )}
 
       {/* Picture-in-Picture button */}
-        <div className="absolute top-0 right-0 p-4 z-10">
-          <button className="text-white">
-            <img src={floatingScreen} alt="PiP" className="h-5 w-5" />
-          </button>
-        </div>
+      <div className="absolute top-0 right-0 p-4 z-10">
+        <button className="text-white">
+          <img src={floatingScreen} alt="PiP" className="h-5 w-5" />
+        </button>
+      </div>
     </div>
   );
 };

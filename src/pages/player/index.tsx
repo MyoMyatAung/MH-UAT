@@ -4,6 +4,7 @@ import VideoPlayer from './video/VideoPlayer';
 import SourceSelector from './video/SourceSelector';
 import DetailSection from './video/DetailSection';
 import EpisodeSelector from './video/EpisodeSelector';
+import Loader from '../search/components/Loader';
 
 interface Episode {
   episode_id: number | null;
@@ -66,12 +67,18 @@ const DetailPage: React.FC = () => {
     navigate(-1); // Go back to the previous page
   };
 
-  if (!movieDetail || !currentEpisode) {
-    return <div>Loading...</div>;
-  }
+  // if (!movieDetail || !currentEpisode) {
+  //   return <div className="flex justify-center items-center mt-52 bg-black w-full" style={{height: '100vh'}}>
+  //   <Loader />
+  // </div>;
+  // }
 
   return (
     <div className="bg-black overflow-y-scroll min-h-screen">
+      {!movieDetail || !currentEpisode ? <div className="flex justify-center items-center mt-52 bg-black">
+    <Loader />
+  </div> :
+  <>
       <VideoPlayer
         videoUrl={selectedEpisode?.play_url || currentEpisode?.play_url || ''}
         onBack={navigateBackFunction}
@@ -92,6 +99,7 @@ const DetailPage: React.FC = () => {
         onEpisodeSelect={handleEpisodeSelect}
         selectedEpisode={selectedEpisode || movieDetail.play_from[0]?.list[0]}
       />
+      </>}
     </div>
   );
 };
