@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faExpand } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faExpand, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import floatingScreen from '../../../assets/floatingScreen.png';
 
 interface Episode {
@@ -43,6 +43,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
   const [currentTime, setCurrentTime] = useState("0:00");
   const [duration, setDuration] = useState("0:00");
   const [controlsVisible, setControlsVisible] = useState(true);
+  const [isBuffering, setIsBuffering] = useState(false); // New state to track buffering
+  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const STORAGE_KEY = 'watchHistory'; // Main key for storing watch history
 
@@ -75,6 +77,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
 
   // Load saved progress if available
   const loadProgress = () => {
+    setIsBuffering(true);
     const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     if (savedHistory[movieDetail.name] && savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`]) {
       const savedTime = savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`].progressTime;
@@ -102,31 +105,27 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
           // Load the saved progress after HLS manifest is parsed
           loadProgress();
 
-          // Ensure video plays after it can play
-          videoRef.current?.addEventListener('canplay', () => {
+          const canPlayHandler = () => {
             if (videoRef.current) {
+              // Show buffering spinner
+              setIsBuffering(true);
+              // Play the video after it's ready and progress is set
               videoRef.current.play().then(() => {
                 console.log('Video started playing');
                 setIsPlaying(true);
+                setIsBuffering(false); // Hide buffering spinner
               }).catch((error) => {
                 console.error('Video play failed:', error);
+                setIsBuffering(false); // Hide buffering spinner on error
               });
             }
-          });
+          };
+
+          videoRef.current?.removeEventListener('canplay', canPlayHandler);
+          videoRef.current?.addEventListener('canplay', canPlayHandler);
         });
 
         hlsRef.current = hls;
-      } else if (videoRef.current?.canPlayType('application/vnd.apple.mpegurl')) {
-        videoRef.current.src = videoUrl;
-        videoRef.current?.addEventListener('canplay', () => {
-          loadProgress();
-          videoRef.current?.play().then(() => {
-            console.log('Video started playing');
-            setIsPlaying(true);
-          }).catch((error) => {
-            console.error('Video play failed:', error);
-          });
-        });
       }
     };
 
@@ -135,13 +134,26 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
     }
 
     return () => {
+      saveProgress();
       if (hlsRef.current) {
         hlsRef.current.destroy();
       }
-      // Save progress when switching episodes or unmounting the component
-      saveProgress();
     };
-  }, [videoUrl, selectedEpisode]); // Re-run when selectedEpisode changes
+  }, [videoUrl, selectedEpisode]);
+
+  // Handle hiding controls after 3 seconds of inactivity
+  const hideControls = () => {
+    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = setTimeout(() => {
+      setControlsVisible(false);
+    }, 3000);
+  };
+
+  // Handle showing controls on interaction
+  const showControls = () => {
+    setControlsVisible(true);
+    hideControls(); // Start timeout to hide again
+  };
 
   // Update progress bar without saving every second
   const handleTimeUpdate = () => {
@@ -163,10 +175,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
   const handlePlayPause = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
+        setIsBuffering(true); // Show buffering icon while resuming
         videoRef.current.play().then(() => {
           setIsPlaying(true);
+          setIsBuffering(false); // Hide buffering icon after resuming
         }).catch((error) => {
           console.error('Video play failed:', error);
+          setIsBuffering(false); // Hide buffering icon on error
         });
       } else {
         videoRef.current.pause();
@@ -198,8 +213,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
   return (
     <div
       className="relative bg-black h-full w-full"
-      onMouseMove={() => setControlsVisible(true)} // Show controls on mouse move or touch
-      onTouchStart={() => setControlsVisible(true)} // Show controls on touch
+      onMouseMove={showControls} // Show controls on mouse move or touch
+      onTouchStart={showControls} // Show controls on touch
     >
       {/* The video player */}
       <video
@@ -216,11 +231,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
       </video>
 
       {/* Back button */}
-      <div className="absolute top-0 left-0 p-4 z-10">
+      <div className={`absolute top-0 left-0 p-4 z-10 ${controlsVisible ? '' : 'hidden'}`}>
         <button onClick={handleBack} className="text-white">
           <FontAwesomeIcon icon={faArrowLeft} size="1x" />
         </button>
       </div>
+
+      {/* Buffering Icon */}
+      {isBuffering && (
+        <div className="absolute inset-0 flex justify-center items-center">
+          <FontAwesomeIcon icon={faSpinner} size="1x" spin className="text-white" />
+        </div>
+      )}
 
       {/* Custom Play/Pause Button */}
       {controlsVisible && (

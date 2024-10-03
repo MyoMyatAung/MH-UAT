@@ -83,7 +83,7 @@ const DetailPage: React.FC = () => {
         videoUrl={selectedEpisode?.play_url || currentEpisode?.play_url || ''}
         onBack={navigateBackFunction}
         movieDetail={movieDetail} // Pass movie details to DetailSection
-        selectedEpisode={selectedEpisode}
+        selectedEpisode={selectedEpisode || currentEpisode}
       />
       <DetailSection
         movieDetail={movieDetail} // Pass movie details to DetailSection
@@ -92,12 +92,12 @@ const DetailPage: React.FC = () => {
         episodes={movieDetail.play_from[0]?.list || []}
         onEpisodeChange={handleEpisodeChange}
         onEpisodeSelect={handleEpisodeSelect}
-        selectedEpisode={selectedEpisode || movieDetail.play_from[0]?.list[0]}
+        selectedEpisode={selectedEpisode || selectedEpisode || currentEpisode }
       />
       <EpisodeSelector
         episodes={movieDetail.play_from[0]?.list || []}
         onEpisodeSelect={handleEpisodeSelect}
-        selectedEpisode={selectedEpisode || movieDetail.play_from[0]?.list[0]}
+        selectedEpisode={selectedEpisode || selectedEpisode || currentEpisode }
       />
       </>}
     </div>
