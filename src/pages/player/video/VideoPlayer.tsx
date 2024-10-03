@@ -67,6 +67,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
 
       savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`] = {
         progressTime: currentTime,
+      };
+
+      savedHistory[movieDetail.name]['movieDetail'] = {
         movieDetail: movieDetail
       };
 
