@@ -1,113 +1,112 @@
 import React, { useEffect, useRef, useState } from "react";
-import back from "../../assets/login/back.svg";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setOtpOpen } from "../../features/login/ModelSlice";
-import { getOtp } from "../../services/userService";
+import { getOtp, registerEmail } from "../../services/userService";
+import back from "../../assets/login/back.svg";
 
 interface OptProps {
-  email: string;
+  email?: string;
+  password?: string;
+  phone?: string;
 }
 
-const Opt: React.FC<OptProps> = ({ email }) => {
-  const [otpDigits, setOtpDigits] = useState<string[]>([
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-  ]);
+const Opt: React.FC<OptProps> = ({ email, password, phone }) => {
+  const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(""));
   const [timer, setTimer] = useState<number>(59);
-  const { captchaCode, captchaKey } = useSelector((state: any) => state.model);
-  // console.log(captchaCode, captchaKey, email);
-  const dispatch = useDispatch();
   const [buttonText, setButtonText] = useState<string>("59 s");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { captchaCode, captchaKey } = useSelector((state: any) => state.model);
 
-  // Countdown logic
   useEffect(() => {
-    if (timer > 0) {
-      setButtonText(`${timer} s`);
-    }
-    if (timer > 0) {
-      const countdown = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
+    const countdown = setInterval(() => {
+      if (timer > 0) setTimer((prev) => prev - 1);
+    }, 1000);
 
-      return () => clearInterval(countdown);
-    } else {
-      setButtonText("Resend Code");
-    }
+    if (timer === 0) setButtonText("Resend Code");
+    else setButtonText(`${timer} s`);
+
+    return () => clearInterval(countdown);
   }, [timer]);
 
   useEffect(() => {
-    getOtp(captchaCode, email);
-  }, []);
+    if (email) {
+      getOtp(captchaKey, email);
+    }
+  }, [captchaCode, email]);
 
   const handleOTPChange = (index: number, value: string) => {
     const updatedOTP = [...otpDigits];
     updatedOTP[index] = value;
     setOtpDigits(updatedOTP);
 
-    // Auto-focus on the next input box if current value is not empty
     if (value && index < inputRefs.current.length - 1) {
       inputRefs.current[index + 1]?.focus();
     }
+
+    if (updatedOTP.every((digit) => digit) && email && password) {
+      const otpCode = updatedOTP.join("");
+      registerEmail(email, password, otpCode) //3
+        .then(() => navigate("/profile"))
+        .catch((error) => console.error("Error during registration:", error));
+    }
   };
 
-  const resend = () => {
-    setTimer(59);
-    setOtpDigits(["", "", "", "", "", ""]);
-
-    getOtp(captchaCode, email);
+  const resendOtp = () => {
+    if (email) {
+      setTimer(59);
+      setOtpDigits(Array(6).fill(""));
+      getOtp(captchaCode, email); //2
+    }
   };
 
   return (
-    <div className=" w-screen absolute z-[9090909] h-screen bg-[#161619] p-[20px]">
+    <div className="w-screen h-screen absolute z-[9090909] bg-[#161619] p-[20px]">
       <div className="flex justify-between w-2/3">
         <img
-          onClick={() => dispatch(setOtpOpen(false))}
           src={back}
           alt="Back"
+          onClick={() => dispatch(setOtpOpen(false))}
         />
-        <h1 className="text-white text-[16px] font-[600] leading-[20px]">
+        <h1 className="text-white text-[16px] font-semibold leading-[20px]">
           OTP Verification
         </h1>
       </div>
 
-      {/* OTP Input Fields */}
       <div className="py-20 flex flex-col justify-center items-center">
-        <div className="">
+        <div>
           {otpDigits.map((digit, index) => (
             <input
               key={index}
-              type="text"
               ref={(ref) => (inputRefs.current[index] = ref)}
-              maxLength={1}
+              type="number"
               value={digit}
+              maxLength={1}
               onChange={(e) => handleOTPChange(index, e.target.value)}
-              className="w-12 h-12 mx-1 pl-3 text-center rounded-[8px] bg-[#303030] text-white text-[20px]"
+              className="w-12 h-12 mx-1 text-center rounded-lg bg-[#303030] text-white text-[20px]"
             />
           ))}
         </div>
 
-        <p className="text-[#888] text-[10px] font-[400] leading-[15px] p-3 text-center">
+        <p className="text-[#888] text-[10px] font-light leading-[15px] p-3 text-center">
           Verification code sent to{" "}
           <span className="text-white">DevelopX10@gmail.com</span> /{" "}
           <span className="text-white">+868880818.</span> Please check your
-          messages and be sure to check your spam folder
+          messages and spam folder.
         </p>
       </div>
 
-      <div className="w-full py-[0px]">
+      <div className="w-full">
         <button
           disabled={timer > 0}
-          onClick={resend}
-          className={` px-[15px] py-[10px] w-full text-[16px] font-[600] leading-[22px]  ${
+          onClick={resendOtp}
+          className={`w-full px-[15px] py-[10px] text-[16px] font-semibold leading-[22px] ${
             timer > 0
               ? "otp_button text-white"
-              : " bg-white rounded-[80px] text-black"
-          } `}
+              : "bg-white rounded-full text-black"
+          }`}
         >
           {buttonText}
         </button>

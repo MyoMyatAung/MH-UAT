@@ -14,6 +14,8 @@ const PUBLIC_KEY = `-----BEGIN RSA PUBLIC KEY-----
   XLcrqvEZnRK1oak67/ihf7iwPJqdc+68ZYEmmdqwunOvRdjq89fQMVelmqcRD9RY
   e08v+xDxG9Co9z7hcXGTsUquMxkh29uNawIDAQAB
   -----END RSA PUBLIC KEY-----`;
+// GET request
+
 
 /**
  * Fetch captcha image and key status
@@ -111,37 +113,118 @@ export const login = async (
   }
 };
 
+// fetch(API_URL + /v1/app/config?pack=${encrypted}&signature=${signature}).then(r => r.json()).then(d => {
+//   console.log(d)
+// });
+// export const getOtp = async (
+//   captchaCode: string,
+//   // keyStatus: string,
+//   email: string
+// ): Promise<void> => {
+//   try {
+//     const otpResponse = await axios.get(
+//       "https://cc3e497d.qdhgtch.com:2345/api/v1/user/get_code",
+//       {
+//         params: {
+//           send_type: "email",
+//           to: email,
+//           captcha: captchaCode,
+//         },
+//       }
+//     );
+
+//     console.log("OTP Request successful:", otpResponse.data);
+//   } catch (error) {
+//     console.error("Error requesting OTP:", error);
+//   }
+// };
+
+export const registerEmail = async (
+  email: string,
+  password: string,
+  email_code: string
+) => {
+  const formData = {
+    email,
+    password,
+    email_code,
+  };
+  const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
+
+  const signature = generateSignature(encryptedData);
+
+  console.log(formData);
+  try {
+    const response = await axios.post(
+      "https://cc3e497d.qdhgtch.com:2345/api/v1/user/register/email",
+      encryptedData
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error during registration:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+export const registerPhone = async (
+  Phone: string,
+  password: string,
+  sms_code: string
+) => {
+  const formData = {
+    Phone,
+    password,
+    sms_code,
+  };
+
+  console.log(formData);
+  try {
+    const response = await axios.post(
+      "https://cc3e497d.qdhgtch.com:2345/api/v1/user/register/phone",
+      formData
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error during registration:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
 export const getOtp = async (
   captchaCode: string,
-  // keyStatus: string,
   email: string
 ): Promise<void> => {
   try {
-    // Step 1: Verify captcha
-    // const captchaResult = await fetch(`${API_URL}v1/user/check_captcha`, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     code: captchaCode,
-    //     key: keyStatus,
-    //   }),
-    // });
+    // Step 1: Create formData with required fields
+    const formData = {
+      send_type: "email",
+      to: email,
+      captcha: captchaCode,
+      timestamp: new Date().getTime(), // Add timestamp for extra security
+    };
 
-    // const captchaResponse = await captchaResult.json();
+    // Step 2: Encrypt the data
+    const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
 
-    // if (!captchaResponse.data) {
-    //   throw new Error("Captcha verification failed");
-    // }
+    // Step 3: Generate signature for the encrypted data
+    const signature = generateSignature(encryptedData);
 
-    // Step 2: Request OTP
+    console.log(encryptedData)
+
+    // Step 4: Make the GET request with encrypted data and signature as query parameters
     const otpResponse = await axios.get(
-      "https://cc3e497d.qdhgtch.com:2345/api/v1/user/get_code",
+      `${API_URL}v1/user/get_code`, 
       {
         params: {
-          send_type: "email",
-          to: email,
-          captcha: captchaCode,
-        },
+          pack: encryptedData,
+          signature: signature,
+        }
       }
     );
 

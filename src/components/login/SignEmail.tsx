@@ -17,7 +17,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
   const { openCaptcha, openOtp } = useSelector((state: any) => state.model);
   const [showOtp, setShowOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("aunkyawin2035@gmail.com");
+  const [email, setEmail] = useState("devaung25@gmail.com");
   const [password, setPassword] = useState("1234rewq");
   const [error, setError] = useState("");
   const [isVisible, setIsVisible] = useState(true);
@@ -91,7 +91,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
         <Captch isLogin={false} username={email} password={password} />
       )}
 
-      {openOtp && <Opt email={email}/>}
+      {openOtp && <Opt password={password} email={email}/>}
       <AnimatePresence>
         {isVisible && (
           <motion.div
