@@ -14,7 +14,9 @@ interface SignEmailProps {
 
 const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
   const dispatch = useDispatch();
-  const { openCaptcha, openOtp } = useSelector((state: any) => state.model);
+  const { openCaptcha, openOtp, openSignUpEmailModel } = useSelector(
+    (state: any) => state.model
+  );
   const [showOtp, setShowOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("devaung25@gmail.com");
@@ -26,6 +28,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
   const show = () => {
     setShowPassword(!showPassword);
   };
+  console.log(openSignUpEmailModel)
 
   // Password validation function
   const validatePassword = (password: string) => {
@@ -91,7 +94,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
         <Captch isLogin={false} username={email} password={password} />
       )}
 
-      {openOtp && <Opt password={password} email={email}/>}
+      {openOtp && <Opt setIsVisible={setIsVisible} password={password} email={email} />}
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -198,7 +201,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                 </button>
               </form>
 
-              <button className=" bg-white text-black px-2 py-2" onClick={getOtp}>test</button>
+              {/* <button className=" bg-white text-black px-2 py-2" onClick={getOtp}>test</button> */}
 
               {error && <p className="text-red-500 mt-2">{error}</p>}
             </div>

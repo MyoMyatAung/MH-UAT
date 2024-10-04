@@ -1,24 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setOtpOpen } from "../../features/login/ModelSlice";
-import { getOtp, registerEmail } from "../../services/userService";
+import { setOtpOpen, setSignUpEmail } from "../../features/login/ModelSlice";
+import { getOtp, registerEmail, registerPhone } from "../../services/userService";
 import back from "../../assets/login/back.svg";
 
 interface OptProps {
   email?: string;
   password?: string;
   phone?: string;
+  setIsVisible: (isVisible: boolean) => void;
 }
 
-const Opt: React.FC<OptProps> = ({ email, password, phone }) => {
+const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(""));
   const [timer, setTimer] = useState<number>(59);
   const [buttonText, setButtonText] = useState<string>("59 s");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { captchaCode, captchaKey } = useSelector((state: any) => state.model);
+  const { captchaCode, captchaKey, openSignUpEmailModel } = useSelector(
+    (state: any) => state.model
+  );
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -33,7 +36,9 @@ const Opt: React.FC<OptProps> = ({ email, password, phone }) => {
 
   useEffect(() => {
     if (email) {
-      getOtp(captchaCode,captchaKey, email);
+      getOtp(captchaCode, captchaKey, email, "email");
+    } else if (phone) {
+      getOtp(captchaCode, captchaKey, phone, "phone");
     }
   }, [captchaCode, email]);
 
@@ -46,11 +51,21 @@ const Opt: React.FC<OptProps> = ({ email, password, phone }) => {
       inputRefs.current[index + 1]?.focus();
     }
 
-    if (updatedOTP.every((digit) => digit) && email && password) {
+    // Handle OTP submission when all digits are filled
+    if (updatedOTP.every((digit) => digit)) {
       const otpCode = updatedOTP.join("");
-      registerEmail(email, password, otpCode) //3
-        .then(() => navigate("/profile"))
-        .catch((error) => console.error("Error during registration:", error));
+
+      if (email && password) {
+        registerEmail(email, password, otpCode) // Registration for email
+          .then(() => navigate("/profile"))
+          .catch((error) => console.error("Error during registration:", error));
+      } else if (phone && password) {
+        registerPhone(phone, password, otpCode) // Registration for phone
+          .then(() => navigate("/profile"))
+          .catch((error) =>
+            console.error("Error during phone registration:", error)
+          );
+      }
     }
   };
 
@@ -58,18 +73,19 @@ const Opt: React.FC<OptProps> = ({ email, password, phone }) => {
     if (email) {
       setTimer(59);
       setOtpDigits(Array(6).fill(""));
-      getOtp(captchaCode,captchaKey, email);
+      getOtp(captchaCode, captchaKey, email, "email");
     }
+  };
+
+  const handleBack = () => {
+    dispatch(setOtpOpen(false));
+    setIsVisible(true);
   };
 
   return (
     <div className="w-screen h-screen absolute z-[9090909] bg-[#161619] p-[20px]">
       <div className="flex justify-between w-2/3">
-        <img
-          src={back}
-          alt="Back"
-          onClick={() => dispatch(setOtpOpen(false))}
-        />
+        <img src={back} alt="Back" onClick={handleBack} />
         <h1 className="text-white text-[16px] font-semibold leading-[20px]">
           OTP Verification
         </h1>

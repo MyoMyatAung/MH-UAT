@@ -121,6 +121,7 @@ export const registerEmail = async (
     email,
     password,
     email_code,
+    timestamp: new Date().getTime(),
   };
   const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
 
@@ -130,9 +131,19 @@ export const registerEmail = async (
   try {
     const response = await axios.post(
       "https://cc3e497d.qdhgtch.com:2345/api/v1/user/register/email",
-      encryptedData
+      // encryptedData,
+      {
+        pack: encryptedData,
+        signature: signature,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     return response.data;
+    console.log(response.data);
   } catch (error: any) {
     console.error(
       "Error during registration:",
@@ -143,26 +154,38 @@ export const registerEmail = async (
 };
 
 export const registerPhone = async (
-  Phone: string,
+  phone: string,
   password: string,
   sms_code: string
 ) => {
   const formData = {
-    Phone,
+    phone,
     password,
     sms_code,
+    timestamp: new Date().getTime(), // Add timestamp as in registerEmail
   };
+
+  const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY); // Encrypt the data
+  const signature = generateSignature(encryptedData); // Generate the signature
 
   console.log(formData);
   try {
     const response = await axios.post(
       "https://cc3e497d.qdhgtch.com:2345/api/v1/user/register/phone",
-      formData
+      {
+        pack: encryptedData, // Encrypted data
+        signature: signature, // Signature
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     return response.data;
   } catch (error: any) {
     console.error(
-      "Error during registration:",
+      "Error during phone registration:",
       error.response?.data || error.message
     );
     throw error;
@@ -172,9 +195,11 @@ export const registerPhone = async (
 export const getOtp = async (
   captchaCode: string,
   keyStatus: string,
-  email: string
+  sendTo: string, // This can be either email or phone
+  sendType: "email" | "phone" // Specifies if it's for email or phone
 ): Promise<void> => {
   try {
+    // Step 1: Verify Captcha
     const captchaResult = await axios.post(`${API_URL}v1/user/check_captcha`, {
       code: captchaCode,
       key: keyStatus,
@@ -185,23 +210,24 @@ export const getOtp = async (
     if (!captchaResponse.data) {
       throw new Error("Captcha verification failed");
     }
-    // Step 1: Create formData with required fields
+
+    // Step 2: Prepare formData with required fields, using `sendType` to differentiate
     const formData = {
-      send_type: "email",
-      to: email,
+      send_type: sendType, // Set as "email" or "phone"
+      to: sendTo, // The value will be either an email or a phone number
       captcha: captchaResponse.data.key,
       timestamp: new Date().getTime(), // Add timestamp for extra security
     };
-    console.log(formData)
 
-    // Step 2: Encrypt the data
+    console.log(formData);
+
+    // Step 3: Encrypt the data
     const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
 
-    // Step 3: Generate signature for the encrypted data
+    // Step 4: Generate signature for the encrypted data
     const signature = generateSignature(encryptedData);
 
-
-    // Step 4: Make the GET request with encrypted data and signature as query parameters
+    // Step 5: Make the GET request with encrypted data and signature as query parameters
     const otpResponse = await axios.get(`${API_URL}v1/user/get_code`, {
       params: {
         pack: encryptedData,

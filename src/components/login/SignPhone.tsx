@@ -79,7 +79,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-      {openOtp && <Opt phone={phone} />}
+      {openOtp && <Opt setIsVisible={setIsVisible} phone={phone} password={password} />}
       {openCaptcha && (
         <Captch isLogin={false} username={phone} password={password} />
       )}
