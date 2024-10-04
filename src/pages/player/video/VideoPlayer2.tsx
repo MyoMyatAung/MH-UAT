@@ -1,14 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import Hls from "hls.js";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowLeft,
-  faExpand,
-  faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
-import floatingScreen from "../../../assets/floatingScreen.png";
+import React, { useEffect, useRef, useState } from 'react';
+import Hls from 'hls.js';
+import screenfull from 'screenfull';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faExpand, faSpinner, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
+import floatingScreen from '../../../assets/floatingScreen.png';
 
-// Your models (kept as is)
 interface Episode {
   episode_id: number | null;
   episode_name: string;
@@ -43,24 +39,7 @@ interface VideoPlayerProps {
   selectedEpisode?: Episode | null;
 }
 
-// Helper function to format time (e.g., 1:05) (unchanged)
-const formatTime = (time: number) => {
-  const minutes = Math.floor(time / 60);
-  const seconds = Math.floor(time % 60);
-  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-};
-
-// Detect if the device is running iOS (iPhone, iPad)
-const isIOS = () => {
-  return true;
-};
-
-const VideoPlayer: React.FC<VideoPlayerProps> = ({
-  videoUrl,
-  onBack,
-  movieDetail,
-  selectedEpisode,
-}) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail, selectedEpisode }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -71,47 +50,55 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [isBuffering, setIsBuffering] = useState(false);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const STORAGE_KEY = "watchHistory"; // Main key for storing watch history
+  const STORAGE_KEY = 'watchHistory';
 
-  // Save progress logic (unchanged)
+  // Helper function to format time (e.g., 1:05)
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
+
+  // Save the movie progress when back button or episode change happens
   const saveProgress = () => {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
-      const savedHistory = JSON.parse(
-        localStorage.getItem(STORAGE_KEY) || "{}"
-      );
+      const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
       if (!savedHistory[movieDetail.name]) {
         savedHistory[movieDetail.name] = {};
       }
-      savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`] =
-        {
-          progressTime: currentTime,
-        };
-      savedHistory[movieDetail.name]["movieDetail"] = { movieDetail };
+
+      savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`] = {
+        progressTime: currentTime,
+      };
+
+      savedHistory[movieDetail.name]['movieDetail'] = {
+        movieDetail: movieDetail
+      };
+
+      console.log('Saving progress:', currentTime);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(savedHistory));
     }
   };
 
-  // Load progress logic (unchanged)
+  // Load saved progress if available
   const loadProgress = () => {
-    const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    if (
-      savedHistory[movieDetail.name] &&
-      savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`]
-    ) {
-      const savedTime =
-        savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`]
-          .progressTime;
+    setIsBuffering(true);
+    const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (savedHistory[movieDetail.name] && savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`]) {
+      const savedTime = savedHistory[movieDetail.name][`episode_${selectedEpisode?.episode_id}`].progressTime;
       if (videoRef.current && savedTime) {
+        console.log('Resuming from:', savedTime);
         videoRef.current.currentTime = savedTime || 0;
       }
     }
   };
 
-  // Set up HLS or native iOS playback (with minimal change)
+  // Set up HLS for .m3u8 files and handle auto play with progress loading
   useEffect(() => {
-    if (videoUrl && videoRef.current) {
-      // Use HLS.js for non-iOS devices
+    const initHls = () => {
+      setIsBuffering(true);
       if (Hls.isSupported()) {
         if (hlsRef.current) {
           hlsRef.current.destroy();
@@ -123,29 +110,48 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           setDuration(formatTime(videoRef.current?.duration || 0));
           loadProgress();
-          const canPlayHandler = () => {
-            setIsBuffering(true);
-            videoRef.current?.play().then(() => {
-              setIsPlaying(true);
-              setIsBuffering(false);
-            });
-          };
-          videoRef.current?.addEventListener("canplay", canPlayHandler);
+          setIsBuffering(false);
+        });
+
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          console.error('HLS error:', data);
+          setIsBuffering(false);
         });
 
         hlsRef.current = hls;
-      }
-    }
-
-    return () => {
-      saveProgress(); // Save progress on unmount
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
+      } else if (videoRef.current?.canPlayType('application/vnd.apple.mpegurl')) {
+        videoRef.current.src = videoUrl;
+        videoRef.current.addEventListener('loadedmetadata', () => {
+          setDuration(formatTime(videoRef.current?.duration || 0));
+          loadProgress();
+        });
       }
     };
+
+    if (videoUrl && videoRef.current) {
+      initHls();
+    }
+
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      const handlePlay = () => setIsPlaying(true);
+      const handlePause = () => setIsPlaying(false);
+
+      videoElement.addEventListener('play', handlePlay);
+      videoElement.addEventListener('pause', handlePause);
+
+      return () => {
+        saveProgress();
+        if (hlsRef.current) {
+          hlsRef.current.destroy();
+        }
+        videoElement.removeEventListener('play', handlePlay);
+        videoElement.removeEventListener('pause', handlePause);
+      };
+    }
   }, [videoUrl, selectedEpisode]);
 
-  // Handle hiding controls after 3 seconds of inactivity (unchanged)
+  // Handle hiding controls after 3 seconds of inactivity
   const hideControls = () => {
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     controlsTimeoutRef.current = setTimeout(() => {
@@ -153,66 +159,54 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }, 3000);
   };
 
-  // Handle showing controls on interaction (unchanged)
+  // Handle showing controls on interaction
   const showControls = () => {
     setControlsVisible(true);
-    hideControls(); // Start timeout to hide again
+    hideControls();
   };
 
-  // Update progress bar without saving every second (unchanged)
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      const currentTime = videoRef.current.currentTime;
-      const duration = videoRef.current.duration;
-      setProgress((currentTime / duration) * 100);
-      setCurrentTime(formatTime(currentTime));
-    }
-  };
-
-  // Save progress on back button click (unchanged)
+  // Save progress on back button click
   const handleBack = () => {
     saveProgress();
     onBack();
   };
 
-  // Toggle play/pause state (unchanged)
+  // Toggle play/pause state
   const handlePlayPause = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
-        setIsBuffering(true); // Show buffering icon while resuming
-        videoRef.current
-          .play()
-          .then(() => {
-            setIsPlaying(true);
-            setIsBuffering(false); // Hide buffering icon after resuming
-          })
-          .catch((error) => {
-            setIsBuffering(false); // Hide buffering icon on error
-          });
+        setIsBuffering(true);
+        videoRef.current.play().then(() => {
+          setIsBuffering(false);
+        }).catch((error) => {
+          console.error('Video play failed:', error);
+          setIsBuffering(false);
+        });
       } else {
         videoRef.current.pause();
-        setIsPlaying(false);
-        saveProgress(); // Save progress on pause
+        saveProgress();
       }
     }
   };
 
-  // Seek video using custom progress bar (unchanged)
+  // Seek video using custom progress bar
   const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (videoRef.current) {
-      const newTime =
-        (Number(e.target.value) / 100) * videoRef.current.duration;
+      const newTime = (Number(e.target.value) / 100) * videoRef.current.duration;
       videoRef.current.currentTime = newTime;
     }
   };
 
-  // Fullscreen functionality (unchanged)
+  // Fullscreen functionality
   const handleFullscreenToggle = () => {
     if (videoRef.current) {
-      if (!document.fullscreenElement) {
-        videoRef.current.requestFullscreen();
-      } else {
-        document.exitFullscreen();
+      // For iOS devices, request fullscreen directly on the video element
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        (videoRef.current as any).webkitEnterFullscreen?.();
+      } else if (screenfull.isEnabled) {
+        screenfull.toggle(videoRef.current).catch((err) => {
+          console.error('Fullscreen error:', err);
+        });
       }
     }
   };
@@ -220,120 +214,98 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   return (
     <div
       className="relative bg-black h-full w-full"
-      onMouseMove={showControls} // Show controls on mouse move or touch
-      onTouchStart={showControls} // Show controls on touch
+      onMouseMove={showControls}
+      onTouchStart={showControls}
     >
-      <div className={`top-0 left-0 p-2 z-10 sticky`}>
-        <button onClick={handleBack} className="text-white">
-          <FontAwesomeIcon icon={faArrowLeft} size="1x" />
-        </button>
-      </div>
-      {/* Use default controls for iOS, and HLS.js for other devices */}
+      {/* The video player */}
       <video
         ref={videoRef}
         width="100%"
         height="auto"
-        controls={isIOS()} // Only show native controls on iOS
-        playsInline // Ensure iOS plays inline
-        webkit-playsinline
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={() =>
-          setDuration(formatTime(videoRef.current?.duration || 0))
-        }
-        style={{ objectFit: "contain", minHeight: "40vh" }}
+        controls={false}
+        // muted // Muted to bypass auto-play restrictions
+        playsInline // Ensure inline playback on iPhone to avoid default controls
+        onTimeUpdate={() => {
+          if (videoRef.current) {
+            const currentTime = videoRef.current.currentTime;
+            const duration = videoRef.current.duration;
+            setProgress((currentTime / duration) * 100);
+            setCurrentTime(formatTime(currentTime));
+          }
+        }}
+        onLoadedMetadata={() => setDuration(formatTime(videoRef.current?.duration || 0))}
+        style={{ objectFit: 'contain', minHeight: '40vh' }}
         autoPlay
       >
         Your browser does not support the video tag.
       </video>
 
-      <>
-        {/* <div className={`absolute top-0 left-0 p-2 z-10`}>
-            <button onClick={handleBack} className="text-white">
-              <FontAwesomeIcon icon={faArrowLeft} size="1x" />
-            </button>
-          </div> */}
+      {/* Back button */}
+      <div className={`absolute top-0 left-0 p-4 z-10`}>
+        <button onClick={handleBack} className="text-white">
+          <FontAwesomeIcon icon={faArrowLeft} size="1x" />
+        </button>
+      </div>
 
-        {/* Buffering Icon */}
-        {isBuffering && (
-          <div className="absolute inset-0 flex justify-center items-center">
-            <FontAwesomeIcon
-              icon={faSpinner}
-              size="1x"
-              spin
-              className="text-playerNavigator"
-            />
-          </div>
-        )}
-      </>
-      {/* Show your custom UI controls for non-iOS devices */}
-      {!isIOS() && (
-        <>
-          {/* Back button */}
-          <div className={`absolute top-0 left-0 p-4 z-10`}>
-            <button onClick={handleBack} className="text-white">
-              <FontAwesomeIcon icon={faArrowLeft} size="1x" />
-            </button>
-          </div>
-
-          {/* Buffering Icon */}
-          {isBuffering && (
-            <div className="absolute inset-0 flex justify-center items-center">
-              <FontAwesomeIcon
-                icon={faSpinner}
-                size="1x"
-                spin
-                className="text-playerNavigator"
-              />
-            </div>
-          )}
-
-          {/* Custom Play/Pause Button */}
-          {controlsVisible && (
-            <div className="absolute inset-0 flex justify-center items-center">
-              <button
-                onClick={handlePlayPause}
-                className="text-white/60 text-3xl"
-              >
-                {!isBuffering && (isPlaying ? "❚❚" : "►")}
-              </button>
-            </div>
-          )}
-
-          {/* Custom Progress Bar and Fullscreen button */}
-          {controlsVisible && (
-            <div className="absolute bottom-0 left-0 right-0 p-4">
-              <div className="flex justify-between items-center text-white mb-2">
-                <span>{currentTime}</span>
-                <span>{duration}</span>
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="range"
-                  className="w-full h-2 bg-gray-600 cursor-pointer"
-                  value={progress}
-                  onChange={handleProgressChange}
-                  style={{
-                    background: `linear-gradient(to right, #F54100 ${progress}%, gray 0%)`,
-                  }}
-                />
-                <button
-                  onClick={handleFullscreenToggle}
-                  className="ml-2 text-white"
-                >
-                  <FontAwesomeIcon icon={faExpand} size="lg" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Picture-in-Picture button */}
-          <div className="absolute top-0 right-0 p-4 z-10">
-            <button className="text-white">
-              <img src={floatingScreen} alt="PiP" className="h-5 w-5" />
-            </button>
-          </div>
-        </>
+      {/* Buffering Icon */}
+      {isBuffering && (
+        <div className="absolute inset-0 flex justify-center items-center">
+          <FontAwesomeIcon icon={faSpinner} size="1x" spin className="text-playerNavigator" />
+        </div>
       )}
+
+      {/* Custom Play/Pause Button */}
+      {controlsVisible && (
+        <div className="absolute inset-0 flex justify-center items-center">
+          <button onClick={handlePlayPause} className="text-white/60 text-3xl">
+            {!isBuffering && (
+              <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} size="lg" />
+            )}
+          </button>
+        </div>
+      )}
+
+      {/* Custom Progress Bar and Fullscreen button */}
+      {controlsVisible && (
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <div className="flex justify-between items-center text-white mb-2">
+            <span>{currentTime}</span>
+            <span>{duration}</span>
+          </div>
+          <div className="flex items-center">
+            <input
+              type="range"
+              className="w-full h-2 bg-gray-600 cursor-pointer"
+              value={progress}
+              onChange={handleProgressChange}
+              style={{
+                background: `linear-gradient(to right, #FFA500 ${progress}%, gray 0%)`
+              }}
+            />
+            {/* Fullscreen button */}
+            <button onClick={handleFullscreenToggle} className="ml-2 text-white">
+              <FontAwesomeIcon icon={faExpand} size="lg" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Picture-in-Picture button */}
+      <div className="absolute top-0 right-0 p-4 z-10">
+        <button className="text-white" onClick={() => {
+          if (videoRef.current) {
+            if (document.pictureInPictureEnabled && videoRef.current.requestPictureInPicture) {
+              videoRef.current.requestPictureInPicture().catch((error) => {
+                console.error('PiP request failed:', error);
+              });
+            } else {
+              console.error('Picture-in-Picture is not supported on this device.');
+            }
+          }
+        }}>
+          <img src={floatingScreen} alt="PiP" className="h-5 w-5" />
+        </button>
+      </div>
     </div>
   );
 };

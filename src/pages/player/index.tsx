@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import VideoPlayer from './video/VideoPlayer2';
+import VideoPlayer from './video/VideoPlayer';
 import SourceSelector from './video/SourceSelector';
 import DetailSection from './video/DetailSection';
 import EpisodeSelector from './video/EpisodeSelector';
