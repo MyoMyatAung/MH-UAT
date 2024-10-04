@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import logo from "../assets/logo.svg";
+import { useNavigate } from "react-router-dom";
 
 const Header: FC = () => {
   const [configData, setConfigData] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
-
+  const navigate = useNavigate();
   const getConfigData = async () => {
     const res = await fetch(
       "https://cc3e497d.qdhgtch.com:2345/api/v1/app/config"
@@ -28,9 +29,10 @@ const Header: FC = () => {
         </div>
         <div className="flex-1 relative">
           <input
+            onFocus={() => navigate("/search")}
             placeholder="觉醒年代"
             type="text"
-            className="rounded-[18.138px] bg-[#444B56] py-[8.062px] px-[16.123px] w-full text-white outline-none"
+            className="rounded-[18.138px] bg-[#444B56]/50 py-[8.062px] px-[16.123px] w-full text-white outline-none"
           />
           <div className="absolute top-2 right-2">
             <svg

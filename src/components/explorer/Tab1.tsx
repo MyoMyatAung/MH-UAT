@@ -12,7 +12,7 @@ const Tab1 = () => {
   };
 
   return (
-    <div className="pb-32 mt-5 min-h-screen">
+    <div className="pb-32 min-h-screen pt-5 px-3">
       <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
         {exploreList?.data?.list?.map((list: any) => (
           <div key={list?.id} onClick={() => handleMovieClick(list.id)}>
