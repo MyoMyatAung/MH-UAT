@@ -33,7 +33,7 @@ const Opt: React.FC<OptProps> = ({ email, password, phone }) => {
 
   useEffect(() => {
     if (email) {
-      getOtp(captchaKey, email);
+      getOtp(captchaCode,captchaKey, email);
     }
   }, [captchaCode, email]);
 
@@ -58,7 +58,7 @@ const Opt: React.FC<OptProps> = ({ email, password, phone }) => {
     if (email) {
       setTimer(59);
       setOtpDigits(Array(6).fill(""));
-      getOtp(captchaCode, email); //2
+      getOtp(captchaCode,captchaKey, email);
     }
   };
 

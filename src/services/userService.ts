@@ -16,7 +16,6 @@ const PUBLIC_KEY = `-----BEGIN RSA PUBLIC KEY-----
   -----END RSA PUBLIC KEY-----`;
 // GET request
 
-
 /**
  * Fetch captcha image and key status
  * @returns {Promise<{captchaImage: string, keyStatus: string}>}
@@ -113,32 +112,6 @@ export const login = async (
   }
 };
 
-// fetch(API_URL + /v1/app/config?pack=${encrypted}&signature=${signature}).then(r => r.json()).then(d => {
-//   console.log(d)
-// });
-// export const getOtp = async (
-//   captchaCode: string,
-//   // keyStatus: string,
-//   email: string
-// ): Promise<void> => {
-//   try {
-//     const otpResponse = await axios.get(
-//       "https://cc3e497d.qdhgtch.com:2345/api/v1/user/get_code",
-//       {
-//         params: {
-//           send_type: "email",
-//           to: email,
-//           captcha: captchaCode,
-//         },
-//       }
-//     );
-
-//     console.log("OTP Request successful:", otpResponse.data);
-//   } catch (error) {
-//     console.error("Error requesting OTP:", error);
-//   }
-// };
-
 export const registerEmail = async (
   email: string,
   password: string,
@@ -198,16 +171,28 @@ export const registerPhone = async (
 
 export const getOtp = async (
   captchaCode: string,
+  keyStatus: string,
   email: string
 ): Promise<void> => {
   try {
+    const captchaResult = await axios.post(`${API_URL}v1/user/check_captcha`, {
+      code: captchaCode,
+      key: keyStatus,
+    });
+
+    const captchaResponse = captchaResult.data;
+
+    if (!captchaResponse.data) {
+      throw new Error("Captcha verification failed");
+    }
     // Step 1: Create formData with required fields
     const formData = {
       send_type: "email",
       to: email,
-      captcha: captchaCode,
+      captcha: captchaResponse.data.key,
       timestamp: new Date().getTime(), // Add timestamp for extra security
     };
+    console.log(formData)
 
     // Step 2: Encrypt the data
     const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
@@ -215,18 +200,14 @@ export const getOtp = async (
     // Step 3: Generate signature for the encrypted data
     const signature = generateSignature(encryptedData);
 
-    console.log(encryptedData)
 
     // Step 4: Make the GET request with encrypted data and signature as query parameters
-    const otpResponse = await axios.get(
-      `${API_URL}v1/user/get_code`, 
-      {
-        params: {
-          pack: encryptedData,
-          signature: signature,
-        }
-      }
-    );
+    const otpResponse = await axios.get(`${API_URL}v1/user/get_code`, {
+      params: {
+        pack: encryptedData,
+        signature: signature,
+      },
+    });
 
     console.log("OTP Request successful:", otpResponse.data);
   } catch (error) {
