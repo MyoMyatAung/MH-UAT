@@ -17,6 +17,7 @@ import {
 } from "./features/login/ModelSlice";
 import Login from "./pages/login";
 import SignUp from "./components/login/SignUp";
+import Favorite from "./pages/profile/Favorite";
 
 // Lazy load the pages
 const Home = React.lazy(() => import("./pages/home"));
@@ -49,6 +50,7 @@ const App: React.FC = () => {
   const hideHeaderFooter =
     location.pathname.startsWith("/player") ||
     location.pathname.startsWith("/history") ||
+    location.pathname.startsWith("/favorites") ||
     location.pathname.startsWith("/notifications") ||
     location.pathname.startsWith("/settings") ||
     location.pathname.startsWith("/search_overlay") ||
@@ -98,6 +100,7 @@ const App: React.FC = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/player/:id" element={<Player />} />
             <Route path="/history" element={<History />} />
+            <Route path="/favorites" element={<Favorite />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/notifications" element={<Notifications />} />
           </Routes>

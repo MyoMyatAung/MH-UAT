@@ -3,8 +3,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface FavoriteItem {
   id: string;
-  vod_id?: string;
-  // Add other properties if needed
 }
 
 interface FavoriteState {
@@ -25,19 +23,26 @@ export const FavoriteSlice = createSlice({
         (item) => item.id === newData.id
       );
       if (existingDataIndex === -1) {
-        // If data with the same vod_id doesn't exist, add it
+        // Add to favorites
         state.data = [...state.data, newData];
       } else {
+        // Remove from favorites
         state.data = state.data.filter((item) => item.id !== newData.id);
       }
+    },
+    deleteFavData: (state, action: PayloadAction<string[]>) => {
+      // Remove all movies whose IDs are in the action.payload array
+      state.data = state.data.filter(
+        (item) => !action.payload.includes(item.id)
+      );
     },
   },
 });
 
 // Actions generated from the slice
-export const { setFavData } = FavoriteSlice.actions;
+export const { setFavData, deleteFavData } = FavoriteSlice.actions;
 
-// A selector to get the navbar data from the state
+// A selector to get the favorite data from the state
 export const selectFavData = (state: { favorite: FavoriteState }) =>
   state.favorite.data;
 

@@ -40,7 +40,7 @@ const ProfileFirst = () => {
             </svg>
           </div>
         </Link>
-        <Link to={"/"} className="p-first">
+        <Link to={"/favorites"} className="p-first">
           <div className="flex gap-3 items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
