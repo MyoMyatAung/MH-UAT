@@ -42,10 +42,10 @@ const Login: React.FC = () => {
   // };
 
   return (
-    <div className="h-screen whole flex items-center justify-center overflow-hidden">
+    <div className="h-scree flex items-center justify-center overflow-hidde">
       <AnimatePresence>
         <motion.div
-          className="login_box h-[410px] absolute bottom-0 z-[999] w-full max-w-md"
+          className="login_box h-[410px] absolute bottom-0 z-[999] w-screen"
           initial="hidden"
           animate="visible"
           exit="exit"

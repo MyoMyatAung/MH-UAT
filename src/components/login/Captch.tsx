@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import capClose from "../../assets/login/capClose.svg";
 import { useDispatch } from "react-redux";
-import { setCaptchaOpen } from "../../features/login/ModelSlice";
+import { setCapCode, setCaptchaOpen, setOCapKey, setOtpOpen } from "../../features/login/ModelSlice";
 import { getCaptcha, login } from "../../services/userService"; // Importing service methods
 import { useNavigate } from "react-router-dom";
 
-const Captch: React.FC<{username: string, password: string}> = ({username, password}) => {
+const Captch: React.FC<{
+  username: string;
+  password: string;
+  isLogin: boolean;
+}> = ({ username, password, isLogin }) => {
   const dispatch = useDispatch();
   const [captchaCode, setCaptchaCode] = useState("");
   const [captchaImage, setCaptchaImage] = useState<string | null>(null);
@@ -28,6 +32,7 @@ const Captch: React.FC<{username: string, password: string}> = ({username, passw
   const fetchCaptcha = async () => {
     try {
       const { captchaImage, keyStatus } = await getCaptcha();
+      // console.log(keyStatus)
       setCaptchaImage(captchaImage);
       setKeyStatus(keyStatus);
     } catch (err) {
@@ -36,22 +41,35 @@ const Captch: React.FC<{username: string, password: string}> = ({username, passw
     }
   };
 
+  const handleFunction = () => {
+    if (isLogin) {
+      handleLogin();
+    } else {
+      handleOtp();
+    }
+  };
+
   // Handle login after verifying the captcha
   const handleLogin = async () => {
     try {
       // Call login from userService with captcha verification
-      const loginResponse = await login(username, password, captchaCode, keyStatus);
+      const loginResponse = await login(
+        username,
+        password,
+        captchaCode,
+        keyStatus
+      );
       console.log("Login Success:", loginResponse);
-  
+
       // Set the token in localStorage
       localStorage.setItem("authToken", JSON.stringify(loginResponse));
-  
+
       // Close the captcha modal and redirect to home (or the desired route)
       dispatch(setCaptchaOpen(false));
-  
+
       // Manually redirect to the home page after login
       setTimeout(() => {
-        navigate('/home');
+        navigate("/home");
       }, 1000);
     } catch (err) {
       setError("Login failed");
@@ -59,12 +77,21 @@ const Captch: React.FC<{username: string, password: string}> = ({username, passw
     }
   };
 
+  const handleOtp = () => {
+    dispatch(setCapCode(captchaCode))
+    dispatch(setOCapKey(keyStatus))
+    dispatch(setCaptchaOpen(false));
+    dispatch(setOtpOpen(true));
+  };
+
   return (
     <div className="fixed inset-0 z-[99999] bg-black/50 backdrop-blur-[12px] w-screen h-screen flex justify-center items-center">
       {captchaImage && (
         <div className="bg-[#1C1B20] w-[310px] h-[170px] p-[20px]">
           <div className="flex justify-between items-center pb-[16px]">
-            <h1 className="text-white text-[16px] font-[400] text-center">Verify</h1>
+            <h1 className="text-white text-[16px] font-[400] text-center">
+              Verify
+            </h1>
             <img
               onClick={() => dispatch(setCaptchaOpen(false))}
               className="p-1 bg-white"
@@ -80,18 +107,26 @@ const Captch: React.FC<{username: string, password: string}> = ({username, passw
               value={captchaCode}
               onChange={(e) => setCaptchaCode(e.target.value)}
             />
-            <img className="w-[87px] h-[40px]" src={captchaImage} alt="Captcha" />
+            <img
+              className="w-[87px] h-[40px]"
+              src={captchaImage}
+              alt="Captcha"
+            />
           </div>
           <button
             className={`mt-[16px] w-full rounded-[4px] p-[10px] text-[14px] font-[400] ${
-              isButtonDisabled ? "bg-[#333237] text-[#777]" : "bg-white text-black"
+              isButtonDisabled
+                ? "bg-[#333237] text-[#777]"
+                : "bg-white text-black"
             }`}
             disabled={isButtonDisabled}
-            onClick={handleLogin}
+            onClick={handleFunction}
           >
             Sure
           </button>
-          {error && <div className="text-red-500 mt-2 text-center">{error}</div>}
+          {error && (
+            <div className="text-red-500 mt-2 text-center">{error}</div>
+          )}
         </div>
       )}
     </div>

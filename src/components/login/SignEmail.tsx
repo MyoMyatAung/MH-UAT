@@ -6,23 +6,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import Opt from "./Opt";
 import Captch from "./Captch";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setAuthModel,
-  setCaptchaOpen,
-  setLoginOpen,
-  setSignupOpen,
-} from "../../features/login/ModelSlice";
+import { setCaptchaOpen } from "../../features/login/ModelSlice";
+import axios from "axios";
 interface SignEmailProps {
   handleBack2: () => void; // Accept handleBack as a prop
 }
 
 const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
   const dispatch = useDispatch();
-  const { openCaptcha } = useSelector((state: any) => state.model);
+  const { openCaptcha, openOtp, openSignUpEmailModel } = useSelector(
+    (state: any) => state.model
+  );
   const [showOtp, setShowOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("devaung25@gmail.com");
+  const [password, setPassword] = useState("1234rewq");
   const [error, setError] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
@@ -61,8 +59,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
     e.preventDefault();
     try {
       dispatch(setCaptchaOpen(true));
-      console.log("Login successful");
-      setShowOtp(true);
+      // setShowOtp(true);
       setIsVisible(false);
     } catch (err) {
       setError("Login failed. Please check your credentials.");
@@ -70,17 +67,33 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
   };
 
   const handleClose = () => {
-    dispatch(setLoginOpen(false));
-    dispatch(setSignupOpen(false));
-    dispatch(setAuthModel(false));
     setIsVisible(false);
+  };
+
+  const getOtp = () => {
+    axios
+      .get("https://cc3e497d.qdhgtch.com:2345/api/v1/user/get_code", {
+        params: {
+          send_type: "email",
+          to: "devaung25@gmail.com",
+          captcha: "3656",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-      {openCaptcha && <Captch username={email} password={password} />}
+      {openCaptcha && (
+        <Captch isLogin={false} username={email} password={password} />
+      )}
 
-      {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
+      {openOtp && <Opt setIsVisible={setIsVisible} password={password} email={email} />}
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -125,7 +138,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                     onChange={(e) => setEmail(e.target.value)}
                     onFocus={() => setIsFocusedEmail(true)}
                     onBlur={() => setIsFocusedEmail(email !== "")}
-                    className="w-full px-4 py-2 bg-transparent input_border focus:outline-none text-white placeholder-transparen"
+                    className="w-full px-4 py-2 bg-[#161619] input_border focus:outline-none text-white placeholder-transparen"
                     required
                     placeholder=""
                   />
@@ -148,7 +161,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                     onChange={(e) => setPassword(e.target.value)}
                     onFocus={() => setIsFocusedPassword(true)}
                     onBlur={() => setIsFocusedPassword(password !== "")}
-                    className="w-full px-4 py-2 bg-transparent input_border focus:outline-none text-white placeholder-transparent"
+                    className="w-full px-4 py-2 bg-[#161619] input_border focus:outline-none text-white placeholder-transparent"
                     required
                     placeholder=""
                   />
@@ -186,6 +199,8 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                   Sign Up
                 </button>
               </form>
+
+              {/* <button className=" bg-white text-black px-2 py-2" onClick={getOtp}>test</button> */}
 
               {error && <p className="text-red-500 mt-2">{error}</p>}
             </div>
