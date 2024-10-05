@@ -2,7 +2,7 @@ const Tab2 = () => {
 
   return (
     <div>
-      <div className="w-full">
+      <div className="w-full px-3">
         <nav className="flex gap-8 overflow-x-scroll no-scrollbar py-4">
           <button className="flex flex-col items-center justify-center gap-1">
             <span className="text-[16px]">13</span>
@@ -56,7 +56,7 @@ const Tab2 = () => {
           </button>
         </nav>
       </div>
-      <div className="grid grid-cols-3 md:gird-cols-4 lg:grid-cols-6 gap-3 pb-32">
+      <div className="grid grid-cols-3 md:gird-cols-4 lg:grid-cols-6 gap-3 pb-32 px-3">
         <Card />
         <Card />
         <Card />

@@ -30,11 +30,11 @@ const Movies = ({ movieData }) => {
   return (
     <div className="px-10 max-md:px-3">
       <div className="flex justify-between items-center">
-        <h1 className="uppercase max-md:text-[16px] max-md:leading-[24px] text-[24px] leading-[26px] font-[800] flex items-center gap-2">
+        <h1 className="text-sm uppercase text-white font-semibold flex items-center">
           <span className="text-white font-headerFont">{movieData?.title}</span>
         </h1>
         <a
-          href={`/topic/${movieData?.title}/${movieData?.navigator?.id}`}
+          // href={`/topic/${movieData?.title}/${movieData?.navigator?.id}`}
           className=""
         >
           {movieData?.navigator?.title}
@@ -54,7 +54,7 @@ const Movies = ({ movieData }) => {
           </svg>
         </a>
       </div>
-      <div className="max-md:mt-5 mt-10">
+      <div className="max-md:mt-5 mt-5">
         <Swiper
           modules={[Navigation]}
           slidesPerView={1}
@@ -65,7 +65,11 @@ const Movies = ({ movieData }) => {
           }}
           breakpoints={{
             320: {
-              slidesPerView: 2.5,
+              slidesPerView: 3.5,
+              spaceBetween: 10,
+            },
+            350: {
+              slidesPerView: 3,
               spaceBetween: 10,
             },
             480: {
@@ -73,27 +77,27 @@ const Movies = ({ movieData }) => {
               spaceBetween: 10,
             },
             640: {
-              slidesPerView: 3.5,
+              slidesPerView: 4.5,
               spaceBetween: 10,
             },
             768: {
-              slidesPerView: 3.5,
+              slidesPerView: 5.5,
               spaceBetween: 10,
             },
             1000: {
-              slidesPerView: 4.5,
+              slidesPerView: 6.5,
               spaceBetween: 20,
             },
             1268: {
-              slidesPerView: 6.5,
+              slidesPerView: 8.5,
               spaceBetween: 20,
             },
             1568: {
-              slidesPerView: 6.5,
+              slidesPerView: 8.5,
               spaceBetween: 20,
             },
             2068: {
-              slidesPerView: 6.5,
+              slidesPerView: 7.5,
               spaceBetween: 20,
             },
           }}

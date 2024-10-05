@@ -22,7 +22,7 @@ code {
 
 button {
   background: none;
-  border: none;
+  /* border: none; */
   cursor: pointer;
 }
 
