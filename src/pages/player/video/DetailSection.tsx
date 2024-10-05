@@ -209,7 +209,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
       {/* Modal for sharing */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-end">
-          <div className="bg-black/80 backdrop-blur-md w-full max-w-md h-[60vh] bottom-0 rounded-lg p-6 text-white overflow-y-auto">
+          <div className="bg-black backdrop-blur-md w-full max-w-md h-[60vh] bottom-0 rounded-lg p-6 text-white overflow-y-auto">
             {/* Modal Header */}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">Introduction</h2>
