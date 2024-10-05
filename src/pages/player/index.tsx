@@ -195,6 +195,7 @@ const DetailPage: React.FC = () => {
           <DetailSection
             adsData={adsData}
             movieDetail={movieDetail} // Pass movie details to DetailSection
+            id={id || ''}
           />
           <SourceSelector
             changeSource={changeSource}
