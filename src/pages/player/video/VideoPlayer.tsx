@@ -94,6 +94,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
         progressTime: currentTime,
         movieId: (movieDetail as any)['id'],
         duration: videoRef.current?.duration,
+        image: (movieDetail as any).cover,
         ...selectedEpisode
       }
       lastWatchHistoryList[movieDetail.name] = latestWatchHistory;
