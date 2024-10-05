@@ -8,7 +8,9 @@ import {
   faTimes,
   faFire,
 } from "@fortawesome/free-solid-svg-icons";
-
+import CommentComponent from "./CommentSection";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthModel } from "../../../features/login/ModelSlice";
 interface DetailSectionProps {
   movieDetail: {
     code: string;
@@ -22,7 +24,7 @@ interface DetailSectionProps {
     tags: { name: string }[];
     comments_count: string;
     popularity_score: number;
-    members: { name: string, type: number }[];
+    members: { name: string; type: number }[];
   };
   adsData: {
     [key: string]: {
@@ -36,15 +38,18 @@ interface DetailSectionProps {
       };
     };
   } | null;
+  id: string;
 }
 
 const DetailSection: React.FC<DetailSectionProps> = ({
   movieDetail,
   adsData,
+  id,
 }) => {
   const adEntries = adsData && adsData.data ? Object.values(adsData.data) : []; // Extracting all the ads
   const [activeTab, setActiveTab] = useState("tab-1");
   const [showModal, setShowModal] = useState(false); // For triggering modal
+  const dispatch = useDispatch();
 
   const handleDetailClick = () => {
     setShowModal(true);
@@ -54,6 +59,22 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     setShowModal(false);
   };
 
+  const handleTabClick = async(tab: string) => {
+    const loginResponse = await localStorage.getItem("authToken");
+    if(!loginResponse || (loginResponse && loginResponse.includes('errorCode'))) {
+      localStorage.removeItem('authToken');
+      dispatch(setAuthModel(true));
+      return;
+    }
+    const loginInfo = JSON.parse(loginResponse);
+    alert(loginInfo.token_type);
+    if(tab === 'star') {
+    } else if (tab === 'info') {
+
+    } else {
+      
+    }
+  }
   return (
     <div className="flex flex-col w-full bg-black">
       {/* Tabs */}
@@ -154,18 +175,18 @@ const DetailSection: React.FC<DetailSectionProps> = ({
 
             {/* Action Buttons */}
             <div className="actions flex justify-between my-4">
-              <button className="action-btn flex flex-col items-center px-4 py-2 rounded-md">
+              <button onClick={()=>handleTabClick('start')} className="action-btn flex flex-col items-center px-4 py-2 rounded-md">
                 <img src={star} alt="" className="h-7 mb-2" />
                 <span className="text-gray-200">收藏</span>
               </button>
 
-              <button className="flex flex-col items-center px-4 py-2 rounded-md">
+              <button onClick={()=>handleTabClick('info')} className="flex flex-col items-center px-4 py-2 rounded-md">
                 <img src={info} alt="" className="h-7 mb-2" />
                 <span className="text-gray-200">反馈/求片</span>
               </button>
 
               {/* Trigger modal on share button */}
-              <button className="action-btn flex flex-col items-center px-4 py-2 rounded-md">
+              <button onClick={()=>handleTabClick('share')} className="action-btn flex flex-col items-center px-4 py-2 rounded-md">
                 <img src={share} alt="" className="h-7 mb-2" />
                 <span className="text-gray-200">分享</span>
               </button>
@@ -181,29 +202,33 @@ const DetailSection: React.FC<DetailSectionProps> = ({
         {activeTab === "tab-2" && (
           <div id="tab-2" className="block">
             {/* Comment section or other content */}
+            <CommentComponent movieId={id} />
           </div>
         )}
         <div className="bg-gray-800 text-white text-center rounded-lg flex flex-col items-center mt-5 justify-center overflow-y-scroll h-52">
-  {adEntries.length > 0 ? (
-    (() => {
-      const randomIndex = Math.floor(Math.random() * adEntries.length);
-      const ad: any = adEntries[randomIndex % adEntries.length];
-      return ad && ad.data && ad.data.image && ad.data.url ? (
-        <a
-          href={ad.data.url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src={ad.data.image}
-            alt={`Ad ${randomIndex}`}
-            className="w-auto h-52 rounded-md"
-          />
-        </a>
-      ) : null;
-    })()
-  ) : null} {/* Don't render if no ad data */}
-</div>
+          {adEntries.length > 0
+            ? (() => {
+                const randomIndex = Math.floor(
+                  Math.random() * adEntries.length
+                );
+                const ad: any = adEntries[randomIndex % adEntries.length];
+                return ad && ad.data && ad.data.image && ad.data.url ? (
+                  <a
+                    href={ad.data.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={ad.data.image}
+                      alt={`Ad ${randomIndex}`}
+                      className="w-auto h-52 rounded-md"
+                    />
+                  </a>
+                ) : null;
+              })()
+            : null}{" "}
+          {/* Don't render if no ad data */}
+        </div>
       </div>
 
       {/* Modal for sharing */}

@@ -34,7 +34,7 @@ interface Reply {
   create_time: string;
 }
 
-const Comment: React.FC<CommentProps> = ({ movieId }) => {
+const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
@@ -174,4 +174,4 @@ const Comment: React.FC<CommentProps> = ({ movieId }) => {
   );
 };
 
-export default Comment;
+export default CommentComponent;
