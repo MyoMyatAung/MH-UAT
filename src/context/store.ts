@@ -12,6 +12,7 @@ import FavoriteSlice from "../pages/search/slice/FavoriteSlice";
 import modelReducer from "..//features/login/ModelSlice";
 import { homeApi } from "../pages/home/services/homeApi";
 import { explorerAPi } from "../pages/explorer/services/explorerAPi";
+import { profileApi } from "../pages/profile/services/profileApi";
 
 // Define persist config
 const persistConfig = {
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   history: HistorySlice,
   favorite: FavoriteSlice,
   [searchApi.reducerPath]: searchApi.reducer,
+  [profileApi.reducerPath]: profileApi.reducer,
   [homeApi.reducerPath]: homeApi.reducer,
   [explorerAPi.reducerPath]: explorerAPi.reducer,
 });
@@ -43,6 +45,7 @@ const store = configureStore({
       },
     })
       .concat(searchApi.middleware)
+      .concat(profileApi.middleware)
       .concat(homeApi.middleware)
       .concat(explorerAPi.middleware),
 });

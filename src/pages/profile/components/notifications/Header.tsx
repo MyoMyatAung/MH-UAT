@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ categories, onCategoryClick, selectedCategory }: any) => {
   return (
     <div className="flex gap-10 noti-header items-center p-5">
       <Link to="/profile">
@@ -18,9 +18,15 @@ const Header = () => {
         </svg>
       </Link>
 
-      <div className="active">活动</div>
-      <div>公告</div>
-      <div>关于</div>
+      {categories.map((category: any) => (
+        <div
+          key={category.id}
+          className={selectedCategory === category.id ? "active" : ""}
+          onClick={() => onCategoryClick(category.id)}
+        >
+          {category.name}
+        </div>
+      ))}
     </div>
   );
 };
