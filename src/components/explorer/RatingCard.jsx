@@ -7,7 +7,7 @@ const RatingCard = ({ movie, index }) => {
       <Link to={`/player/${movie?.id}`} className="relative">
         <img
           src={movie?.cover}
-          className="w-[100px] h-[131px] md:w-[160px] md:h-[222px] rounded-md object-cover"
+          className="w-[80px] h-[111px] md:w-[160px] md:h-[222px] rounded-md object-cover"
           alt=""
         />
         <div className="absolute top-0 left-0 bg-orange-600 rounded-tl-md rounded-br-md text-white px-2 py-0.5">

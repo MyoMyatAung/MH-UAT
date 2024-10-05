@@ -24,7 +24,7 @@ const Tab4 = () => {
 
   return (
     <div className="pb-32 min-h-screen">
-      <div className="w-full">
+      <div className="w-full px-3">
         <nav className="flex overflow-x-scroll no-scrollbar pb-5 gap-3">
           {data?.data?.map((item: RankingItem, index: number) => (
             <div
@@ -48,7 +48,7 @@ const Tab4 = () => {
           ))}
         </nav>
       </div>
-      <div className="">
+      <div className="px-3">
         {data?.data[activeTab]?.movie_data?.length ? (
           data?.data[activeTab]?.movie_data?.map((item: any, index: any) => (
             <RatingCard movie={item} key={index} index={index} />

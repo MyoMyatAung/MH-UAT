@@ -6,7 +6,7 @@ module.exports = {
       colors: {
         primary: '#BB86FC',
         secondary: '#03DAC6',
-        background: '#121212',
+        background: '#161619',
         header: '#282828',
         footer: '#282828',
         text: '#E0E0E0',
@@ -14,6 +14,7 @@ module.exports = {
         selected: '#FF5722',
         unselected: '#4B5563',
         player: 'black',
+        playerNavigator: '#F54100',
       },
       fontSize: {
         'xs': '0.75rem',   // Extra small text

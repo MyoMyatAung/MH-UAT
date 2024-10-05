@@ -10,7 +10,6 @@ import FooterNav from "./components/FooterNav";
 import { useDispatch, useSelector } from "react-redux";
 import LoginEmail from "./components/login/LoginEmail";
 
-
 import {
   setAuthModel,
   setLoginOpen,
@@ -18,7 +17,6 @@ import {
 } from "./features/login/ModelSlice";
 import Login from "./pages/login";
 import SignUp from "./components/login/SignUp";
-
 
 // Lazy load the pages
 const Home = React.lazy(() => import("./pages/home"));
@@ -50,7 +48,6 @@ const App: React.FC = () => {
   // Hide header and footer when the current path is "/player/:id" or "/login"
   const hideHeaderFooter =
     location.pathname.startsWith("/player") ||
-
     location.pathname.startsWith("/history") ||
     location.pathname.startsWith("/notifications") ||
     location.pathname.startsWith("/settings") ||
@@ -58,6 +55,7 @@ const App: React.FC = () => {
     location.pathname.startsWith("/search") ||
     location.pathname.startsWith("/profile");
 
+  const hideHeader = location.pathname.startsWith("/explorer");
 
   // useEffect(() => {
   //   // Redirect to login if not logged in and trying to access any route other than login
@@ -85,7 +83,7 @@ const App: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Conditionally render Header */}
-      {!hideHeaderFooter && <Header />}
+      {!hideHeaderFooter && !hideHeader && <Header />}
 
       <div className="flex-grow overflow-auto bg-black">
         <Suspense fallback={<div>Loading...</div>}>
@@ -102,7 +100,6 @@ const App: React.FC = () => {
             <Route path="/history" element={<History />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/notifications" element={<Notifications />} />
-
           </Routes>
         </Suspense>
       </div>
