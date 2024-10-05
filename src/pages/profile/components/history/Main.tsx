@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import img from "../../images/historyImg.png";
+import { useNavigate } from "react-router-dom";
+
+interface Movie {
+  id: string;
+  name: string;
+  last_episodeid: string;
+  progress_time: number;
+  cover: string;
+}
 
 interface MainProps {
   isEditMode: boolean;
   setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-  movies: string[];
-  setMovies: React.Dispatch<React.SetStateAction<string[]>>;
+  movies: Movie[];
+  setMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
 }
 
 const Main: React.FC<MainProps> = ({
@@ -15,8 +23,10 @@ const Main: React.FC<MainProps> = ({
   setMovies,
 }) => {
   const [filterToggle, setFilterToggle] = useState(false);
-  const [selectedMovies, setSelectedMovies] = useState<string[]>([]);
+  const [selectedMovies, setSelectedMovies] = useState<any[]>([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const navigate = useNavigate(); // Hook for navigation
 
   const handleDelete = () => {
     setShowConfirmation(true);
@@ -26,21 +36,48 @@ const Main: React.FC<MainProps> = ({
     setFilterToggle((prev) => !prev);
   };
 
-  const handleMovieSelect = (movie: string) => {
+  const handleMovieSelect = (movieId: string) => {
     setSelectedMovies((prevSelected) =>
-      prevSelected.includes(movie)
-        ? prevSelected.filter((m) => m !== movie)
-        : [...prevSelected, movie]
+      prevSelected.includes(movieId)
+        ? prevSelected.filter((id) => id !== movieId)
+        : [...prevSelected, movieId]
     );
   };
+
+  const updateLocalStorageAfterDelete = (updatedMovies: Movie[]) => {
+    const watchHistory = localStorage.getItem("watchHistory");
+    if (watchHistory) {
+      const parsedData = JSON.parse(watchHistory);
+      console.log("deletemovies", updatedMovies);
+      // Remove the movies from localStorage that are no longer in the updatedMovies state
+      updatedMovies.forEach((movie) => {
+        const movieEntry = Object.keys(parsedData).find(
+          (key) => parsedData[key]?.movieDetail?.movieDetail?.id === movie
+        );
+        console.log(movieEntry);
+        if (movieEntry) {
+          delete parsedData[movieEntry];
+        }
+      });
+
+      console.log("p", parsedData);
+
+      // Save the updated data back to localStorage
+      localStorage.setItem("watchHistory", JSON.stringify(parsedData));
+    }
+  };
+
   const confirmDelete = () => {
     const updatedMovies = movies.filter(
-      (movie) => !selectedMovies.includes(movie)
+      (movie) => !selectedMovies.includes(movie.id)
     );
     setMovies(updatedMovies);
     setSelectedMovies([]);
     setIsEditMode(false);
     setShowConfirmation(false);
+
+    // Update localStorage after movies are deleted
+    updateLocalStorageAfterDelete(selectedMovies);
   };
 
   const cancelDelete = () => {
@@ -78,14 +115,20 @@ const Main: React.FC<MainProps> = ({
           {movies.map((movie, index) => (
             <div
               key={index}
-              className={`history-card flex items-center justify-between transition-all duration-300 ease-in-out`}
+              className="history-card flex items-center justify-between transition-all duration-300 ease-in-out"
               onClick={(e) => {
-                if (!(e.target as HTMLElement).closest("input")) {
-                  handleMovieSelect(movie);
+                if (isEditMode) {
+                  // In edit mode, allow selection
+                  if (!(e.target as HTMLElement).closest("input")) {
+                    handleMovieSelect(movie.id);
+                  }
+                } else {
+                  // Not in edit mode, redirect to player
+                  navigate(`/player/${movie.id}`);
                 }
               }}
             >
-              {/* {isEditMode && ( */}
+              {/* Checkbox for Edit Mode */}
               <div
                 className={`custom-checkbox transition-transform duration-500 ease-in-out transform ${
                   isEditMode ? "translate-x-0" : "-translate-x-[50px]"
@@ -93,28 +136,32 @@ const Main: React.FC<MainProps> = ({
               >
                 <input
                   type="checkbox"
-                  checked={selectedMovies.includes(movie)}
+                  checked={selectedMovies.includes(movie.id)}
                   onChange={(e) => {
                     e.stopPropagation();
-                    handleMovieSelect(movie);
+                    handleMovieSelect(movie.id);
                   }}
                   className="h-5 w-5 text-[#F54100] border-2 border-gray-600 rounded-full focus:ring-0 focus:outline-none"
                 />
               </div>
-              {/* )} */}
+
               <div
-                className={` ${
+                className={`${
                   isEditMode ? "ml-0" : "-ml-7"
                 } transition-all duration-300 ease-in-out`}
               >
-                <img src={img} alt={movie} className="h-[80px] max-w-[116px]" />
+                <img
+                  src={movie.cover}
+                  alt={movie.name}
+                  className="h-[80px] max-w-[116px]"
+                />
               </div>
 
-              <div className="flex justify-between w-full ">
+              <div className="flex justify-between w-full">
                 <div>
-                  <h1 className="text-lg font-semibold">{movie}</h1>
+                  <h1 className="text-[16px] font-semibold">{movie.name}</h1>
                   <p className="text-sm text-gray-400">
-                    Episode {index + 1} Viewed 29%
+                    {movie.last_episodeid}, Viewed {movie.progress_time}%
                   </p>
                 </div>
               </div>
@@ -134,7 +181,7 @@ const Main: React.FC<MainProps> = ({
             Cancel all
           </button>
           <button
-            className="delete-all w-[50%] "
+            className="delete-all w-[50%]"
             onClick={handleDelete}
             disabled={selectedMovies.length === 0}
           >
@@ -149,7 +196,7 @@ const Main: React.FC<MainProps> = ({
               <h2 className="p-5">
                 Are you sure you want to clear all History?
               </h2>
-              <div className="flex justify-between  ">
+              <div className="flex justify-between">
                 <button
                   className="text-white w-[50%] p-3 border-t-[1px] border-r-[1px] border-gray-500"
                   onClick={cancelDelete}
@@ -157,7 +204,7 @@ const Main: React.FC<MainProps> = ({
                   Cancel
                 </button>
                 <button
-                  className="text-[#f54100] w-[50%] p-3 border-t-[1px] border-gray-500 "
+                  className="text-[#f54100] w-[50%] p-3 border-t-[1px] border-gray-500"
                   onClick={confirmDelete}
                 >
                   Clear All

@@ -396,3 +396,21 @@
   margin-top: 10px;
   border-bottom: 1px solid #474747;
 }
+
+.fav_text {
+  overflow: hidden;
+  color: var(--White-100, #fff);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: "PingFang SC";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+@media screen and (min-width: 575px) and (max-width: 640px) {
+  .fav {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
