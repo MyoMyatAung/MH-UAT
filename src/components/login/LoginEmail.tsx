@@ -42,8 +42,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
     e.preventDefault();
     try {
       dispatch(setCaptchaOpen(true));
-      console.log("Login successful");
-      // navigate('home');
+      setIsVisible(false)
     } catch (err) {
       setError("Login failed. Please check your credentials.");
     }
@@ -81,16 +80,16 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center overflow-hidden">
+    <div className="min-h-screen w-screen flex items-center justify-center overflow-hidden">
       {/* Conditionally render the ForgotPass component if `forgot` is true */}
-      {openCaptcha && <Captch username={email} password={password} />}
+      {openCaptcha && <Captch isLogin={true} username={email} password={password} />}
       {forgot ? (
         <ForgotPass forgot={forgot} setForgot={setForgot} />
       ) : (
         <AnimatePresence>
           {isVisible && (
             <motion.div
-              className="login_box h-[480px] absolute bottom-0 z-[9999] w-full max-w-md py-4 px-[20px] bg-gray-800 rounded-t-2xl"
+              className="login_box h-[480px] absolute bottom-0 z-[9999] w-screen  py-4 px-[20px] bg-gray-800 rounded-t-2xl"
               initial="hidden"
               animate="visible"
               exit="exit"
@@ -131,7 +130,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
                       onChange={(e) => setEmail(e.target.value)}
                       onFocus={() => setIsFocusedEmail(true)}
                       onBlur={() => setIsFocusedEmail(email !== "")}
-                      className="w-full px-4 py-2 bg-transparent border-b-2 border-gray-500 focus:outline-none text-white transition-colors duration-300"
+                      className="w-full px-4 py-2 bg-[#161619] input_border focus:outline-none text-white placeholder-transparent"
                       required
                       placeholder=""
                     />
@@ -154,7 +153,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
                       onChange={(e) => setPassword(e.target.value)}
                       onFocus={() => setIsFocusedPassword(true)}
                       onBlur={() => setIsFocusedPassword(password !== "")}
-                      className="w-full px-4 py-2 bg-transparent input_border focus:outline-none text-white placeholder-transparent"
+                      className="w-full px-4 py-2 bg-[#161619] input_border focus:outline-none text-white placeholder-transparent"
                       required
                       placeholder="Please Enter Your Password"
                     />
