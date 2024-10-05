@@ -19,10 +19,10 @@ interface SignPhoneProps {
 
 const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
   const dispatch = useDispatch();
-  const { openCaptcha } = useSelector((state: any) => state.model);
+  const { openCaptcha, openOtp } = useSelector((state: any) => state.model);
   const [showOtp, setShowOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isVisible, setIsVisible] = useState(true);
@@ -79,8 +79,10 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-      {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
-      {openCaptcha && <Captch username={email} password={password} />}
+      {openOtp && <Opt setIsVisible={setIsVisible} phone={phone} password={password} />}
+      {openCaptcha && (
+        <Captch isLogin={false} username={phone} password={password} />
+      )}
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -121,10 +123,10 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
                 <div className="relative ">
                   <input
                     type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     onFocus={() => setIsFocusedEmail(true)}
-                    onBlur={() => setIsFocusedEmail(email !== "")}
+                    onBlur={() => setIsFocusedEmail(phone !== "")}
                     className="w-full px-4 py-2 bg-transparent input_border focus:outline-none text-white placeholder-transparent"
                     required
                     placeholder=""
@@ -132,7 +134,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
                   <label
                     htmlFor="text"
                     className={`absolute text-[14px] left-4 text-gray-500 transition-all duration-300 pointer-events-none ${
-                      isFocusedEmail || email
+                      isFocusedEmail || phone
                         ? "top-[-8px] text-xs text-blue-500"
                         : "top-1/2 transform -translate-y-1/2"
                     }`}

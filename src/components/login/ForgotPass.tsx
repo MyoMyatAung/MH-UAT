@@ -53,8 +53,8 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
 
   return (
     <div className=" w-screen h-screen bg-[#161619]">
-      {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />}
-      {openCaptcha && <Captch username={email} password={password} />}
+      {/* {showOtp && <Opt showOtp={showOtp} setShowOtp={setShowOtp} />} */}
+      {openCaptcha && <Captch isLogin={false} username={email} password={password} />}
 
       <div className="p-[20px]">
         {/* head */}
