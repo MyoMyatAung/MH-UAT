@@ -7,6 +7,7 @@ interface Episode {
   episode_name: string;
   play_url: string;
   from_code: string;
+  ready_to_play: boolean;
 }
 
 interface PlayFrom {
@@ -59,7 +60,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
-      <div className="bg-black/70 backdrop-blur-md w-full max-w-md h-[65vh] rounded-t-xl p-4 text-white">
+      <div className="bg-black backdrop-blur-md w-full max-w-md h-[65vh] rounded-t-xl p-4 text-white">
         <div className="flex justify-between items-center mb-4">
           <div className="flex space-x-6 overflow-x-auto m-auto">
             {/* Episode Tab */}

@@ -88,14 +88,14 @@ const DetailSection: React.FC<DetailSectionProps> = ({
         </div>
 
         {/* Buttons aligned to the right */}
-        <div className="flex mr-2 space-x-1 mt-3">
+        {/* <div className="flex mr-2 space-x-1 mt-3">
           <button className="px-4 py-2 bg-gray-800 text-white font-bold rounded-l-3xl">
             发起申
           </button>
           <button className="px-4 py-2 bg-gray-800 text-white font-bold rounded-r-3xl flex items-center">
             弹<span className="text-sm text-orange-600">✔</span>
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Tab content */}
@@ -183,25 +183,27 @@ const DetailSection: React.FC<DetailSectionProps> = ({
             {/* Comment section or other content */}
           </div>
         )}
-        <div className="bg-gray-800 text-white text-center rounded-lg flex flex-col items-center mt-5 justify-center  overflow-y-scroll h-52">
-          {adEntries.map(
-            (ad: any, index) =>
-              ad.data && ad.data.image && ad.data.url ? ( // Check if ad has data, image, and url
-                <a
-                  key={index}
-                  href={ad.data.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src={ad.data.image}
-                    alt={`Ad ${index}`}
-                    className="w-auto h-52 rounded-md"
-                  />
-                </a>
-              ) : null // Don't render if no ad data
-          )}
-        </div>
+        <div className="bg-gray-800 text-white text-center rounded-lg flex flex-col items-center mt-5 justify-center overflow-y-scroll h-52">
+  {adEntries.length > 0 ? (
+    (() => {
+      const randomIndex = Math.floor(Math.random() * adEntries.length);
+      const ad: any = adEntries[randomIndex % adEntries.length];
+      return ad && ad.data && ad.data.image && ad.data.url ? (
+        <a
+          href={ad.data.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src={ad.data.image}
+            alt={`Ad ${randomIndex}`}
+            className="w-auto h-52 rounded-md"
+          />
+        </a>
+      ) : null;
+    })()
+  ) : null} {/* Don't render if no ad data */}
+</div>
       </div>
 
       {/* Modal for sharing */}

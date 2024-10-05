@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 import screenfull from 'screenfull';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faExpand, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faExpand, faSpinner, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 import floatingScreen from '../../../assets/floatingScreen.png';
 
 interface Episode {
@@ -10,6 +10,7 @@ interface Episode {
   episode_name: string;
   play_url: string;
   from_code: string;
+  ready_to_play: boolean;
 }
 
 interface MovieDetail {
@@ -132,12 +133,23 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
       initHls();
     }
 
-    return () => {
-      saveProgress();
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-      }
-    };
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      const handlePlay = () => setIsPlaying(true);
+      const handlePause = () => setIsPlaying(false);
+
+      videoElement.addEventListener('play', handlePlay);
+      videoElement.addEventListener('pause', handlePause);
+
+      return () => {
+        saveProgress();
+        if (hlsRef.current) {
+          hlsRef.current.destroy();
+        }
+        videoElement.removeEventListener('play', handlePlay);
+        videoElement.removeEventListener('pause', handlePause);
+      };
+    }
   }, [videoUrl, selectedEpisode]);
 
   // Handle hiding controls after 3 seconds of inactivity
@@ -166,7 +178,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
       if (videoRef.current.paused) {
         setIsBuffering(true);
         videoRef.current.play().then(() => {
-          setIsPlaying(true);
           setIsBuffering(false);
         }).catch((error) => {
           console.error('Video play failed:', error);
@@ -174,7 +185,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
         });
       } else {
         videoRef.current.pause();
-        setIsPlaying(false);
         saveProgress();
       }
     }
@@ -189,11 +199,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
   };
 
   // Fullscreen functionality
-const handleFullscreenToggle = () => {
+  const handleFullscreenToggle = () => {
     if (videoRef.current) {
       // For iOS devices, request fullscreen directly on the video element
-      if (/iPhone|iPad|iPod/i.test(navigator.userAgent) && (videoRef.current as any).webkitEnterFullscreen) {
-        (videoRef.current as any).webkitEnterFullscreen();
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        (videoRef.current as any).webkitEnterFullscreen?.();
       } else if (screenfull.isEnabled) {
         screenfull.toggle(videoRef.current).catch((err) => {
           console.error('Fullscreen error:', err);
@@ -201,7 +211,6 @@ const handleFullscreenToggle = () => {
       }
     }
   };
-  
 
   return (
     <div
@@ -250,7 +259,9 @@ const handleFullscreenToggle = () => {
       {controlsVisible && (
         <div className="absolute inset-0 flex justify-center items-center">
           <button onClick={handlePlayPause} className="text-white/60 text-3xl">
-            {!isBuffering && (isPlaying ? '❚❚' : '►')}
+            {!isBuffering && (
+              <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} size="lg" />
+            )}
           </button>
         </div>
       )}
@@ -282,7 +293,17 @@ const handleFullscreenToggle = () => {
 
       {/* Picture-in-Picture button */}
       <div className="absolute top-0 right-0 p-4 z-10">
-        <button className="text-white">
+        <button className="text-white" onClick={() => {
+          if (videoRef.current) {
+            if (document.pictureInPictureEnabled && videoRef.current.requestPictureInPicture) {
+              videoRef.current.requestPictureInPicture().catch((error) => {
+                console.error('PiP request failed:', error);
+              });
+            } else {
+              console.error('Picture-in-Picture is not supported on this device.');
+            }
+          }
+        }}>
           <img src={floatingScreen} alt="PiP" className="h-5 w-5" />
         </button>
       </div>

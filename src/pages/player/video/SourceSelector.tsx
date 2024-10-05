@@ -8,6 +8,7 @@ interface Episode {
   episode_name: string;
   play_url: string;
   from_code: string;
+  ready_to_play: boolean;
 }
 
 interface MovieDetail {
