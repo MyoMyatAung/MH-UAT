@@ -57,8 +57,15 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
 
       if (email && password) {
         registerEmail(email, password, otpCode) // Registration for email
-          .then(() => navigate("/profile"))
-          .catch((error) => console.error("Error during registration:", error));
+        .then((registerResponse) => {
+          // Store registration response (e.g., auth token) in localStorage
+          localStorage.setItem("authToken", JSON.stringify(registerResponse));
+
+          // Redirect to home after registration
+          setTimeout(() => {
+            navigate("/home");
+          }, 1000);
+        })          .catch((error) => console.error("Error during registration:", error));
       } else if (phone && password) {
         registerPhone(phone, password, otpCode) // Registration for phone
           .then(() => navigate("/profile"))

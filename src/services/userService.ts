@@ -131,7 +131,6 @@ export const registerEmail = async (
   try {
     const response = await axios.post(
       "https://cc3e497d.qdhgtch.com:2345/api/v1/user/register/email",
-      // encryptedData,
       {
         pack: encryptedData,
         signature: signature,
@@ -142,8 +141,19 @@ export const registerEmail = async (
         },
       }
     );
-    return response.data;
-    console.log(response.data);
+
+    // Axios stores headers in an object, not a map, so access it like this
+    const dataIsEncrypt = response.headers["x-app-data-encrypt"];
+
+    // Handle the response
+    const resultText = response.data; // Axios responses store data in the `data` property
+
+    // If the data is encrypted, decrypt it; otherwise, return as is
+    if (!dataIsEncrypt) {
+      return resultText;
+    } else {
+      return decryptWithAes(resultText);
+    }
   } catch (error: any) {
     console.error(
       "Error during registration:",

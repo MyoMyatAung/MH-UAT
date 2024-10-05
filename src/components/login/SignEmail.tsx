@@ -28,7 +28,6 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
   const show = () => {
     setShowPassword(!showPassword);
   };
-  console.log(openSignUpEmailModel)
 
   // Password validation function
   const validatePassword = (password: string) => {
