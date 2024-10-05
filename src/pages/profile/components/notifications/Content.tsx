@@ -1,22 +1,19 @@
-// Content.js
+const Content = ({ notice }: any) => {
+  if (!notice) return null;
 
-const Content = () => {
   return (
-    <div className="content  p-3">
+    <div className="content p-3">
       <div className="text-card">
-        <h3>安卓版本投屏功能已恢复</h3>
-        <p className="mt-3">
-          您的电影之夜变得更加精彩！发现精心策划的电影合集，创建观看列表，并与朋友分享您最喜爱的电影。我们的高级搜索和筛选选项使您可以轻松找到您想看的任何电影，无论是充满动作的惊悚片还是温馨的爱情片。在一个地方查看最新的预告片、新闻和电影评论。加入我们的电影爱好者社区，让每个夜晚都成为MovieTime之夜！
-        </p>
-        <h3 className="mt-5">安卓版本投屏功能已恢复</h3>
-        <p className="mt-3">
-          您的电影之夜变得更加精彩！发现精心策划的电影合集，创建观看列表，并与朋友分享您最喜爱的电影。我们的高级搜索和筛选选项使您可以轻松找到您想看的任何电影，无论是充满动作的惊悚片还是温馨的爱情片。在一个地方查看最新的预告片、新闻和电影评论。加入我们的电影爱好者社区，让每个夜晚都成为MovieTime之夜！
-        </p>
-        <h3 className="mt-5">安卓版本投屏功能已恢复</h3>
-        <p className="mt-3">
-          您的电影之夜变得更加精彩！发现精心策划的电影合集，创建观看列表，并与朋友分享您最喜爱的电影。我们的高级搜索和筛选选项使您可以轻松找到您想看的任何电影，无论是充满动作的惊悚片还是温馨的爱情片。在一个地方查看最新的预告片、新闻和电影评论。加入我们的电影爱好者社区，让每个夜晚都成为MovieTime之夜！
-        </p>
-        <button className="noti-btn mt-6">点击跳转更新</button>
+        <h3>{notice.title}</h3>
+        <p className="mt-3">{notice.content}</p>
+        {notice.extend.page_name && (
+          <button
+            className="noti-btn mt-6"
+            onClick={() => window.open(notice.extend.page_path, "_blank")}
+          >
+            {notice.extend.page_name}
+          </button>
+        )}
       </div>
     </div>
   );
