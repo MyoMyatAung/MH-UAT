@@ -4,6 +4,7 @@ import { deleteFavData } from "../../../search/slice/FavoriteSlice"; // Adjust p
 import { useNavigate } from "react-router-dom";
 import Ads from "../../../search/components/Ads";
 import Loader from "../../../search/components/Loader";
+import ImageWithPlaceholder from "../../../search/components/ImgPlaceholder";
 
 interface MainProps {
   isEditMode: boolean;
@@ -59,7 +60,7 @@ const Main: React.FC<MainProps> = ({
   };
 
   return (
-    <div className="bg-[#161619] pb-[100px]">
+    <div className="bg-[#161619] pb-[50px] mt-[65px] ">
       <div className="mt-3">
         {isLoading || isFetching ? (
           <div className="flex justify-center items-center h-[126px]">
@@ -80,7 +81,7 @@ const Main: React.FC<MainProps> = ({
             >
               <div className="relative transition-transform duration-500 ease-in-out transform">
                 <div
-                  className={`custom-checkbox absolute top-[2px] right-[2px] ${
+                  className={`custom-checkbox absolute top-[2px] right-[2px] z-10 ${
                     isEditMode ? "block" : "hidden"
                   }`}
                 >
@@ -94,10 +95,12 @@ const Main: React.FC<MainProps> = ({
                     className="h-5 w-5 text-[#F54100] border-2 border-gray-600 rounded-full focus:ring-0 focus:outline-none"
                   />
                 </div>
-                <img
+                <ImageWithPlaceholder
                   src={movie?.cover}
-                  alt={movie?.name}
-                  className="w-full h-[153px] rounded-md"
+                  alt={`Picture of ${movie?.name}`}
+                  width="100%"
+                  height={153}
+                  className="rounded-md w-full h-[153px] object-cover object-center"
                 />
               </div>
 

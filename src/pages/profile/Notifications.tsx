@@ -6,9 +6,10 @@ import "./profile.css";
 import { useGetNotificationQuery } from "./services/profileApi";
 import { useGetAdsQuery } from "../search/services/searchApi";
 import Ads from "../search/components/Ads";
+import Loader from "../search/components/Loader";
 
 const Notifications = () => {
-  const { data, isLoading } = useGetNotificationQuery(); // Fetch data from API
+  const { data, isLoading, isFetching } = useGetNotificationQuery(); // Fetch data from API
   const {
     data: ads,
     isFetching: isFetched,
@@ -27,10 +28,14 @@ const Notifications = () => {
     }
   }, [data]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || isFetching)
+    return (
+      <div className="flex justify-center items-center h-screen bg-[#161619]">
+        <Loader />
+      </div>
+    );
 
   const advert = ads?.data?.notice_up?.data;
-  console.log(advert);
 
   const categories = data?.data || []; // Safely get categories
 

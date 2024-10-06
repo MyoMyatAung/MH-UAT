@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ImageWithPlaceholder from "../../../search/components/ImgPlaceholder";
 
 interface Movie {
   id: string;
   name: string;
   last_episodeid: string;
+  episode_name: string;
   progress_time: number;
+  playedTime: string;
+  duration: any;
   cover: string;
 }
 
@@ -22,7 +26,6 @@ const Main: React.FC<MainProps> = ({
   movies,
   setMovies,
 }) => {
-  const [filterToggle, setFilterToggle] = useState(false);
   const [selectedMovies, setSelectedMovies] = useState<any[]>([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -30,10 +33,6 @@ const Main: React.FC<MainProps> = ({
 
   const handleDelete = () => {
     setShowConfirmation(true);
-  };
-
-  const handleToggle = () => {
-    setFilterToggle((prev) => !prev);
   };
 
   const handleMovieSelect = (movieId: string) => {
@@ -44,26 +43,20 @@ const Main: React.FC<MainProps> = ({
     );
   };
 
-  const updateLocalStorageAfterDelete = (updatedMovies: Movie[]) => {
-    const watchHistory = localStorage.getItem("watchHistory");
+  const updateLocalStorageAfterDelete = (updatedMovies: any[]) => {
+    const watchHistory = localStorage.getItem("lastWatchHistory");
     if (watchHistory) {
       const parsedData = JSON.parse(watchHistory);
-      console.log("deletemovies", updatedMovies);
-      // Remove the movies from localStorage that are no longer in the updatedMovies state
-      updatedMovies.forEach((movie) => {
-        const movieEntry = Object.keys(parsedData).find(
-          (key) => parsedData[key]?.movieDetail?.movieDetail?.id === movie
-        );
-        console.log(movieEntry);
-        if (movieEntry) {
-          delete parsedData[movieEntry];
-        }
+      updatedMovies.forEach((movieId) => {
+        Object.keys(parsedData).forEach((key) => {
+          if (parsedData[key].movieId === movieId) {
+            delete parsedData[key]; // Delete the entry if the movieId matches
+          }
+        });
       });
 
-      console.log("p", parsedData);
-
       // Save the updated data back to localStorage
-      localStorage.setItem("watchHistory", JSON.stringify(parsedData));
+      localStorage.setItem("lastWatchHistory", JSON.stringify(parsedData));
     }
   };
 
@@ -84,10 +77,18 @@ const Main: React.FC<MainProps> = ({
     setShowConfirmation(false);
   };
 
+  // Calculate view percentage
+  const calculateViewPercentage = (progress_time: number, duration: number) => {
+    if (duration && progress_time) {
+      return ((progress_time / duration) * 100).toFixed(2); // Display up to 2 decimal points
+    }
+    return "0";
+  };
+
   return (
-    <div className="bg-[#161619] pb-[100px]">
-      <div className="mt-3">
-        <div className="flex items-center justify-between bg-[#1B1B1F] px-5 py-1">
+    <div className="bg-[#161619] mt-[60px]  pb-[50px]">
+      <div className="">
+        {/* <div className="flex items-center justify-between bg-[#1B1B1F] px-5 py-1">
           <div className="history-text">Today</div>
           <div className="flex gap-2 items-center">
             <p className="filter-text">Filter the watched videos</p>
@@ -108,14 +109,14 @@ const Main: React.FC<MainProps> = ({
               ></div>
             </label>
           </div>
-        </div>
+        </div> */}
 
         <div className="py-3">
           {/* Movie Cards */}
           {movies.map((movie, index) => (
             <div
               key={index}
-              className="history-card flex items-center justify-between transition-all duration-300 ease-in-out"
+              className="history-card transition-all duration-300 ease-in-out"
               onClick={(e) => {
                 if (isEditMode) {
                   // In edit mode, allow selection
@@ -130,8 +131,8 @@ const Main: React.FC<MainProps> = ({
             >
               {/* Checkbox for Edit Mode */}
               <div
-                className={`custom-checkbox transition-transform duration-500 ease-in-out transform ${
-                  isEditMode ? "translate-x-0" : "-translate-x-[50px]"
+                className={`custom-checkbox transition-transform duration-300 ease-in-out transform ${
+                  isEditMode ? "translate-x-3" : "-translate-x-[50px]"
                 }`}
               >
                 <input
@@ -146,23 +147,41 @@ const Main: React.FC<MainProps> = ({
               </div>
 
               <div
-                className={`${
-                  isEditMode ? "ml-0" : "-ml-7"
-                } transition-all duration-300 ease-in-out`}
+                className={` transition-transform flex items-center justify-between  duration-300 ease-in-out transform ${
+                  isEditMode ? "translate-x-[25px]" : "translate-x-0"
+                } `}
               >
-                <img
-                  src={movie.cover}
-                  alt={movie.name}
-                  className="h-[80px] max-w-[116px]"
-                />
-              </div>
+                <div className="relative">
+                  <ImageWithPlaceholder
+                    src={movie?.cover}
+                    alt={`Picture of ${movie?.name}`}
+                    width={116}
+                    height={80}
+                    className="rounded-md w-[116px] h-[80px] object-cover object-center"
+                  />
 
-              <div className="flex justify-between w-full">
-                <div>
-                  <h1 className="text-[16px] font-semibold">{movie.name}</h1>
-                  <p className="text-sm text-gray-400">
-                    {movie.last_episodeid}, Viewed {movie.progress_time}%
-                  </p>
+                  <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black to-transparent rounded-sm"></div>
+
+                  <div className="absolute bottom-1 text-[10px] left-1 z-10">
+                    {movie?.episode_name}
+                  </div>
+                </div>
+
+                <div className="flex justify-between w-full ml-5">
+                  <div>
+                    <h1 className="text-[16px] font-semibold">{movie.name}</h1>
+                    <p className="text-sm text-gray-400 mt-1">
+                      ep {movie.episode_name}, Viewed
+                      <span>
+                        {" "}
+                        {calculateViewPercentage(
+                          movie.progress_time,
+                          movie.duration
+                        )}
+                        %
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -170,7 +189,7 @@ const Main: React.FC<MainProps> = ({
         </div>
 
         <div
-          className={`fixed z-10 bottom-0 gap-3 w-full bg-[#1B1B1F] p-6 flex justify-between items-center  transition-transform duration-300 ease-in-out ${
+          className={`fixed z-10 bottom-0 gap-3 w-full bg-[#1B1B1F] p-6 flex justify-between items-center transition-transform duration-300 ease-in-out ${
             isEditMode ? "translate-y-0" : "translate-y-full"
           }`}
         >

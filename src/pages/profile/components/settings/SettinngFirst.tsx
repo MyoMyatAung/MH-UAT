@@ -36,7 +36,7 @@ const SettingFirst = () => {
           </div>
         </div>
 
-        <div className="p-first">
+        {/* <div className="p-first">
           <div className="flex gap-1 max-w-[230px] flex-col ">
             <h1>Allow download Without Wi-fi</h1>
           </div>
@@ -57,7 +57,7 @@ const SettingFirst = () => {
               ></div>
             </label>
           </div>
-        </div>
+        </div> */}
         <div className="p-first">
           <div className="flex gap-1 max-w-[230px] flex-col ">
             <h1>Picture-In-picture mode</h1>
