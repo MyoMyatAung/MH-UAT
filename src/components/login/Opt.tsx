@@ -59,7 +59,7 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
         registerEmail(email, password, otpCode) // Registration for email
         .then((registerResponse) => {
           // Store registration response (e.g., auth token) in localStorage
-          localStorage.setItem("authToken", JSON.stringify(registerResponse));
+          localStorage.setItem("authToken", JSON.stringify(registerResponse.data));
 
           // Redirect to home after registration
           setTimeout(() => {
