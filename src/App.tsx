@@ -28,6 +28,7 @@ const Player = React.lazy(() => import("./pages/player"));
 const Detail = React.lazy(() => import("./pages/explorer/Detail"));
 const History = React.lazy(() => import("./pages/profile/History"));
 const Settings = React.lazy(() => import("./pages/profile/Settings"));
+const Callback = React.lazy(() => import("./pages/callback"));
 const Notifications = React.lazy(() => import("./pages/profile/Notifications"));
 
 // ProtectedRoute component to handle route guarding
@@ -53,7 +54,8 @@ const App: React.FC = () => {
     location.pathname.startsWith("/settings") ||
     location.pathname.startsWith("/search_overlay") ||
     location.pathname.startsWith("/search") ||
-    location.pathname.startsWith("/profile");
+    location.pathname.startsWith("/profile") ||
+    location.pathname.startsWith("/social_callback");
 
   const hideHeader = location.pathname.startsWith("/explorer");
 
@@ -99,6 +101,7 @@ const App: React.FC = () => {
             <Route path="/player/:id" element={<Player />} />
             <Route path="/history" element={<History />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/social_callback" element={<Callback />} />
             <Route path="/notifications" element={<Notifications />} />
           </Routes>
         </Suspense>

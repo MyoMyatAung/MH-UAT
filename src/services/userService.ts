@@ -4,6 +4,7 @@ import {
   generateSignature,
   decryptWithAes,
 } from "./newEncryption";
+import { useDispatch } from "react-redux";
 
 const API_URL = "https://cc3e497d.qdhgtch.com:2345/api/";
 const PUBLIC_KEY = `-----BEGIN RSA PUBLIC KEY-----
@@ -275,4 +276,140 @@ export const getSocialLoginUrl = async (type: string, action: string) => {
     console.error("Error fetching social login URL:", error);
     throw error;
   }
+};
+export const handleSocialLoginCallback = async (
+  type: string,
+  action: string,
+  code: string
+) => {
+  try {
+    const response = await axios.post(
+      "https://cc3e497d.qdhgtch.com:2345/api/v1/user/social_login_callback",
+      {
+        action: action, // e.g., "login"
+        type: type, // e.g., "qq", "wx", "sina"
+        code: code, // The code you get from the redirect
+      },
+      {
+        headers: {
+          "X-Action-Type": "your-action-type",
+          "X-Client-Setting": "your-client-settings",
+          "X-App-Version": "1000",
+          "X-App-Lang": "zh_CN",
+        },
+      }
+    );
+
+    // Handle the success response, maybe store the tokens
+    if (response.data) {
+      return response.data.data;
+    }
+  } catch (error) {
+    console.error("Error handling social login callback", error);
+    // alert("Failed to complete social login. Please try again.");
+  }
+};
+
+export const handleSocialLoginCredentials = async (
+  captchaCode: string,
+  keyStatus: string,
+  username: string,
+  password: string,
+  // repassword:string,
+  platform_type: string,
+  social_id: string
+) => {
+  try {
+    const captchaResult = await axios.post(`${API_URL}v1/user/check_captcha`, {
+      code: captchaCode,
+      key: keyStatus,
+    });
+
+    const captchaResponse = captchaResult.data;
+
+    if (!captchaResponse.data) {
+      throw new Error("Captcha verification failed");
+    }
+
+    const formData = {
+      username: username,
+      password: password,
+      // repassword:repassword,
+      platform_type: platform_type,
+      social_id: social_id,
+      captcha: captchaResponse.data.key,
+      timestamp: new Date().getTime(),
+    };
+    console.log(formData);
+
+    const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
+
+    const signature = generateSignature(encryptedData);
+
+    const response = await axios.post(
+      "https://cc3e497d.qdhgtch.com:2345//api/v1/user/register/social",
+      {
+        pack: encryptedData,
+        signature: signature,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(response);
+  } catch (error) {}
+};
+
+export const handleSocialSignUpCredentials = async (
+  captchaCode: string,
+  keyStatus: string,
+  username: string,
+  password: string,
+  repassword:string,
+  platform_type: string,
+  social_id: string
+) => {
+  try {
+    const captchaResult = await axios.post(`${API_URL}v1/user/check_captcha`, {
+      code: captchaCode,
+      key: keyStatus,
+    });
+
+    const captchaResponse = captchaResult.data;
+
+    if (!captchaResponse.data) {
+      throw new Error("Captcha verification failed");
+    }
+
+    const formData = {
+      username: username,
+      password: password,
+      repassword:repassword,
+      platform_type: platform_type,
+      social_id: social_id,
+      captcha: captchaResponse.data.key,
+      timestamp: new Date().getTime(),
+    };
+    console.log(formData);
+
+    const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
+
+    const signature = generateSignature(encryptedData);
+
+    const response = await axios.post(
+      "https://cc3e497d.qdhgtch.com:2345/api/v1/user/bind_social_with_credentials",
+      {
+        pack: encryptedData,
+        signature: signature,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(response);
+  } catch (error) {}
 };

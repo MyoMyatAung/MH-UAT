@@ -1,11 +1,13 @@
-import React from "react";
-import { getSocialLoginUrl } from "../../services/userService";
+import React, { useEffect } from "react";
+import { getSocialLoginUrl, handleSocialLoginCallback } from "../../services/userService";
 import weChat from "../../assets/login/weChat.png";
+import { useSearchParams } from "react-router-dom";
 
 const WeChatLogin = () => {
+    const [searchParams] = useSearchParams();
   const handleWeChatLogin = async () => {
     try {
-      const socialLoginData = await getSocialLoginUrl("wx", "login");
+      const socialLoginData = await getSocialLoginUrl("google", "login");
       console.log("Social login data:", socialLoginData);
       const wechatLoginUrl = socialLoginData.data.url; // Make sure this matches the actual structure
 
@@ -21,6 +23,14 @@ const WeChatLogin = () => {
 
     // window.location.href = wechatLoginUrl;
   };
+
+  useEffect(() => {
+    const code = searchParams.get("code"); // Extract the code from URL
+    const type = searchParams.get("type"); // e.g., qq, wx, sina
+    if (code && type) {
+      handleSocialLoginCallback(type, "login", code);
+    }
+  }, [searchParams]);
 
   return (
     <img
