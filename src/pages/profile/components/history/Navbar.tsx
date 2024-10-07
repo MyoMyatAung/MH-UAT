@@ -8,7 +8,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isEditMode, onEditClick }) => {
   return (
-    <div className="flex justify-between items-center p-5">
+    <div className="flex fixed top-0 w-full z-10 bg-[#161619] justify-between items-center p-5">
       <Link to="/profile">
         <svg
           xmlns="http://www.w3.org/2000/svg"

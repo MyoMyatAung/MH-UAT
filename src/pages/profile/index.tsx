@@ -6,9 +6,10 @@ import ProfileSecond from "./components/ProfileSecond";
 
 const index = () => {
   return (
-    <div className="bg-[#161619] text-white">
-      <div className="profile-bg w-full h-screen">
-        <div className="z-10 ">
+    <>
+      <div className="profile-bg"></div>
+      <div className="text-white">
+        <div className="">
           <div>
             <Navbar />
           </div>
@@ -21,7 +22,7 @@ const index = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

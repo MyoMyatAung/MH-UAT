@@ -18,6 +18,7 @@ const ImageWithPlaceholder = ({
   ...props
 }: ImageWithPlaceholderProps) => {
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -29,6 +30,9 @@ const ImageWithPlaceholder = ({
               imgRef.current.onload = () => {
                 if (imgRef.current) {
                   imgRef.current.style.opacity = "1";
+                  if (containerRef.current) {
+                    containerRef.current.style.borderRadius = "0";
+                  }
                 }
               };
             }
@@ -54,7 +58,11 @@ const ImageWithPlaceholder = ({
   }, [src]);
 
   return (
-    <div className="image-container" style={{ width: width, height: height }}>
+    <div
+      ref={containerRef}
+      className="image-container"
+      style={{ width: width, height: height }}
+    >
       <img
         ref={imgRef}
         src={cardSkeleton}

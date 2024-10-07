@@ -1,19 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import {
+  useLazyGetAutocompleteQuery, // Lazy query for autocomplete suggestions
+} from "../services/searchApi"; // Adjust the import based on your API setup
 
 interface NavbarProps {
   query: string;
   setQuery: (query: string) => void;
-  onSearch: () => void; // Add onSearch prop to trigger search
+  onSearch: () => void; // Function to trigger search
 }
 
 const Navbar: React.FC<NavbarProps> = ({ query, setQuery, onSearch }) => {
+  const [suggestions, setSuggestions] = useState<any[]>([]); // Store autocomplete suggestions
+  const [isFocused, setIsFocused] = useState(false); // Manage input focus
+
+  const [triggerAutocomplete, { data: autocompleteData }] =
+    useLazyGetAutocompleteQuery(); // Lazy query for autocomplete
+
+  // Fetch autocomplete suggestions when the query changes
+  useEffect(() => {
+    if (query.trim()) {
+      const timer = setTimeout(() => {
+        triggerAutocomplete({ keyword: query }); // Fetch autocomplete suggestions
+      }, 300); // Debounce to avoid too many API calls
+      return () => clearTimeout(timer);
+    } else {
+      setSuggestions([]); // Clear suggestions if query is empty
+    }
+  }, [query, triggerAutocomplete]);
+
+  // Update suggestions when autocomplete data arrives
+  useEffect(() => {
+    if (autocompleteData) {
+      setSuggestions(autocompleteData.data);
+    }
+  }, [autocompleteData]);
+
+  // Handle form submit (trigger search)
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.length !== 0) {
+    if (query.trim()) {
+      setSuggestions([]); // Clear suggestions after search
       onSearch(); // Trigger the search
-    } else {
-      console.log("need query");
     }
+  };
+
+  // Handle suggestion click (trigger search with selected suggestion)
+  const handleSuggestionClick = (suggestion: string) => {
+    setQuery(suggestion); // Set the clicked suggestion as the query
+    setSuggestions([]); // Clear suggestions after click
+    onSearch(); // Trigger search
   };
 
   return (
@@ -43,8 +78,10 @@ const Navbar: React.FC<NavbarProps> = ({ query, setQuery, onSearch }) => {
             value={query}
             type="text"
             className="search-input"
-            placeholder="觉醒年代"
-            onChange={(e) => setQuery(e.target.value)} // Update the query state on input change
+            placeholder="Search for movies"
+            onChange={(e) => setQuery(e.target.value)} // Update the query state
+            onFocus={() => setIsFocused(true)} // Show suggestions on focus
+            onBlur={() => setTimeout(() => setIsFocused(false), 200)} // Delay for clicks on suggestions
           />
         </div>
         <div className="w-[40px]">
@@ -53,6 +90,24 @@ const Navbar: React.FC<NavbarProps> = ({ query, setQuery, onSearch }) => {
           </button>
         </div>
       </form>
+
+      {isFocused && suggestions.length > 0 && (
+        <ul className="fixed top-[60px] left-0 pt-[20px] pb-[80px] h-screen w-full bg-[#161616] text-white z-50 overflow-y-auto">
+          {suggestions.map((suggestion: any, index) => (
+            <li
+              key={index}
+              onClick={() => handleSuggestionClick(suggestion.name)}
+              className="cursor-pointer ml-[20px] p-2 active:text-[#f54100]"
+              dangerouslySetInnerHTML={{
+                __html: suggestion?.highlight.replace(
+                  /<em>(.*?)<\/em>/g,
+                  '<span style="color: #F54100;">$1</span>'
+                ),
+              }} // Render highlighted text
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

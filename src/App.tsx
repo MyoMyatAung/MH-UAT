@@ -18,6 +18,7 @@ import {
 import Login from "./pages/login";
 import SignUp from "./components/login/SignUp";
 import Favorite from "./pages/profile/Favorite";
+import Loader from "./pages/search/components/Loader";
 
 // Lazy load the pages
 const Home = React.lazy(() => import("./pages/home"));
@@ -87,8 +88,14 @@ const App: React.FC = () => {
       {/* Conditionally render Header */}
       {!hideHeaderFooter && !hideHeader && <Header />}
 
-      <div className="flex-grow overflow-auto bg-black">
-        <Suspense fallback={<div>Loading...</div>}>
+      <div className="flex-grow overflow-auto ">
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center h-screen bg-[#161619]">
+              <Loader />
+            </div>
+          }
+        >
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
