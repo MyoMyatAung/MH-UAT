@@ -8,19 +8,20 @@ import Captch from "./Captch";
 import { useDispatch, useSelector } from "react-redux";
 import { setCaptchaOpen } from "../../features/login/ModelSlice";
 import axios from "axios";
+import UserName from "./UserName";
 interface SignEmailProps {
   handleBack2: () => void; // Accept handleBack as a prop
 }
 
 const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
   const dispatch = useDispatch();
-  const { openCaptcha, openOtp, openSignUpEmailModel } = useSelector(
+  const { openCaptcha, openOtp, openSignUpEmailModel , openUserNameForm } = useSelector(
     (state: any) => state.model
   );
   const [showOtp, setShowOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("devaung25@gmail.com");
-  const [password, setPassword] = useState("1234rewq");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
@@ -92,7 +93,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
       {openCaptcha && (
         <Captch isLogin={false} username={email} password={password} />
       )}
-
+    {openUserNameForm && <UserName />}
       {openOtp && <Opt setIsVisible={setIsVisible} password={password} email={email} />}
       <AnimatePresence>
         {isVisible && (
