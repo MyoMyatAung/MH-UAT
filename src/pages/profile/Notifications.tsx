@@ -35,6 +35,8 @@ const Notifications = () => {
       </div>
     );
 
+  console.log(data);
+
   const advert = ads?.data?.notice_up?.data;
 
   const categories = data?.data || []; // Safely get categories
@@ -59,39 +61,42 @@ const Notifications = () => {
   const notices = selectedCategoryData?.notices || [];
 
   return (
-    <div className="bg-[#161619] text-white">
-      {/* Header */}
-      <Header
-        categories={categories}
-        onCategoryClick={handleCategoryClick}
-        selectedCategory={selectedCategory}
-      />
+    <>
+      <div className="fixed-bg"></div>
+      <div className="bg-[#161619] text-white">
+        {/* Header */}
+        <Header
+          categories={categories}
+          onCategoryClick={handleCategoryClick}
+          selectedCategory={selectedCategory}
+        />
 
-      <div className="border-b-[1px] border-[#242426] mb-5"></div>
+        <div className="border-b-[1px] border-[#242426] mb-5"></div>
 
-      {/* Ads */}
-      <Ads advert={advert} />
+        {/* Ads */}
+        <Ads advert={advert} />
 
-      {/* Sidebar and Content */}
-      <div className="grid grid-cols-3 gap-2 mt-10 h-full pb-[100px]">
-        <div className="col-span-1">
-          <Sidebar
-            notices={notices}
-            onNoticeClick={handleNoticeClick}
-            selectedNotice={selectedNotice}
-          />
-        </div>
-        <div className="col-span-2">
-          {selectedNotice && (
-            <Content
-              notice={notices.find(
-                (notice: any) => notice.id === selectedNotice
-              )}
+        {/* Sidebar and Content */}
+        <div className="grid grid-cols-3 gap-2 mt-10 h-full pb-[100px]">
+          <div className="col-span-1">
+            <Sidebar
+              notices={notices}
+              onNoticeClick={handleNoticeClick}
+              selectedNotice={selectedNotice}
             />
-          )}
+          </div>
+          <div className="col-span-2">
+            {selectedNotice && (
+              <Content
+                notice={notices.find(
+                  (notice: any) => notice.id === selectedNotice
+                )}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

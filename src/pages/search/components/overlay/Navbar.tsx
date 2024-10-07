@@ -1,18 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setHistoryData } from "../../slice/HistorySlice";
+import {
+  useLazyGetAutocompleteQuery,
+  useLazyGetSearchMovieQuery,
+} from "../../services/searchApi";
 
 const Navbar: React.FC = () => {
   const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]); // Store autocomplete suggestions
+  const [isFocused, setIsFocused] = useState(false); // Manage input focus
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [triggerAutocomplete, { data: autocompleteData }] =
+    useLazyGetAutocompleteQuery(); // Lazy query for autocomplete
+  const [triggerSearchMovie] = useLazyGetSearchMovieQuery(); // Lazy query for search
+
+  useEffect(() => {
+    if (query.trim()) {
+      // Trigger the autocomplete API when query changes
+      const timer = setTimeout(() => {
+        triggerAutocomplete({ keyword: query });
+      }, 300); // Add debounce for 300ms to avoid too many calls
+      return () => clearTimeout(timer);
+    } else {
+      setSuggestions([]); // Clear suggestions if the query is empty
+    }
+  }, [query, triggerAutocomplete]);
+
+  useEffect(() => {
+    if (autocompleteData) {
+      setSuggestions(autocompleteData.data); // Set autocomplete suggestions when data is received
+    }
+  }, [autocompleteData]);
+
   const handleSubmit = (event: any) => {
     event.preventDefault();
 
     if (query.trim()) {
       dispatch(setHistoryData({ data: query.trim() }));
       navigate(`/search?query=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setQuery(suggestion); // Set the clicked suggestion as the query
+    setSuggestions([]); // Clear suggestions
+    if (suggestion.trim()) {
+      dispatch(setHistoryData({ data: suggestion.trim() }));
+      navigate(`/search?query=${encodeURIComponent(suggestion.trim())}`);
     }
   };
 
@@ -43,8 +81,10 @@ const Navbar: React.FC = () => {
             value={query}
             type="text"
             className="search-input"
-            placeholder="觉醒年代"
+            placeholder="Search for movies"
             onChange={(e) => setQuery(e.target.value)} // Update the query state on input change
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setTimeout(() => setIsFocused(false), 200)} // Delay to allow clicks on suggestions
           />
         </div>
         <div className="w-[40px]">
@@ -53,6 +93,24 @@ const Navbar: React.FC = () => {
           </button>
         </div>
       </form>
+
+      {isFocused && suggestions.length > 0 && (
+        <ul className="fixed top-[60px] left-0 pt-[20px] pb-[80px] h-screen w-full bg-[#161616] text-white z-50 overflow-y-auto">
+          {suggestions.map((suggestion: any, index) => (
+            <li
+              key={index}
+              onClick={() => handleSuggestionClick(suggestion.name)}
+              className="cursor-pointer ml-[20px] p-2 active:text-[#f54100]"
+              dangerouslySetInnerHTML={{
+                __html: suggestion?.highlight.replace(
+                  /<em>(.*?)<\/em>/g,
+                  '<span style="color: #F54100;">$1</span>'
+                ),
+              }}
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

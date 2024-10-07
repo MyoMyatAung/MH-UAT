@@ -97,42 +97,45 @@ const ProfileFirst = () => {
         </Link>
 
         {/* Horizontal Scrolling Movie List */}
-        <div className="flex overflow-x-scroll whitespace-nowrap watch_ten scrollbar-hide gap-4 ">
-          {movies.map((movie) => (
-            <Link
-              to={`/player/${movie.id}`}
-              key={movie.id}
-              className="min-w-[100px]"
-            >
-              <div className="relative">
-                <ImageWithPlaceholder
-                  src={movie?.cover}
-                  alt={`Picture of ${movie?.name}`}
-                  width={100}
-                  height={65}
-                  className="w-[100px] rounded-t-md h-[65px] object-cover object-center"
-                />
-                <div className="absolute watchedDuration bottom-[2px] right-[3px] ">
-                  {formatDuration(movie.progress_time)}
+        {movies.length !== 0 && (
+          <div className="flex overflow-x-scroll whitespace-nowrap watch_ten scrollbar-hide gap-4 ">
+            {movies?.map((movie) => (
+              <Link
+                to={`/player/${movie.id}`}
+                key={movie.id}
+                className="min-w-[100px]"
+              >
+                <div className="relative">
+                  <ImageWithPlaceholder
+                    src={movie?.cover}
+                    alt={`Picture of ${movie?.name}`}
+                    width={100}
+                    height={65}
+                    className="w-[100px] rounded-t-md h-[65px] object-cover object-center"
+                  />
+                  <div className="absolute watchedDuration bottom-[2px] right-[3px] ">
+                    {formatDuration(movie.progress_time)}
+                  </div>
                 </div>
-              </div>
 
-              <div className="watchlist-item-progress">
-                <div
-                  className="progress-bar"
-                  style={{
-                    width: `${
-                      movie?.duration
-                        ? (movie?.progress_time / movie?.duration) * 100
-                        : 0
-                    }%`,
-                  }}
-                ></div>
-              </div>
-              <div className="his-text mt-1">{movie.name}</div>
-            </Link>
-          ))}
-        </div>
+                <div className="watchlist-item-progress">
+                  <div
+                    className="progress-bar"
+                    style={{
+                      width: `${
+                        movie?.duration
+                          ? (movie?.progress_time / movie?.duration) * 100
+                          : 0
+                      }%`,
+                    }}
+                  ></div>
+                </div>
+                <div className="his-text mt-1">{movie.name}</div>
+              </Link>
+            ))}
+          </div>
+        )}
+
         <Link to={"/favorites"} className="p-first">
           <div className="flex gap-3 items-center">
             <svg
