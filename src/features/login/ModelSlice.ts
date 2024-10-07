@@ -10,6 +10,7 @@ interface model {
   captchaKey: string;
   openSignUpEmailModel: boolean;
   openSignUpPhoneModel: boolean;
+  openUserNameForm : boolean
 }
 
 const initialState: model = {
@@ -22,6 +23,7 @@ const initialState: model = {
   captchaKey: "",
   openSignUpEmailModel: false,
   openSignUpPhoneModel: false,
+  openUserNameForm : false
 };
 
 export const modelSlice = createSlice({
@@ -55,7 +57,9 @@ export const modelSlice = createSlice({
     setSignUpPhone: (state, action) => {            //no need
       state.openSignUpPhoneModel = action.payload;
     },
-
+    setOpenUserNameForm: (state, action) => {            //no need
+      state.openUserNameForm = action.payload;
+    },
   },
 });
 
@@ -68,7 +72,8 @@ export const {
   setCapCode,
   setOCapKey,
   setSignUpEmail,
-  setSignUpPhone
+  setSignUpPhone,
+  setOpenUserNameForm
 } = modelSlice.actions;
 
 export default modelSlice.reducer;
