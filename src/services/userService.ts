@@ -250,3 +250,29 @@ export const getOtp = async (
     console.error("Error requesting OTP:", error);
   }
 };
+
+export const getSocialLoginUrl = async (type: string, action: string) => {
+  try {
+    const response = await axios.get(
+      "https://cc3e497d.qdhgtch.com:2345/api/v1/user/get_social_login_url",
+      {
+        params: {
+          type: type,
+          action: action,
+        },
+        headers: {
+          "X-Action-Type": "your-action-type",
+          "X-Client-Setting": "your-client-settings",
+          "X-App-Version": "1000", // Example of version
+          "X-App-Lang": "zh_CN", // Or 'en'
+        },
+      }
+    );
+
+    // Handle the response
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching social login URL:", error);
+    throw error;
+  }
+};
