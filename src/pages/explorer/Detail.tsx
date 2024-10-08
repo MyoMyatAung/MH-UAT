@@ -45,9 +45,9 @@ const Detail = () => {
       <p className="px-3 text-[12px] mb-3">
         Include {details?.movies?.length} Films
       </p>
-      <div className="grid grid-cols-3 gap-3 px-3">
+      <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:gird-cols-8 gap-3 px-3">
         {details?.movies?.map((movie: any) => (
-          <Link key={movie} to={`/player/${movie.id}`}>
+          <Link key={movie} to={`/player/${movie.id}`} className="mx-auto">
             <MovieCard movie={movie} height={""} />
           </Link>
           // <div className="">
