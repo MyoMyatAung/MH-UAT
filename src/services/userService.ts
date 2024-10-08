@@ -338,7 +338,7 @@ export const handleSocialLoginCredentials = async (
       platform_type: platform_type,
       social_id: social_id,
       captcha: captchaResponse.data.key,
-      timestamp: new Date().getTime(),
+      // timestamp: new Date().getTime(),
     };
     console.log(formData);
 
@@ -346,18 +346,40 @@ export const handleSocialLoginCredentials = async (
 
     const signature = generateSignature(encryptedData);
 
-    const response = await axios.post(
-      "https://cc3e497d.qdhgtch.com:2345//api/v1/user/register/social",
+    // const response = await axios.post(
+    //   "https://cc3e497d.qdhgtch.com:2345/api/v1/user/bind_social_with_credentials",
+    //   {
+    //     pack: encryptedData,
+    //     signature: signature,
+    //   },
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+
+    const response = await fetch(
+      "https://cc3e497d.qdhgtch.com:2345/api/v1/user/bind_social_with_credentials",
       {
-        pack: encryptedData,
-        signature: signature,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pack: encryptedData,
+          signature,
+        }),
       }
     );
+
+    const dataIsEncrypt = response.headers.get("x-app-data-encrypt");
+    const resultText = await response.text();
+
+    if (!dataIsEncrypt) {
+      return JSON.parse(resultText);
+    } else {
+      return decryptWithAes(resultText);
+    }
+
     console.log(response);
   } catch (error) {}
 };
@@ -367,7 +389,7 @@ export const handleSocialSignUpCredentials = async (
   keyStatus: string,
   username: string,
   password: string,
-  repassword:string,
+  repassword: string,
   platform_type: string,
   social_id: string
 ) => {
@@ -386,7 +408,7 @@ export const handleSocialSignUpCredentials = async (
     const formData = {
       username: username,
       password: password,
-      repassword:repassword,
+      repassword: repassword,
       platform_type: platform_type,
       social_id: social_id,
       captcha: captchaResponse.data.key,
