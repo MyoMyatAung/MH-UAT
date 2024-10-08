@@ -34,6 +34,11 @@ export const explorerAPi = createApi({
         return `/movie/ranking/list`;
       },
     }),
+    getWeeklyMovies: builder.query({
+      query: (week: any) => {
+        return `/movie/weekly?week_day=${week}`;
+      },
+    }),
   }),
 });
 
@@ -41,4 +46,5 @@ export const {
   useGetExploreListQuery,
   useGetMovieTopicListQuery,
   useGetMovieRankingListQuery,
+  useGetWeeklyMoviesQuery,
 } = explorerAPi;
