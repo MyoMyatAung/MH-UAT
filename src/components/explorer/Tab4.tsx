@@ -35,7 +35,6 @@ const Tab4 = () => {
     console.log(data);
   };
 
-
   useEffect(() => {
     getRankingById(id);
   }, [id]);
@@ -43,7 +42,7 @@ const Tab4 = () => {
   return (
     <div className="pb-32 min-h-screen">
       <div className="w-full px-3">
-        <nav className="flex overflow-x-scroll no-scrollbar pb-5 gap-3">
+        <nav className="flex overflow-x-scroll no-scrollbar pb-5 gap-3 remove-scrollbar">
           {data?.data?.map((item: any, index: number) => (
             <div
               className="relative"
