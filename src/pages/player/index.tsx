@@ -27,6 +27,7 @@ interface MovieDetail {
   area: string;
   year: string;
   score: string;
+  is_collect: boolean;
   content: string;
   cover: string;
   type_name: string;
@@ -63,14 +64,26 @@ const DetailPage: React.FC = () => {
   const [adsData, setAdsData] = useState<AdsData | null>(null);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [selectedSource, setSelectedSource] = useState(0); // Track the selected source
+  const [activeTab, setActiveTab] = useState("tab-1");
 
   const navigate = useNavigate();
 
   // Fetch the movie details based on the provided id
   const getMovieDetail = async () => {
+    const loginResponse = await localStorage.getItem("authToken");
+    const loginInfo = loginResponse ? JSON.parse(loginResponse) : null;
+    const authorization = loginInfo && loginInfo.data && loginInfo.data.token_type ? `${loginInfo.data.token_type} ${loginInfo.data.access_token}` : '';
+    if(!authorization) {
+      localStorage.removeItem('authToken');
+    }
+    const header = authorization ? {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      }} : {method: "GET"};
     const res = await fetch(
-      `https://cc3e497d.qdhgtch.com:2345/api/v1/movie/detail?id=${id}`
-    );
+      `https://cc3e497d.qdhgtch.com:2345/api/v1/movie/detail?id=${id}`, header);
     const data = await res.json();
     setMovieDetail(data?.data);
 
@@ -195,31 +208,37 @@ const DetailPage: React.FC = () => {
           <DetailSection
             adsData={adsData}
             movieDetail={movieDetail} // Pass movie details to DetailSection
-            id={id || ''}
+            id={id || ""}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
           />
-          <SourceSelector
-            changeSource={changeSource}
-            episodes={
-              episodes && episodes.length > 0
-                ? episodes
-                : movieDetail.play_from[0]?.list || []
-            }
-            onEpisodeChange={handleEpisodeChange}
-            onEpisodeSelect={handleEpisodeSelect}
-            selectedEpisode={selectedEpisode || currentEpisode}
-            movieDetail={movieDetail} // Pass movie details to DetailSection
-            selectedSource={selectedSource}
-            setSelectedSource={handleSelectedSource}
-          />
-          <EpisodeSelector
-            episodes={
-              episodes && episodes.length > 0
-                ? episodes
-                : movieDetail.play_from[0]?.list || []
-            }
-            onEpisodeSelect={handleEpisodeSelect}
-            selectedEpisode={selectedEpisode || currentEpisode}
-          />
+          {activeTab === "tab-1" && (
+            <>
+              <SourceSelector
+                changeSource={changeSource}
+                episodes={
+                  episodes && episodes.length > 0
+                    ? episodes
+                    : movieDetail.play_from[0]?.list || []
+                }
+                onEpisodeChange={handleEpisodeChange}
+                onEpisodeSelect={handleEpisodeSelect}
+                selectedEpisode={selectedEpisode || currentEpisode}
+                movieDetail={movieDetail} // Pass movie details to DetailSection
+                selectedSource={selectedSource}
+                setSelectedSource={handleSelectedSource}
+              />
+              <EpisodeSelector
+                episodes={
+                  episodes && episodes.length > 0
+                    ? episodes
+                    : movieDetail.play_from[0]?.list || []
+                }
+                onEpisodeSelect={handleEpisodeSelect}
+                selectedEpisode={selectedEpisode || currentEpisode}
+              />
+            </>
+          )}
         </>
       )}
     </div>
