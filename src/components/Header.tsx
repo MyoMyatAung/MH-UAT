@@ -1,23 +1,13 @@
 import { FC, useEffect, useState } from "react";
 import logo from "../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
+import { useGetHeaderTopicsQuery } from "../../src/pages/home/services/homeApi";
 
 const Header: FC = () => {
-  const [configData, setConfigData] = useState([]);
+  const { data } = useGetHeaderTopicsQuery();
+  const configData = data?.data?.index_top_nav;
   const [activeTab, setActiveTab] = useState(0);
   const navigate = useNavigate();
-  const getConfigData = async () => {
-    const res = await fetch(
-      "https://cc3e497d.qdhgtch.com:2345/api/v1/app/config"
-    );
-    const data = await res.json();
-    console.log(data?.data?.index_top_nav);
-    setConfigData(data?.data?.index_top_nav);
-  };
-
-  useEffect(() => {
-    getConfigData();
-  }, []);
   return (
     <header className="w-full z-50 fixed top-0 bg-gradient-to-b from-[#151722] via-[#151722] to-[#161619]/80 py-4">
       <div className="flex items-center px-3 gap-3">
@@ -53,7 +43,7 @@ const Header: FC = () => {
       </div>
       <div className="w-full">
         <nav className="flex overflow-x-scroll no-scrollbar px-3 gap-3">
-          {configData.map((item: any, index) => (
+          {configData?.map((item: any, index: any) => (
             <div
               className="relative"
               onClick={() => setActiveTab(index)}

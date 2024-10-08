@@ -19,12 +19,26 @@ export const homeApi = createApi({
   }),
 
   endpoints: (builder) => ({
+    getHeaderTopics: builder.query<any, void>({
+      query: () => {
+        return `/app/config`;
+      },
+    }),
     getRecommendedMovies: builder.query<any, void>({
       query: () => {
         return `/movie/index_recommend`;
       },
     }),
+    getFilteredMovieByTopic: builder.query<any, void>({
+      query: (id) => {
+        return `/movie/${id}/recommend`;
+      },
+    }),
   }),
 });
 
-export const { useGetRecommendedMoviesQuery } = homeApi;
+export const {
+  useGetRecommendedMoviesQuery,
+  useGetFilteredMovieByTopicQuery,
+  useGetHeaderTopicsQuery,
+} = homeApi;
