@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faPaperPlane, faSpinner, faP } from '@fortawesome/free-solid-svg-icons';
 import ProfileImg from '../../../assets/profile.png'
 
 interface CommentProps {
@@ -115,17 +115,15 @@ const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
   };
 
   return (
-    <div className="comment-section bg-gray-900 p-4 rounded-md">
+    <div className="comment-section p-1 rounded-md">
       {comments.map((comment) => (
         <div key={comment.id} className="comment border-b border-gray-700 pb-4 mb-4">
-          <div className="profile flex items-center mb-2">
-            <img src={comment.user.avatar || ProfileImg} alt={comment.user.nickname} className="w-10 h-10 rounded-full mr-2" />
-            <div>
+          <div className="profile flex items-center justify-items-center mb-2">
+            <img src={comment.user.avatar || ProfileImg} alt={comment.user.nickname} className="w-10 h-10 rounded-full mr-2 mt-2" />
+            {/* <div className="flex"> */}
               <span className="username text-white font-bold">{comment.user.nickname}</span>
-              <span className="badge bg-blue-500 text-xs text-white px-2 py-1 ml-2 rounded">
-                {comment.user.level}
-              </span>
-            </div>
+              <img src={comment.user.level} alt={comment.user.level} className="h-6 w-auto ml-2" />
+            {/* </div> */}
           </div>
           <div className="comment-text text-gray-300 mb-2">{comment.content}</div>
           <div className="comment-actions flex items-center justify-between">
@@ -149,7 +147,7 @@ const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
                     <img
                       src={reply.user.avatar}
                       alt={reply.user.nickname}
-                      className="w-8 h-8 rounded-full mr-2"
+                      className="rounded-full mr-2"
                     />
                     <div>
                       <span className="username text-white font-bold">{reply.user.nickname}</span>
@@ -171,8 +169,8 @@ const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
 
       {/* Create new comment */}
             {/* Create new comment */}
-            <div className="create-comment mt-6 flex items-center bg-gray-800 p-3 rounded-lg">
-        <img src={ProfileImg} alt="User Avatar" className="w-10 h-10 rounded-full mr-3" />
+      <div className="create-comment mt-6 flex items-center justify-center rounded-lg w-full">
+        <img src={ProfileImg} alt="User Avatar" className="w-10 h-10 rounded-full mr-1 mt-2" />
         <input
           type="text"
           value={newComment}
@@ -180,13 +178,13 @@ const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
           className="flex-grow bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="确认过眼神，你是发言人！"
         />
-        <button
+        {newComment && <button
           onClick={handleCreateComment}
-          className="bg-blue-600 text-white py-2 px-4 ml-3 rounded-md hover:bg-blue-700 focus:outline-none"
+          className="bg-playerNavigator text-white py-2 px-4 ml-3 rounded-md focus:outline-none"
           disabled={loading}
         >
-          {loading ? 'Posting...' : 'Post'}
-        </button>
+          {loading ? <FontAwesomeIcon icon={faSpinner} /> : <FontAwesomeIcon icon={faPaperPlane} />}
+        </button>}
       </div>
     </div>
   );

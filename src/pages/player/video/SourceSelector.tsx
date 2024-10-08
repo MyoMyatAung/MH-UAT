@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight, faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import ModalComponent from "./EpisodeModal";
 
 interface Episode {
@@ -110,9 +110,9 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
             openModal();
             setSource("sources");
           }}
-        >
+        >          
+          <FontAwesomeIcon icon={faArrowsRotate} className="mr-2 text-lg" />
           <span className="font-semibold text-sm">Switch Resource</span>
-          <FontAwesomeIcon icon={faChevronRight} className="ml-2 text-md" />
         </button>
       </div>}
 
