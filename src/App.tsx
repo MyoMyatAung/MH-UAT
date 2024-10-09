@@ -64,7 +64,7 @@ const App: React.FC = () => {
     dispatch(setPanding(true));
     const timer = setTimeout(() => {
       dispatch(setPanding(false));
-    }, 3000);
+    }, 6000);
 
     return () => clearTimeout(timer);
   }, [dispatch]);
