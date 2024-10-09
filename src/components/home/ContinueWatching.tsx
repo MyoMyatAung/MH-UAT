@@ -53,7 +53,12 @@ const ContinueWatching = () => {
     return formattedDuration;
   }
   return (
-    <div>
+    <>
+      {movies?.length && (
+        <h1 className="text-sm uppercase text-white font-semibold flex items-center px-3">
+          <span className="text-white font-headerFont">Continue Watching</span>
+        </h1>
+      )}
       {movies.length !== 0 && (
         <div className="flex overflow-x-scroll whitespace-nowrap watch_ten scrollbar-hide gap-4 ">
           {movies?.map((movie) => (
@@ -92,7 +97,7 @@ const ContinueWatching = () => {
           ))}
         </div>
       )}
-    </div>
+    </>
   );
 };
 
