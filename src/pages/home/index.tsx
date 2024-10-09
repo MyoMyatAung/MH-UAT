@@ -4,12 +4,17 @@ import Banner from "../../components/home/Banner";
 import { useGetRecommendedMoviesQuery } from "./services/homeApi";
 import Loader from "../search/components/Loader";
 import ContinueWatching from "../../components/home/ContinueWatching";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FilteredByType from "../../components/home/FilteredByType";
+import { setActiveTab } from "./slice/HomeSlice";
 
 const Home: React.FC = () => {
   const { data, isLoading } = useGetRecommendedMoviesQuery();
   const activeTab = useSelector((state: any) => state.home.activeTab);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setActiveTab(0));
+  }, []);
   return (
     <>
       {/* <FilteredByType /> */}
@@ -23,8 +28,10 @@ const Home: React.FC = () => {
                 if (movieData?.layout === "index_recommend_carousel") {
                   return (
                     <>
-                      <Banner key={index} list={movieData?.list} />{" "}
-                      <ContinueWatching />
+                      <Banner key={index} list={movieData?.list} />
+                      <div className="">
+                        <ContinueWatching />
+                      </div>
                     </>
                   );
                 } else if (movieData?.layout === "base") {
