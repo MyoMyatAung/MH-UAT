@@ -218,6 +218,13 @@
   background: rgba(255, 255, 255, 0.16);
 }
 
+.filter-title span {
+  gap: 2px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
 .filter-title {
   color: white;
 }

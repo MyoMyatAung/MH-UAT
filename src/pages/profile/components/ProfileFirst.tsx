@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { startTransition, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import ImageWithPlaceholder from "../../search/components/ImgPlaceholder";
+import { setAuthModel } from "../../../features/login/ModelSlice";
+import { useDispatch } from "react-redux";
 
 interface Movie {
   id: any;
@@ -15,6 +17,8 @@ interface Movie {
 
 const ProfileFirst = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Load data from localStorage
   useEffect(() => {
@@ -40,6 +44,10 @@ const ProfileFirst = () => {
       setMovies(movieDetails.slice(0, 10)); // Limit to 10 movies
     }
   }, []);
+  // Check for token in localStorage
+  const isLoggedIn = localStorage.getItem("authToken");
+  const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
+  const token = parsedLoggedIn?.data?.access_token;
 
   function formatDuration(durationInSeconds: any) {
     const hours = Math.floor(durationInSeconds / 3600);
@@ -54,6 +62,18 @@ const ProfileFirst = () => {
     const formattedDuration = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     return formattedDuration;
   }
+
+  const handleFavoritesClick = () => {
+    if (!token) {
+      // If not logged in, open the login modal
+      startTransition(() => {
+        dispatch(setAuthModel(true));
+      });
+    } else {
+      // If logged in, redirect to the favorites page
+      navigate("/favorites");
+    }
+  };
 
   return (
     <div className="profile-div">
@@ -76,7 +96,7 @@ const ProfileFirst = () => {
                 />
               </svg>
             </div>
-            <div className="profile-text">History</div>
+            <div className="profile-text">观看历史</div>
           </div>
           <div>
             <svg
@@ -103,7 +123,7 @@ const ProfileFirst = () => {
               <Link
                 to={`/player/${movie.id}`}
                 key={movie.id}
-                className="min-w-[100px]"
+                className="max-w-[100px]"
               >
                 <div className="relative">
                   <ImageWithPlaceholder
@@ -136,7 +156,7 @@ const ProfileFirst = () => {
           </div>
         )}
 
-        <Link to={"/favorites"} className="p-first">
+        <a className="p-first" onClick={handleFavoritesClick}>
           <div className="flex gap-3 items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +172,7 @@ const ProfileFirst = () => {
                 stroke-width="1.5"
               />
             </svg>
-            <div className="profile-text">My Collection</div>
+            <div className="profile-text">我的收藏</div>
           </div>
           <div>
             <svg
@@ -170,7 +190,7 @@ const ProfileFirst = () => {
               </g>
             </svg>
           </div>
-        </Link>
+        </a>
       </div>
     </div>
   );

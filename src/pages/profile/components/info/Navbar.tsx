@@ -1,12 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-interface NavbarProps {
-  isEditMode: boolean;
-  onEditClick: () => void;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ isEditMode, onEditClick }) => {
+const Navbar: React.FC = () => {
   return (
     <div className="flex fixed top-0 w-full z-10 bg-[#161619] justify-between items-center p-5">
       <Link to="/profile">
@@ -23,10 +18,8 @@ const Navbar: React.FC<NavbarProps> = ({ isEditMode, onEditClick }) => {
           />
         </svg>
       </Link>
-      <div className="history-title">观看历史</div>
-      <div className="edit-title" onClick={onEditClick}>
-        {isEditMode ? "取消" : "编辑"}
-      </div>
+      <div className="history-title">Profile</div>
+      <div className="edit-title"></div>
     </div>
   );
 };
