@@ -2,11 +2,14 @@ import { FC, useEffect, useState } from "react";
 import logo from "../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import { useGetHeaderTopicsQuery } from "../../src/pages/home/services/homeApi";
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveTab } from "../../src/pages/home/slice/HomeSlice";
 
 const Header: FC = () => {
   const { data } = useGetHeaderTopicsQuery();
   const configData = data?.data?.index_top_nav;
-  const [activeTab, setActiveTab] = useState(0);
+  const activeTab = useSelector((state: any) => state.home.activeTab);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   return (
     <header className="w-full z-50 fixed top-0 bg-gradient-to-b from-[#151722] via-[#151722] to-[#161619]/80 py-4">
@@ -46,7 +49,7 @@ const Header: FC = () => {
           {configData?.map((item: any, index: any) => (
             <div
               className="relative"
-              onClick={() => setActiveTab(index)}
+              onClick={() => dispatch(setActiveTab(index))}
               key={index}
             >
               <p

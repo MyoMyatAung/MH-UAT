@@ -34,6 +34,9 @@ export const homeApi = createApi({
         return `/movie/${id}/recommend`;
       },
     }),
+    getFilterByMoviesByTypeId: builder.query<any, any>({
+      query: (id) => `/api/v1/movie/screen/list?type_id=${id}`,
+    }),
   }),
 });
 
@@ -41,4 +44,5 @@ export const {
   useGetRecommendedMoviesQuery,
   useGetFilteredMovieByTopicQuery,
   useGetHeaderTopicsQuery,
+  useGetFilterByMoviesByTypeIdQuery,
 } = homeApi;
