@@ -305,7 +305,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
             <CommentComponent movieId={id} />
           </div>
         ) :
-        <div className="bg-gray-800 text-white text-center rounded-lg flex flex-col items-center mt-5 justify-center overflow-y-scroll h-52">
+        <div className="mt-4">
           {adEntries.length > 0
             ? (() => {
                 const randomIndex = Math.floor(
@@ -321,7 +321,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
                     <img
                       src={ad.data.image}
                       alt={`Ad ${randomIndex}`}
-                      className="w-auto h-52 rounded-md"
+                      className="w-full h-auto rounded-md"
                     />
                   </a>
                 ) : null;
