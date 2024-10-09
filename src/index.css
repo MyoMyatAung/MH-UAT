@@ -161,3 +161,7 @@ input[type="range"]::-moz-range-thumb {
     ),
     linear-gradient(90deg, #0a5b75 0%, #4b2555 100%), #161619;
 }
+
+.video-react .video-react-control-bar {
+ background-color: transparent !important; 
+}
