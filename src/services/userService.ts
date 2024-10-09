@@ -338,47 +338,48 @@ export const handleSocialLoginCredentials = async (
       platform_type: platform_type,
       social_id: social_id,
       captcha: captchaResponse.data.key,
-      // timestamp: new Date().getTime(),
+      timestamp: new Date().getTime(),
     };
     console.log(formData);
 
     const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
 
     const signature = generateSignature(encryptedData);
+    console.log(encryptedData);
 
-    // const response = await axios.post(
-    //   "https://cc3e497d.qdhgtch.com:2345/api/v1/user/bind_social_with_credentials",
-    //   {
-    //     pack: encryptedData,
-    //     signature: signature,
-    //   },
-    //   {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   }
-    // );
-
-    const response = await fetch(
+    const response = await axios.post(
       "https://cc3e497d.qdhgtch.com:2345/api/v1/user/bind_social_with_credentials",
       {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pack: encryptedData,
-          signature,
-        }),
+        pack: encryptedData,
+        signature: signature,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
-    const dataIsEncrypt = response.headers.get("x-app-data-encrypt");
-    const resultText = await response.text();
+    // const response = await fetch(
+    //   "https://cc3e497d.qdhgtch.com:2345/api/v1/user/bind_social_with_credentials",
+    //   {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       pack: encryptedData,
+    //       signature,
+    //     }),
+    //   }
+    // );
 
-    if (!dataIsEncrypt) {
-      return JSON.parse(resultText);
-    } else {
-      return decryptWithAes(resultText);
-    }
+    // const dataIsEncrypt = response.headers.get("x-app-data-encrypt");
+    // const resultText = await response.text();
+
+    // if (!dataIsEncrypt) {
+    //   return JSON.parse(resultText);
+    // } else {
+    //   return decryptWithAes(resultText);
+    // }
 
     console.log(response);
   } catch (error) {}
@@ -401,30 +402,35 @@ export const handleSocialSignUpCredentials = async (
 
     const captchaResponse = captchaResult.data;
 
+    console.log("Captcha Response:", captchaResponse);
+
     if (!captchaResponse.data) {
       throw new Error("Captcha verification failed");
     }
 
     const formData = {
-      username: username,
-      password: password,
-      repassword: repassword,
-      platform_type: platform_type,
-      social_id: social_id,
+      username,
+      password,
+      repassword,
+      platform_type,
+      social_id,
       captcha: captchaResponse.data.key,
       timestamp: new Date().getTime(),
+
     };
-    console.log(formData);
+    console.log("Form Data:", formData);
 
     const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
-
     const signature = generateSignature(encryptedData);
 
+    console.log("Encrypted Data:", encryptedData);
+    console.log("Signature:", signature);
+
     const response = await axios.post(
-      "https://cc3e497d.qdhgtch.com:2345/api/v1/user/bind_social_with_credentials",
+      "https://cc3e497d.qdhgtch.com:2345/api/v1/user/register/social",
       {
         pack: encryptedData,
-        signature: signature,
+        signature,
       },
       {
         headers: {
@@ -432,6 +438,8 @@ export const handleSocialSignUpCredentials = async (
         },
       }
     );
-    console.log(response);
-  } catch (error) {}
+    console.log("Response:", response.data);
+  } catch (error) {
+    console.error("Error during social sign up:", error);
+  }
 };
