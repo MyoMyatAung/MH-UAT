@@ -146,3 +146,10 @@ input[type="range"]::-moz-range-thumb {
   /* background: #1e2238; */
   background: transparent;
 }
+
+.video-react .video-react-play-progress {
+  background-color: #F54100 !important;
+}
+.video-react .video-react-scrubber-button .video-react-scrubber-button-inner {
+  border-color: #F54100 !important;
+}

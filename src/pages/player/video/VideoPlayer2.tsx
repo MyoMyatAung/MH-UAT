@@ -52,6 +52,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const STORAGE_KEY = 'watchHistory';
+  const STORAGE_KEY_V2 = 'lastWatchHistory'; 
 
   // Helper function to format time (e.g., 1:05)
   const formatTime = (time: number) => {
@@ -63,7 +64,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
   // Save the movie progress when back button or episode change happens
   const saveProgress = () => {
     if (videoRef.current) {
-      const currentTime = videoRef.current.currentTime;
+      const currentTime = videoRef.current.currentTime;      
       const savedHistory = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 
       if (!savedHistory[movieDetail.name]) {
@@ -80,6 +81,24 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onBack, movieDetail
 
       console.log('Saving progress:', currentTime);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(savedHistory));
+
+      console.log('ideoRef.current =>', videoRef.current);
+      const lastWatchHistoryList = JSON.parse(localStorage.getItem(STORAGE_KEY_V2) || '{}');
+
+      if (!lastWatchHistoryList[movieDetail.name]) {
+        lastWatchHistoryList[movieDetail.name] = {};
+      }
+
+      const latestWatchHistory = {
+        playedTime: new Date(),
+        progressTime: currentTime,
+        movieId: (movieDetail as any)['id'],
+        duration: videoRef.current?.duration,
+        image: (movieDetail as any).cover,
+        ...selectedEpisode
+      }
+      lastWatchHistoryList[movieDetail.name] = latestWatchHistory;
+      localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(lastWatchHistoryList));
     }
   };
 
