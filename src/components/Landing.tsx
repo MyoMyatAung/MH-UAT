@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import land from "../assets/login/land.png";
+import ad1 from "../assets/login/ad1.png";
 import hunter from "../assets/login/hunter.png";
 import { useDispatch } from "react-redux";
 import { setPanding } from "../features/login/ModelSlice";
@@ -23,7 +24,8 @@ const Landing: React.FC<LandingProps> = ({}) => {
         <div className="relative min-h-[100svh]">
             {/* Adjusted Image Section */}
             <img
-                src={land}
+                // src={ad1}
+                src={skip <= 3 ? ad1 : land}
                 className="object-cover w-screen h-[75vh] md:h-[80vh]"
                 alt="land"
             />
