@@ -28,7 +28,7 @@ const Header: FC = () => {
         </div>
         <div className="flex-1 relative">
           <input
-            onFocus={() => navigate("/search")}
+            onFocus={() => navigate("/search_overlay")}
             placeholder="觉醒年代"
             type="text"
             className="rounded-[18.138px] bg-[#444B56]/50 py-[8.062px] px-[16.123px] w-full text-white outline-none"
@@ -50,6 +50,7 @@ const Header: FC = () => {
           </div>
         </div>
       </div>
+      ''
       <div className="w-full">
         <nav className="flex overflow-x-scroll px-3 gap-3 remove-scrollbar">
           {configData?.map((item: any, index: any) => (

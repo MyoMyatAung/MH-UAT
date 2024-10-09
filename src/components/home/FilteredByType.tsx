@@ -41,7 +41,7 @@ const FilteredByType = () => {
           <Loader />
         </div>
       ) : (
-        <div className="pt-28">
+        <div className="pt-32">
           <FilterByTag data={filteredTags} />
 
           {movieData?.length ? (

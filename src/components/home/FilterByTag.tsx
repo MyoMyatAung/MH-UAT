@@ -5,7 +5,7 @@ const FilterByTag = ({ data }: any) => {
   const [activeYear, setActiveYear] = useState(0);
   const [activeArea, setActiveArea] = useState(0);
   return (
-    <div className="w-full gradient-bg-home pt-2 pb-2 flex flex-col gap-3">
+    <div className="w-full gradient-bg-home pt-5 pb-2 flex flex-col gap-3">
       <div className="flex overflow-x-scroll px-3 gap-10 remove-scrollbar items-center">
         {data[0]?.class?.map((item: any, index: any) => (
           <div className="relative" key={index}>
