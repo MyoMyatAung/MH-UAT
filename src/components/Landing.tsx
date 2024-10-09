@@ -26,14 +26,12 @@ const Landing: React.FC<LandingProps> = ({}) => {
             <img
                 // src={ad1}
                 src={skip <= 3 ? ad1 : land}
-                className="object-cover w-screen h-[75vh] md:h-[80vh]"
+                className="object-center w-screen h-[80vh]"
                 alt="land"
             />
             
             {/* Logo Section */}
-            <div className="absolute bottom-0 bg-[#190A01] py-[5vw] px-[5vw] w-screen h-[25vh] md:h-[20vh]">
-                <img src={hunter} alt="hunter logo" />
-            </div>
+            <img src={hunter} className="object-center w-44 m-auto" alt="hunter logo" />
             
             {/* Countdown */}
             <div
