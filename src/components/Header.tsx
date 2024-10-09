@@ -12,7 +12,13 @@ const Header: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   return (
-    <header className="w-full z-50 fixed top-0 bg-gradient-to-b from-[#151722] via-[#151722] to-[#161619]/80 py-4">
+    <header
+      className={`w-full z-50 fixed top-0 ${
+        activeTab !== 0
+          ? "gradient-bg-home"
+          : "bg-gradient-to-b from-[#151722] via-[#151722] to-[#161619]/80"
+      } py-4`}
+    >
       <div className="flex items-center px-3 gap-3">
         <div className="flex items-center gap-1">
           <img src={logo} alt="" className="h-8 w-auto object-contain" />
@@ -45,11 +51,11 @@ const Header: FC = () => {
         </div>
       </div>
       <div className="w-full">
-        <nav className="flex overflow-x-scroll no-scrollbar px-3 gap-3 remove-scrollbar">
+        <nav className="flex overflow-x-scroll px-3 gap-3 remove-scrollbar">
           {configData?.map((item: any, index: any) => (
             <div
               className="relative"
-              onClick={() => dispatch(setActiveTab(index))}
+              onClick={() => dispatch(setActiveTab(item?.id))}
               key={index}
             >
               <p
