@@ -94,10 +94,10 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
               animate="visible"
               exit="exit"
               variants={variants}
-              // drag="y"
-              // dragConstraints={{ top: 0 }}
-              // dragElastic={0.2}
-              // onDragEnd={handleDragEnd}
+              drag="y"
+              dragConstraints={{ top: 0 }}
+              dragElastic={0.2}
+              onDragEnd={handleDragEnd}
             >
               <div className="flex flex-col justify-center items-center gap-[16px]">
                 <motion.p className="w-[60px] h-[4px] drag_line mt-[12px] cursor-pointer bg-gray-400"></motion.p>
