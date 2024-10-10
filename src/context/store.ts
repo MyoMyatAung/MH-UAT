@@ -9,7 +9,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import FavoriteSlice from "../pages/search/slice/FavoriteSlice";
 import HomeSlice from "../pages/home/slice/HomeSlice";
-
+import ExploreSlice from "../pages/explorer/slice/ExploreSlice";
 import modelReducer from "..//features/login/ModelSlice";
 import { homeApi } from "../pages/home/services/homeApi";
 import { explorerAPi } from "../pages/explorer/services/explorerAPi";
@@ -30,6 +30,7 @@ const rootReducer = combineReducers({
   history: HistorySlice,
   favorite: FavoriteSlice,
   home: HomeSlice,
+  explore: ExploreSlice,
   [searchApi.reducerPath]: searchApi.reducer,
   [profileApi.reducerPath]: profileApi.reducer,
   [homeApi.reducerPath]: homeApi.reducer,
