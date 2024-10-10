@@ -5,6 +5,7 @@ import { useGetHeaderTopicsQuery } from "../../pages/home/services/homeApi";
 import MovieCard from "./MovieCard";
 import Loader from "../../pages/search/components/Loader";
 import FilterTag from "./FilterTag";
+import { Link } from "react-router-dom";
 
 const FilterMovie = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +30,6 @@ const FilterMovie = () => {
     getMoviesByType(activeTab);
   }, [activeTab, sort, area, year, classData]);
 
-
   return (
     <div className="bg-background text-text min-h-screen">
       <div className="">
@@ -37,9 +37,13 @@ const FilterMovie = () => {
         {movieData?.length ? (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 pt-5 pb-32 px-3">
             {movieData?.map((movie: any) => (
-              <div key={movie?.id} className="mx-auto">
+              <Link
+                to={`/player/${movie?.id}`}
+                key={movie?.id}
+                className="mx-auto"
+              >
                 <MovieCard movie={movie} height={"200px"} />
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
