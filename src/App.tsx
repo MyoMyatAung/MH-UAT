@@ -102,7 +102,7 @@ const App: React.FC = () => {
           {/* Conditionally render Header */}
           {!hideHeaderFooter && !hideHeader && <Header />}
 
-          <div className="flex-grow overflow-auto ">
+          <div className="flex-grow">
             <Suspense
               fallback={
                 <div className="flex justify-center items-center h-screen bg-[#161619]">
