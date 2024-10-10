@@ -13,6 +13,7 @@ import LoginEmail from "./components/login/LoginEmail";
 import {
   setAuthModel,
   setLoginOpen,
+  setPanding,
   setSignupOpen,
 } from "./features/login/ModelSlice";
 import Login from "./pages/login";
@@ -20,6 +21,8 @@ import SignUp from "./components/login/SignUp";
 import Favorite from "./pages/profile/Favorite";
 import Loader from "./pages/search/components/Loader";
 import ErrorToast from "./pages/profile/error/ErrorToast";
+import Landing from "./components/Landing";
+
 
 // Lazy load the pages
 const Home = React.lazy(() => import("./pages/home"));
@@ -48,10 +51,9 @@ const Bind = React.lazy(() => import("./pages/profile/Bind"));
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
-  const { openAuthModel, openLoginModel, openSignupModel } = useSelector(
-    (state: any) => state.model
-  );
-
+  const { openAuthModel, openLoginModel, openSignupModel, panding } =
+    useSelector((state: any) => state.model);
+  // console.log(panding);
   const location = useLocation();
   // const isLoggedIn = localStorage.getItem("authToken"); // Check if the user is authenticated
 
@@ -74,6 +76,15 @@ const App: React.FC = () => {
     location.pathname.startsWith("/bind");
 
   const hideHeader = location.pathname.startsWith("/explorer");
+  useEffect(() => {
+    dispatch(setPanding(true));
+    const timer = setTimeout(() => {
+      dispatch(setPanding(false));
+    }, 6000);
+
+    return () => clearTimeout(timer);
+  }, [dispatch]);
+  // console.log(panding);
 
   // useEffect(() => {
   //   // Redirect to login if not logged in and trying to access any route other than login
@@ -99,58 +110,64 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Conditionally render Header */}
-      {!hideHeaderFooter && !hideHeader && <Header />}
+    <>
+      {panding ? (
+        <Landing />
+      ) : (
+        <div className="flex flex-col min-h-screen">
+          {/* Conditionally render Header */}
+          {!hideHeaderFooter && !hideHeader && <Header />}
 
-      <div className="flex-grow overflow-auto ">
-        <Suspense
-          fallback={
-            <div className="flex justify-center items-center h-screen bg-[#161619]">
-              <Loader />
-            </div>
-          }
-        >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/search" element={<Main />} />
-            <Route path="/search_overlay" element={<Search />} />
-            <Route path="/explorer" element={<Explorer />} />
-            <Route path="/explorer/:id" element={<Detail />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/player/:id" element={<Player />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/favorites" element={<Favorite />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/info" element={<Info />} />
-            <Route path="/nickname" element={<Nickname />} />
-            <Route path="/username" element={<Username />} />
-            <Route path="/update_email" element={<Email />} />
-            <Route path="/update_phone" element={<Phnumber />} />
-            <Route path="/update_password" element={<Password />} />
-            <Route path="/bind" element={<Bind />} />
-          </Routes>
-        </Suspense>
+          <div className="flex-grow overflow-auto ">
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center h-screen bg-[#161619]">
+                  <Loader />
+                </div>
+              }
+            >
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/search" element={<Main />} />
+                <Route path="/search_overlay" element={<Search />} />
 
-        <ErrorToast />
-      </div>
+                <Route path="/explorer" element={<Explorer />} />
+                <Route path="/explorer/:id" element={<Detail />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/player/:id" element={<Player />} />
+                <Route path="/history" element={<History />} />
+                <Route path="/favorites" element={<Favorite />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/info" element={<Info />} />
+                <Route path="/nickname" element={<Nickname />} />
+                <Route path="/username" element={<Username />} />
+                <Route path="/update_email" element={<Email />} />
+                <Route path="/update_phone" element={<Phnumber />} />
+                <Route path="/update_password" element={<Password />} />
+                <Route path="/bind" element={<Bind />} />
+              </Routes>
+            </Suspense>
+             <ErrorToast />
+          </div>
 
-      {/* Conditionally render FooterNav */}
-      {!hideHeaderFooter && <FooterNav />}
-      {location.pathname.startsWith("/profile") && <FooterNav />}
+          {/* Conditionally render FooterNav */}
+          {!hideHeaderFooter && <FooterNav />}
+          {location.pathname.startsWith("/profile") && <FooterNav />}
 
-      {(openAuthModel || openLoginModel || openSignupModel) && (
-        <div
-          className="fixed inset-0 bg-black opacity-50 z-[998]" // Overlay with 50% opacity
-          onClick={closeAllModals} // Close all modals on click
-        ></div>
+          {(openAuthModel || openLoginModel || openSignupModel) && (
+            <div
+              className="fixed inset-0 bg-black opacity-50 z-[998]" // Overlay with 50% opacity
+              onClick={closeAllModals} // Close all modals on click
+            ></div>
+          )}
+          {openAuthModel && <Login />}
+          {openLoginModel && <LoginEmail handleBack={handleBack} />}
+          {openSignupModel && <SignUp handleBack={handleBack} />}
+        </div>
       )}
-      {openAuthModel && <Login />}
-      {openLoginModel && <LoginEmail handleBack={handleBack} />}
-      {openSignupModel && <SignUp handleBack={handleBack} />}
-    </div>
+    </>
   );
 };
 

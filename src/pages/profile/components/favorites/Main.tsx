@@ -74,7 +74,7 @@ const Main: React.FC<MainProps> = ({
       handleDeleteSelect(id);
       handleMovieSelect(movieId); // Select the movie when in edit mode
     } else {
-      navigate(`/player/${id}`);
+      navigate(`/player/${movieId}`);
     }
   };
 

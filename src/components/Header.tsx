@@ -1,25 +1,24 @@
 import { FC, useEffect, useState } from "react";
 import logo from "../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
+import { useGetHeaderTopicsQuery } from "../../src/pages/home/services/homeApi";
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveTab } from "../../src/pages/home/slice/HomeSlice";
 
 const Header: FC = () => {
-  const [configData, setConfigData] = useState([]);
-  const [activeTab, setActiveTab] = useState(0);
+  const { data } = useGetHeaderTopicsQuery();
+  const configData = data?.data?.index_top_nav;
+  const activeTab = useSelector((state: any) => state.home.activeTab);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const getConfigData = async () => {
-    const res = await fetch(
-      "https://cc3e497d.qdhgtch.com:2345/api/v1/app/config"
-    );
-    const data = await res.json();
-    console.log(data?.data?.index_top_nav);
-    setConfigData(data?.data?.index_top_nav);
-  };
-
-  useEffect(() => {
-    getConfigData();
-  }, []);
   return (
-    <header className="w-full z-50 fixed top-0 bg-gradient-to-b from-[#151722] via-[#151722] to-[#161619]/80 py-4">
+    <header
+      className={`w-full z-50 fixed top-0 ${
+        activeTab !== 0
+          ? "gradient-bg-home"
+          : "bg-gradient-to-b from-[#151722] via-[#151722] to-[#161619]/80"
+      } py-4`}
+    >
       <div className="flex items-center px-3 gap-3">
         <div className="flex items-center gap-1">
           <img src={logo} alt="" className="h-8 w-auto object-contain" />
@@ -29,7 +28,7 @@ const Header: FC = () => {
         </div>
         <div className="flex-1 relative">
           <input
-            onFocus={() => navigate("/search")}
+            onFocus={() => navigate("/search_overlay")}
             placeholder="觉醒年代"
             type="text"
             className="rounded-[18.138px] bg-[#444B56]/50 py-[8.062px] px-[16.123px] w-full text-white outline-none"
@@ -51,12 +50,13 @@ const Header: FC = () => {
           </div>
         </div>
       </div>
+      ''
       <div className="w-full">
-        <nav className="flex overflow-x-scroll no-scrollbar px-3 gap-3">
-          {configData.map((item: any, index) => (
+        <nav className="flex overflow-x-scroll px-3 gap-3 remove-scrollbar">
+          {configData?.map((item: any, index: any) => (
             <div
               className="relative"
-              onClick={() => setActiveTab(index)}
+              onClick={() => dispatch(setActiveTab(item?.id))}
               key={index}
             >
               <p

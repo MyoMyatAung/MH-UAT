@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setOtpOpen, setSignUpEmail } from "../../features/login/ModelSlice";
+import { setOpenUserNameForm, setOtpOpen, setSignUpEmail } from "../../features/login/ModelSlice";
 import { getOtp, registerEmail, registerPhone } from "../../services/userService";
 import back from "../../assets/login/back.svg";
 
@@ -59,13 +59,13 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
         registerEmail(email, password, otpCode) // Registration for email
         .then((registerResponse) => {
           // Store registration response (e.g., auth token) in localStorage
-          localStorage.setItem("authToken", JSON.stringify(registerResponse));
+          localStorage.setItem("authToken", JSON.stringify(registerResponse.data));
 
           // Redirect to home after registration
-          setTimeout(() => {
-            navigate("/home");
-          }, 1000);
-        })          .catch((error) => console.error("Error during registration:", error));
+          // setTimeout(() => {
+          //   navigate("/home");
+          // }, 1000);
+        }).catch((error) => console.error("Error during registration:", error));
       } else if (phone && password) {
         registerPhone(phone, password, otpCode) // Registration for phone
           .then(() => navigate("/profile"))
@@ -104,11 +104,11 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
             <input
               key={index}
               ref={(ref) => (inputRefs.current[index] = ref)}
-              type="number"
+              type="password"
               value={digit}
               maxLength={1}
               onChange={(e) => handleOTPChange(index, e.target.value)}
-              className="w-12 h-12 mx-1 text-center rounded-lg bg-[#303030] text-white text-[20px]"
+              className="w-10 h-10 mx-1 text-center rounded-lg bg-[#303030] text-white text-[20px]"
             />
           ))}
         </div>

@@ -2,8 +2,8 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 const Banner = ({ list }: { list: any }) => {
   return (
-    <div className="pt-28">
-      <div className="px-3">
+    <div className="pt-36">
+      <div className="px-3 md:px-10">
         <div className="relative rounded-lg">
           <Carousel showThumbs={false} showArrows={false} showStatus={false}>
             {list?.map((banner: any) => (
