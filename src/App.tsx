@@ -44,7 +44,7 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const { openAuthModel, openLoginModel, openSignupModel, panding } =
     useSelector((state: any) => state.model);
-  console.log(panding);
+  // console.log(panding);
   const location = useLocation();
   // const isLoggedIn = localStorage.getItem("authToken"); // Check if the user is authenticated
 
@@ -68,7 +68,7 @@ const App: React.FC = () => {
 
     return () => clearTimeout(timer);
   }, [dispatch]);
-  console.log(panding);
+  // console.log(panding);
 
   // useEffect(() => {
   //   // Redirect to login if not logged in and trying to access any route other than login

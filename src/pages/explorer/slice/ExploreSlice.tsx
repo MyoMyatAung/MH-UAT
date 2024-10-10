@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const HomeSlice = createSlice({
-  name: "home",
+const ExploreSlice = createSlice({
+  name: "explore",
   initialState: {
-    activeTab: 0,
-    sort: "",
+    activeTab: 1,
+    sort: "by_default",
     class: "",
     area: "",
     year: "",
@@ -29,5 +29,5 @@ const HomeSlice = createSlice({
 });
 
 export const { setActiveTab, setSort, setClass, setArea, setYear } =
-  HomeSlice.actions;
-export default HomeSlice.reducer;
+  ExploreSlice.actions;
+export default ExploreSlice.reducer;
