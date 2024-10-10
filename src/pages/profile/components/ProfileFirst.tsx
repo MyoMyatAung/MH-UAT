@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ImageWithPlaceholder from "../../search/components/ImgPlaceholder";
 import { setAuthModel } from "../../../features/login/ModelSlice";
 import { useDispatch } from "react-redux";
+import { useGetListQuery } from "../services/profileApi";
 
 interface Movie {
   id: any;
@@ -16,9 +17,16 @@ interface Movie {
 }
 
 const ProfileFirst = () => {
+  const {
+    data: favoriteMovies,
+    // isLoading: isFavoritesLoading,
+    // isFetching: isFavoritesFetching,
+  } = useGetListQuery({ page: 1 });
   const [movies, setMovies] = useState<Movie[]>([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const favorites = favoriteMovies?.data?.list?.slice(0, 10);
 
   // Load data from localStorage
   useEffect(() => {
@@ -74,11 +82,22 @@ const ProfileFirst = () => {
       navigate("/favorites");
     }
   };
+  const handleHistoryClick = () => {
+    if (!token) {
+      // If not logged in, open the login modal
+      startTransition(() => {
+        dispatch(setAuthModel(true));
+      });
+    } else {
+      // If logged in, redirect to the favorites page
+      navigate("/history");
+    }
+  };
 
   return (
     <div className="profile-div">
       <div className="profile-div-main w-full">
-        <Link to={"/history"} className="p-first">
+        <a className="p-first cursor-pointer" onClick={handleHistoryClick}>
           <div className="flex gap-3 items-center">
             <div>
               {/* SVG Icon */}
@@ -114,24 +133,24 @@ const ProfileFirst = () => {
               </g>
             </svg>
           </div>
-        </Link>
+        </a>
 
         {/* Horizontal Scrolling Movie List */}
-        {movies.length !== 0 && (
+        {movies?.length !== 0 && (
           <div className="flex overflow-x-scroll whitespace-nowrap watch_ten scrollbar-hide gap-4 ">
             {movies?.map((movie) => (
               <Link
                 to={`/player/${movie.id}`}
                 key={movie.id}
-                className="max-w-[100px]"
+                className="w-[136px]"
               >
                 <div className="relative">
                   <ImageWithPlaceholder
                     src={movie?.cover}
                     alt={`Picture of ${movie?.name}`}
-                    width={100}
-                    height={65}
-                    className="w-[100px] rounded-t-md h-[65px] object-cover object-center"
+                    width={136}
+                    height={83}
+                    className="w-[136px] rounded-t-md h-[86px] object-cover object-center"
                   />
                   <div className="absolute watchedDuration bottom-[2px] right-[3px] ">
                     {formatDuration(movie.progress_time)}
@@ -156,7 +175,7 @@ const ProfileFirst = () => {
           </div>
         )}
 
-        <a className="p-first" onClick={handleFavoritesClick}>
+        <a className="p-first cursor-pointer" onClick={handleFavoritesClick}>
           <div className="flex gap-3 items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -191,6 +210,42 @@ const ProfileFirst = () => {
             </svg>
           </div>
         </a>
+
+        {/* Horizontal Scrolling Movie List */}
+        {favorites?.length !== 0 && (
+          <div className="flex overflow-x-scroll whitespace-nowrap watch_ten scrollbar-hide gap-4 ">
+            {favorites?.map((movie: any) => (
+              <Link
+                to={`/player/${movie.id}`}
+                key={movie.id}
+                className="w-[114px]"
+              >
+                <div className="flex flex-col w-[114px] gap-2 transition-all duration-300 ease-in-out">
+                  <div className="relative w-[114px] transition-transform duration-500 ease-in-out transform">
+                    <ImageWithPlaceholder
+                      src={movie?.cover}
+                      alt={`Picture of ${movie?.movie_name}`}
+                      width={114}
+                      height={153}
+                      className="rounded-md w-full h-[153px] object-cover object-center"
+                    />
+                    <div className="absolute w-full bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black to-transparent rounded-sm"></div>
+
+                    <div className="absolute bottom-[3px] right-[3px] text-[10px]">
+                      {movie?.dynamic}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h1 className=" truncate text-[#888] text-[14px]">
+                      {movie?.movie_name}
+                    </h1>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

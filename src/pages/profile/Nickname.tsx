@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import "./profile.css";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useChangeNicknameMutation } from "../profile/services/profileApi"; // import the hook
 import { setUser } from "./components/slice/UserSlice";
+import { showToast } from "./error/ErrorSlice";
 
 const Nickname = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const user = useSelector((state: any) => state.user.user);
   const [text, setText] = useState(user?.nickname);
@@ -15,7 +17,7 @@ const Nickname = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(text);
+
     try {
       await changeNickname({ new_nickname: text }).unwrap();
       dispatch(
@@ -24,9 +26,20 @@ const Nickname = () => {
           nickname: text, // Update the nickname
         })
       );
-      console.log("Nickname changed successfully!");
+      dispatch(
+        showToast({
+          message: "昵称修改成功！",
+          type: "success",
+        })
+      );
+      navigate("/info");
     } catch (error) {
-      console.error("Failed to change nickname:", error);
+      dispatch(
+        showToast({
+          message: (error as any)?.data?.msg || "修改昵称失败",
+          type: "error",
+        })
+      );
     }
   };
 
@@ -49,9 +62,9 @@ const Nickname = () => {
               />
             </svg>
           </Link>
-          <div className="history-title">NickName</div>
-          <div className="edit-title" onClick={handleSubmit}>
-            Save
+          <div className="history-title">昵称</div>
+          <div className="edit-title cursor-pointer" onClick={handleSubmit}>
+            保存
           </div>{" "}
           {/* Trigger form submit */}
         </div>
@@ -60,21 +73,11 @@ const Nickname = () => {
             <input
               type="text"
               className="nickname-input"
-              placeholder={text}
+              placeholder="输入你的昵称"
               value={text}
               onChange={(e) => setText(e.target.value)}
               disabled={isLoading} // Disable input during submission
             />
-            {isSuccess && (
-              <div className="success-message text-green-500 mt-3 ml-5">
-                Nickname changed successfully!
-              </div>
-            )}
-            {isError && (
-              <div className="error-message text-red-500 mt-3 ml-5">
-                Failed to change nickname. Try again.
-              </div>
-            )}
           </form>
         </div>
       </div>

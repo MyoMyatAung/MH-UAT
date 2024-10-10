@@ -1,37 +1,59 @@
 import "./profile.css";
 import { useState } from "react";
 import { useChangePasswordMutation } from "../profile/services/profileApi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { showToast } from "./error/ErrorSlice";
 
 const Password = () => {
   const [password, setPassword] = useState("");
   const [repassword, setRePassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
   const [showRePassword, setShowRePassword] = useState(false); // Toggle repassword visibility
-  const [error, setError] = useState("");
-  const [changePassword, { isError, isSuccess }] = useChangePasswordMutation(); // RTK Mutation for password change
-
+  const [changePassword] = useChangePasswordMutation(); // RTK Mutation for password change
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate password and repassword fields
     if (password.length < 8 || password.length > 25) {
-      setError("Password must be between 8 and 25 characters.");
+      dispatch(
+        showToast({
+          message: "密码必须介于 8 到 25 个字符之间。",
+          type: "error",
+        })
+      );
+
       return;
     }
 
     if (password !== repassword) {
-      setError("Passwords do not match.");
+      dispatch(
+        showToast({
+          message: "密码不匹配。",
+          type: "error",
+        })
+      );
       return;
     }
 
-    // Reset error message
-    setError("");
-
     try {
       await changePassword({ password, repassword }).unwrap();
+      dispatch(
+        showToast({
+          message: "密码修改成功",
+          type: "success",
+        })
+      );
+      navigate("/info");
     } catch (err: any) {
-      setError(err?.data?.msg || "An unexpected error occurred.");
+      dispatch(
+        showToast({
+          message: (err as any)?.data?.msg || "发生错误",
+          type: "error",
+        })
+      );
     }
   };
 
@@ -62,7 +84,7 @@ const Password = () => {
               />
             </svg>
           </Link>
-          <div className="history-title">Change Password</div>
+          <div className="history-title">新密码</div>
           <div></div>
         </div>
 
@@ -72,7 +94,7 @@ const Password = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 className="nickname-input"
-                placeholder="Enter new password"
+                placeholder="输入新密码"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -114,7 +136,7 @@ const Password = () => {
               <input
                 type={showRePassword ? "text" : "password"}
                 className="nickname-input"
-                placeholder="Re-Enter new password"
+                placeholder="重新输入新密码"
                 value={repassword}
                 onChange={(e) => setRePassword(e.target.value)}
               />
@@ -152,22 +174,15 @@ const Password = () => {
               </span>
             </div>
 
-            {error && <p className="text-red-500 mt-3 text-sm ml-5">{error}</p>}
-
-            <p className="text-[#555] font-inter text-[12px] font-medium leading-[20px] mt-3">
-              8-25 characters. Must be a combination of at least two of the
-              following: letters, numbers.
+            <p className="text-[#555] font-inter text-[12px] font-medium leading-[20px] mt-3 ml-3">
+              8-25个字符必须为下列至少两种的组合：字母、数字
             </p>
-            {isSuccess && (
-              <p className="text-green-500 mt-3 text-sm">
-                Password changed successfully!
-              </p>
-            )}
+
             <button
               type="submit" // Correctly using type submit here
               className="mt-6 otp_btn text-white"
             >
-              Set Password
+              确认
             </button>
           </form>
         </div>

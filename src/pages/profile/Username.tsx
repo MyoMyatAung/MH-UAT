@@ -1,16 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import "./profile.css";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useChangeUsernameMutation } from "../profile/services/profileApi"; // import the hook
 import { setUser } from "./components/slice/UserSlice";
+import { showToast } from "./error/ErrorSlice";
 
 const Username = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const user = useSelector((state: any) => state.user.user);
   const [text, setText] = useState(user?.username);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for storing API error message
 
   const [changeUsername, { isLoading, isError, isSuccess }] =
     useChangeUsernameMutation(); // use the mutation hook
@@ -24,15 +25,20 @@ const Username = () => {
           username: text, // Update the Username
         })
       );
-      setErrorMessage(null); // Clear error message on success
-
-      console.log("Username changed successfully!");
+      dispatch(
+        showToast({
+          message: "用户名修改成功！",
+          type: "success",
+        })
+      );
+      navigate("/info");
     } catch (error: any) {
-      setErrorMessage(
-        error?.data?.msg || "Failed to change username. Try again."
-      ); // Capture dynamic error message
-
-      console.error("Failed to change Username:", error);
+      dispatch(
+        showToast({
+          message: (error as any)?.data?.msg || "无法更改用户名",
+          type: "error",
+        })
+      );
     }
   };
 
@@ -55,9 +61,9 @@ const Username = () => {
               />
             </svg>
           </Link>
-          <div className="history-title">UserName</div>
-          <div className="edit-title" onClick={handleSubmit}>
-            Save
+          <div className="history-title">用户名</div>
+          <div className="edit-title cursor-pointer" onClick={handleSubmit}>
+            保存
           </div>{" "}
           {/* Trigger form submit */}
         </div>
@@ -66,22 +72,15 @@ const Username = () => {
             <input
               type="text"
               className="nickname-input"
-              placeholder={text}
+              placeholder="输入您的用户名"
               value={text}
               onChange={(e) => setText(e.target.value)}
               disabled={isLoading} // Disable input during submission
             />
-            {isSuccess && (
-              <div className="success-message text-green-500 mt-3 ml-5">
-                Username changed successfully!
-              </div>
-            )}
-            {isError && errorMessage && (
-              <div className="error-message text-red-500 mt-3 ml-5">
-                {errorMessage}
-              </div>
-            )}
           </form>
+          <p className="text-[12px] text-[#888] mt-3 ml-3">
+            不止电话号码与邮箱，用户名也可以用作账号登录
+          </p>
         </div>
       </div>
     </div>

@@ -3,20 +3,27 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useChangeAvatarMutation } from "../../services/profileApi"; // Your API
 import { setUser } from "../slice/UserSlice";
+import ImageWithPlaceholder from "./ImageWithPlaceholder";
+import { showToast } from "../../error/ErrorSlice";
 
 const Main = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.user);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
-  // const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [changeAvatar, { isError, isSuccess }] = useChangeAvatarMutation(); // RTK mutation for avatar
-  const [error, setError] = useState<string | null>(null);
+
+  const [changeAvatar] = useChangeAvatarMutation(); // RTK mutation for avatar
+
   const bottomSheetRef = useRef<HTMLDivElement | null>(null);
 
   // Function to handle avatar submission
   const handleSubmit = async (file: any) => {
     if (!file) {
-      setError("Please select an image.");
+      dispatch(
+        showToast({
+          message: "请选择一张图片。",
+          type: "error",
+        })
+      );
       return;
     }
 
@@ -32,12 +39,21 @@ const Main = () => {
           avatar: url,
         })
       );
-      alert("Avatar updated successfully!");
+      dispatch(
+        showToast({
+          message: "头像更新成功！",
+          type: "success",
+        })
+      );
+
       closeBottomSheet();
-      setError(null); // Clear any previous error
     } catch (err) {
-      console.log(err);
-      setError("Error updating avatar. Please try again.");
+      dispatch(
+        showToast({
+          message: (err as any)?.data?.msg || "更新头像时出错。",
+          type: "error",
+        })
+      );
     }
   };
 
@@ -47,69 +63,55 @@ const Main = () => {
   ) => {
     const file = event.target.files ? event.target.files[0] : null;
     if (file) {
-      // setSelectedImage(file);
       handleSubmit(file);
     }
     closeBottomSheet();
   };
 
-  // Open the bottom sheet
+  // Function to open the bottom sheet and show the overlay after animation
   const openBottomSheet = () => {
-    setShowBottomSheet(true);
+    setShowBottomSheet(true); // Start the animation by setting the state
+
+    setTimeout(() => {
+      const overlay = document.querySelector(".overlay_image");
+      if (overlay) {
+        overlay.classList.remove("hidden"); // Show the overlay after the animation
+      }
+    }, 0); // Duration should match the CSS animation duration (0.3s)
   };
 
-  // Close the bottom sheet with animation
+  // Function to close the bottom sheet with animation and hide the overlay
   const closeBottomSheet = () => {
     const bottomSheet = bottomSheetRef.current;
+    const overlay = document.querySelector(".overlay_image");
+
     if (bottomSheet) {
+      bottomSheet.classList.remove("slide-in");
       bottomSheet.classList.add("slide-out");
-      setTimeout(() => {
-        setShowBottomSheet(false);
-      }, 300); // Duration should match the CSS animation duration
+      overlay?.classList.add("hidden"); // Hide the overlay
+      setShowBottomSheet(false); // Close the bottom sheet after animation completes
     }
   };
-
-  // Close bottom sheet when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        bottomSheetRef.current &&
-        !bottomSheetRef.current.contains(event.target as Node)
-      ) {
-        closeBottomSheet();
-      }
-    };
-
-    if (showBottomSheet) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showBottomSheet]);
 
   return (
     <div>
       <div
-        onClick={() => setShowBottomSheet(false)}
-        className={`fixed bottom-[194px] left-0 w-full h-full overlay_image ${
-          !showBottomSheet && "hidden"
-        } `}
+        onClick={() => closeBottomSheet()}
+        className={`fixed bottom-0 left-0 w-full h-full overlay_image hidden`}
       ></div>
       <div className="profile-div mt-[60px]">
         <div className="info-div-main w-full">
           <div className="info-first cursor-pointer" onClick={openBottomSheet}>
             <div className="flex gap-1 max-w-[230px] flex-col ">
-              <h1 className="info-text">Set Avatar</h1>
+              <h1 className="info-text">头像设置</h1>
             </div>
 
             <div>
               <div className="profile-p">
                 {user?.avatar ? (
-                  <img
+                  <ImageWithPlaceholder
+                    width={58}
+                    height={58}
                     src={user?.avatar}
                     alt={user?.username}
                     className="rounded-full"
@@ -180,7 +182,7 @@ const Main = () => {
           <div className="info-main-first mt-3">
             <Link to={"/nickname"} className="info-first1">
               <div className="flex gap-1 max-w-[230px] ">
-                <h1 className="info-text">Nickname</h1>
+                <h1 className="info-text">昵称</h1>
               </div>
               <div className="flex items-center gap-1">
                 <p className="info-main-text">{user?.nickname}</p>
@@ -201,20 +203,23 @@ const Main = () => {
 
             <Link to={"/username"} className="info-first1">
               <div className="flex gap-1 max-w-[230px] flex-col ">
-                <h1 className="info-text">Username </h1>
+                <h1 className="info-text">
+                  用户名{" "}
+                  <span className="text-[#888] text-[12px]"> (可用来登录)</span>{" "}
+                </h1>
               </div>
               <div className="flex items-center gap-1">
                 <p className="info-main-text">{user?.username}</p>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="8"
-                  height="14"
-                  viewBox="0 0 8 14"
+                  width="6"
+                  height="8"
+                  viewBox="0 0 6 8"
                   fill="none"
                 >
                   <path
-                    d="M5.17217 6.99999L0.222168 2.04999L1.63617 0.635986L8.00017 6.99999L1.63617 13.364L0.222168 11.95L5.17217 6.99999Z"
-                    fill="#484849"
+                    d="M0.778157 0.156564C0.836612 0.106935 0.906056 0.0675604 0.982509 0.0406946C1.05896 0.0138289 1.14092 0 1.2237 0C1.30647 0 1.38843 0.0138289 1.46488 0.0406946C1.54134 0.0675604 1.61078 0.106935 1.66924 0.156564L5.85277 3.69938C5.89944 3.73882 5.93647 3.78567 5.96173 3.83724C5.987 3.88882 6 3.94411 6 3.99994C6 4.05578 5.987 4.11107 5.96173 4.16264C5.93647 4.21422 5.89944 4.26107 5.85277 4.30051L1.66924 7.84332C1.42255 8.05223 1.02484 8.05223 0.778157 7.84332C0.531474 7.63442 0.531474 7.29762 0.778157 7.08872L4.42302 3.99781L0.773123 0.906907C0.531475 0.702268 0.531474 0.361203 0.778157 0.156564Z"
+                    fill="white"
                   />
                 </svg>
               </div>
@@ -223,7 +228,7 @@ const Main = () => {
           <div className="info-main-first mt-3">
             <Link to={"/update_phone"} className="info-first1">
               <div className="flex gap-1 max-w-[230px] ">
-                <h1 className="info-text">Bind mobile phone number</h1>
+                <h1 className="info-text">绑定电话号码</h1>
               </div>
               <div className="flex items-center gap-1">
                 <p className="info-main-text">
@@ -246,7 +251,7 @@ const Main = () => {
 
             <Link to={"/update_email"} className="info-first1">
               <div className="flex gap-1 max-w-[230px] flex-col ">
-                <h1 className="info-text">Bind Email </h1>
+                <h1 className="info-text">绑定邮箱</h1>
               </div>
               <div className="flex items-center gap-1">
                 <p className="info-main-text">
@@ -266,9 +271,9 @@ const Main = () => {
                 </svg>
               </div>
             </Link>
-            <Link to={"/update_password"} className="info-first1">
+            <Link to={"/bind"} className="info-first1">
               <div className="flex gap-1 max-w-[230px] flex-col ">
-                <h1 className="info-text">Bind quick login </h1>
+                <h1 className="info-text">绑定快捷登录 </h1>
               </div>
               <div className="flex items-center gap-1">
                 <svg
@@ -289,7 +294,7 @@ const Main = () => {
           <div className="info-main-first mt-3">
             <Link to={"/update_password"} className="info-first1">
               <div className="flex gap-1 max-w-[230px] ">
-                <h1 className="info-text">Change Password</h1>
+                <h1 className="info-text">修改密码</h1>
               </div>
               <div className="flex items-center gap-1">
                 <svg
@@ -308,40 +313,34 @@ const Main = () => {
             </Link>
           </div>
 
-          {error && <p className="text-red-500 ml-5 my-3">{error}</p>}
-          {isSuccess && (
-            <p className="text-green-500 ml-5 my-3">
-              Avatar updated successfully!
-            </p>
-          )}
-
-          {/* Bottom Sheet for Image Selection */}
-          {showBottomSheet && (
-            <div className="bottom-sheet slide-in" ref={bottomSheetRef}>
-              <div className="bottom-sheet-content">
-                <button
-                  className="bottom-sheet-option"
-                  onClick={() => document.getElementById("fileInput")?.click()}
-                >
-                  Choose From Gallery
-                </button>
-                <button
-                  className="bottom-sheet-option"
-                  onClick={() =>
-                    document.getElementById("cameraInput")?.click()
-                  }
-                >
-                  Camera
-                </button>{" "}
-                <button
-                  className="bottom-sheet-option"
-                  onClick={closeBottomSheet}
-                >
-                  Cancel
-                </button>
-              </div>
+          <div
+            className={`bottom-sheet ${
+              showBottomSheet ? "slide-in" : "slide-out"
+            }`}
+            ref={bottomSheetRef}
+          >
+            <div className="bottom-sheet-content">
+              <button
+                className="bottom-sheet-option"
+                onClick={() => document.getElementById("fileInput")?.click()}
+              >
+                相册选取
+              </button>
+              <button
+                className="bottom-sheet-option"
+                onClick={() => document.getElementById("cameraInput")?.click()}
+              >
+                拍照
+              </button>{" "}
+              <button
+                className="bottom-sheet-option text-[#717173]"
+                style={{ color: "#717173" }}
+                onClick={closeBottomSheet}
+              >
+                取消
+              </button>
             </div>
-          )}
+          </div>
 
           {/* Hidden file input for gallery */}
           <input

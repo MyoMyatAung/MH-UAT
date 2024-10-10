@@ -147,6 +147,7 @@ const Main = () => {
       )
     );
   };
+  const noData = !data || data?.data?.list.length === 0;
 
   return (
     <>
@@ -375,7 +376,7 @@ const Main = () => {
                   fill="#565454"
                 />
               </svg>
-              <p className="no_history">No Data Found</p>
+              <p className="no_history">空空如也</p>
             </div>
           </div>
         ) : (
@@ -390,6 +391,11 @@ const Main = () => {
             {isFetching && (
               <div className="text-white flex justify-center pb-4 items-center text-center">
                 <Loader />
+              </div>
+            )}
+            {noData && (
+              <div className="text-gray-500 flex justify-center pb-4 items-center text-center">
+                没有更多数据了
               </div>
             )}
           </>

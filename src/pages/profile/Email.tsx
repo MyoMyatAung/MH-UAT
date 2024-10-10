@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import { setCaptchaOpen } from "../../features/login/ModelSlice";
 import Captcha from "./components/email/Captcha";
 import Otp from "./components/email/Otp";
+import { showToast } from "./error/ErrorSlice";
 
 const Email: React.FC = () => {
   const dispatch = useDispatch();
   const { openCaptcha, openOtp } = useSelector((state: any) => state.model); // OpenCaptcha and OpenOtp states
   const user = useSelector((state: any) => state.user.user);
   const [text, setText] = useState(user?.email); // Email value
-  const [emailError, setEmailError] = useState<string | null>(null); // Error state
 
   // Email validation function
   const validateEmail = (email: string) => {
@@ -22,13 +22,15 @@ const Email: React.FC = () => {
     e.preventDefault();
 
     if (!validateEmail(text)) {
-      setEmailError("Please enter a valid email address");
+      dispatch(
+        showToast({
+          message: "请输入有效的电子邮件地址",
+          type: "error",
+        })
+      );
       return;
     }
 
-    // Clear any previous error
-    setEmailError(null);
-    // Open Captcha component
     dispatch(setCaptchaOpen(true));
   };
 
@@ -54,9 +56,9 @@ const Email: React.FC = () => {
                 />
               </svg>
             </Link>
-            <div className="history-title">Set New Email Address</div>
-            <div className="edit-title" onClick={handleSubmit}>
-              Save
+            <div className="history-title">设置新邮箱</div>
+            <div className="edit-title cursor-pointer" onClick={handleSubmit}>
+              保存
             </div>
           </div>
           <div className="mt-[60px] p-4">
@@ -64,16 +66,10 @@ const Email: React.FC = () => {
               <input
                 type="email"
                 className="nickname-input"
-                placeholder="Enter your email"
+                placeholder="输入您的电子邮件"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
               />
-              {/* Show error message if email is invalid */}
-              {emailError && (
-                <div className="text-red-500 text-sm mt-3 ml-5">
-                  {emailError}
-                </div>
-              )}
             </form>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetUserQuery } from "../services/profileApi"; // Import your query
 import { Link } from "react-router-dom";
 import { setUser } from "./slice/UserSlice";
+import ImageWithPlaceholder from "./info/ImageWithPlaceholder";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -70,7 +71,9 @@ const Header = () => {
         >
           <div className="profile-p">
             {user?.avatar ? (
-              <img
+              <ImageWithPlaceholder
+                width={58}
+                height={58}
                 src={user?.avatar}
                 alt={user?.username}
                 className="rounded-full"

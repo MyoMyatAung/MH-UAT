@@ -105,7 +105,10 @@
 }
 
 .watch_ten {
-  margin: 17px 16px;
+  margin-left: 16px;
+  margin-right: 16px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .profile-div {
@@ -491,9 +494,9 @@
 
 .his-text {
   color: #888;
-  text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);
+  text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
   font-family: "PingFang SC";
-  font-size: 9px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -563,6 +566,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
 }
+
 .bottom-sheet {
   position: fixed;
   bottom: 0;
@@ -571,9 +575,7 @@
   background-color: rgba(22, 22, 25, 0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-radius: 19.847px 19.847px 9.924px 9.924px;
-
-  /* padding: 20px; */
+  border-radius: 30px 30px 0px 0px;
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -615,4 +617,45 @@
 .overlay_image {
   background: rgba(0, 0, 0, 0.6);
   z-index: 99;
+  opacity: 1; /* Ensure the overlay is visible initially */
+  transition: opacity 0.3s ease-out; /* Add fade-out transition */
+}
+
+.overlay_image.hidden {
+  opacity: 0; /* Hide the overlay */
+  pointer-events: none; /* Ensure the overlay is not clickable when hidden */
+}
+
+.bind_div {
+  display: flex;
+  height: 58px;
+  padding: 16px 18px;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 20px;
+  background: #1b1b1f;
+}
+
+.bind_div h1 {
+  color: var(--White-100, #fff);
+  font-family: "PingFang SC";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.bind_div span {
+  color: #888;
+  text-align: center;
+  font-family: "PingFang SC";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.toast {
+  background: #242428;
 }

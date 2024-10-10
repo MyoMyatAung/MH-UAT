@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
           />
         </svg>
       </Link>
-      <div className="history-title">Profile</div>
+      <div className="history-title">个人资料</div>
       <div className="edit-title"></div>
     </div>
   );

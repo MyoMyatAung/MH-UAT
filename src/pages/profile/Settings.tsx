@@ -7,6 +7,7 @@ import Versions from "./components/settings/Versions";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearUser } from "./components/slice/UserSlice";
+import { showToast } from "./error/ErrorSlice";
 
 const Settings = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,9 +28,21 @@ const Settings = () => {
       localStorage.removeItem("authToken");
       dispatch(clearUser());
 
+      dispatch(
+        showToast({
+          message: "成功退出",
+          type: "success",
+        })
+      );
+
       navigate("/profile");
     } catch (error) {
-      console.error("Failed to log out:", error);
+      dispatch(
+        showToast({
+          message: "退出失败",
+          type: "error",
+        })
+      );
     }
   };
 

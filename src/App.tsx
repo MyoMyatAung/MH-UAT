@@ -19,6 +19,7 @@ import Login from "./pages/login";
 import SignUp from "./components/login/SignUp";
 import Favorite from "./pages/profile/Favorite";
 import Loader from "./pages/search/components/Loader";
+import ErrorToast from "./pages/profile/error/ErrorToast";
 
 // Lazy load the pages
 const Home = React.lazy(() => import("./pages/home"));
@@ -37,6 +38,7 @@ const Username = React.lazy(() => import("./pages/profile/Username"));
 const Email = React.lazy(() => import("./pages/profile/Email"));
 const Phnumber = React.lazy(() => import("./pages/profile/Phnumber"));
 const Password = React.lazy(() => import("./pages/profile/Password"));
+const Bind = React.lazy(() => import("./pages/profile/Bind"));
 
 // ProtectedRoute component to handle route guarding
 // const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -68,7 +70,8 @@ const App: React.FC = () => {
     location.pathname.startsWith("/username") ||
     location.pathname.startsWith("/update_email") ||
     location.pathname.startsWith("/update_phone") ||
-    location.pathname.startsWith("/update_password");
+    location.pathname.startsWith("/update_password") ||
+    location.pathname.startsWith("/bind");
 
   const hideHeader = location.pathname.startsWith("/explorer");
 
@@ -127,8 +130,11 @@ const App: React.FC = () => {
             <Route path="/update_email" element={<Email />} />
             <Route path="/update_phone" element={<Phnumber />} />
             <Route path="/update_password" element={<Password />} />
+            <Route path="/bind" element={<Bind />} />
           </Routes>
         </Suspense>
+
+        <ErrorToast />
       </div>
 
       {/* Conditionally render FooterNav */}

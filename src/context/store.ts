@@ -14,6 +14,7 @@ import { homeApi } from "../pages/home/services/homeApi";
 import { explorerAPi } from "../pages/explorer/services/explorerAPi";
 import { profileApi } from "../pages/profile/services/profileApi";
 import UserSlice from "../pages/profile/components/slice/UserSlice";
+import ErrorSlice from "../pages/profile/error/ErrorSlice";
 
 // Define persist config
 const persistConfig = {
@@ -29,6 +30,8 @@ const rootReducer = combineReducers({
   model: modelReducer,
   history: HistorySlice,
   favorite: FavoriteSlice,
+  error: ErrorSlice,
+
   user: UserSlice,
   [searchApi.reducerPath]: searchApi.reducer,
   [profileApi.reducerPath]: profileApi.reducer,

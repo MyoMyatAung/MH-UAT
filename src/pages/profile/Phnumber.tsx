@@ -38,9 +38,9 @@ const Phnumber: React.FC = () => {
                 />
               </svg>
             </Link>
-            <div className="history-title">Set Ph number</div>
-            <div className="edit-title" onClick={handleSubmit}>
-              Save
+            <div className="history-title">设置新电话号码</div>
+            <div className="edit-title cursor-pointer" onClick={handleSubmit}>
+              保存
             </div>
           </div>
           <div className="mt-[60px] p-4">
@@ -48,7 +48,7 @@ const Phnumber: React.FC = () => {
               <input
                 type="text"
                 className="nickname-input"
-                placeholder="Enter your Ph number"
+                placeholder="输入您的电话号码"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
               />

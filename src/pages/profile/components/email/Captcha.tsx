@@ -10,6 +10,7 @@ import {
   useCheckCaptchaMutation,
   useLazySendCodeQuery,
 } from "../../services/profileApi";
+import { showToast } from "../../error/ErrorSlice";
 
 const Captcha: React.FC<{ data: string; type: string }> = ({ data, type }) => {
   const dispatch = useDispatch();
@@ -39,7 +40,13 @@ const Captcha: React.FC<{ data: string; type: string }> = ({ data, type }) => {
       setCaptchaImage(captchaImage);
       setKeyStatus(keyStatus);
     } catch (err) {
-      setError("无法加载验证码");
+      dispatch(
+        showToast({
+          message: "无法加载验证码",
+          type: "error",
+        })
+      );
+      setError("");
     }
   };
 
@@ -62,8 +69,12 @@ const Captcha: React.FC<{ data: string; type: string }> = ({ data, type }) => {
       // Dispatch action to open OTP component
       dispatch(setOtpOpen(true)); // Assuming you want to show the OTP form now
     } catch (error) {
-      setError(
-        (error as any)?.data?.msg || "验证码无效或无法发送 OTP。请重试。"
+      dispatch(
+        showToast({
+          message:
+            (error as any)?.data?.msg || "验证码无效或无法发送 OTP。请重试。",
+          type: "error",
+        })
       );
     }
   };
@@ -74,7 +85,7 @@ const Captcha: React.FC<{ data: string; type: string }> = ({ data, type }) => {
         <div className="bg-[#1C1B20] w-[310px] h-[170px] p-[20px]">
           <div className="flex justify-between items-center pb-[16px]">
             <h1 className="text-white text-[16px] font-[400] text-center">
-              Verify
+              核实
             </h1>
             <img
               onClick={() => dispatch(setCaptchaOpen(false))}
@@ -86,7 +97,7 @@ const Captcha: React.FC<{ data: string; type: string }> = ({ data, type }) => {
           <div className="flex justify-center items-center gap-[4px]">
             <input
               type="text"
-              placeholder="Enter Code"
+              placeholder="输入代码"
               className="bg-[#333237] rounded-[4px] text-white p-[10px] focus:outline-none h-[40px]"
               value={captchaCode}
               onChange={(e) => setCaptchaCode(e.target.value)}
@@ -106,11 +117,8 @@ const Captcha: React.FC<{ data: string; type: string }> = ({ data, type }) => {
             disabled={isButtonDisabled || isLoading || isSendCodeLoading}
             onClick={handleVerifyCaptcha}
           >
-            {isLoading || isSendCodeLoading ? "Verifying..." : "Sure"}
+            {isLoading || isSendCodeLoading ? "正在验证…" : "当然"}
           </button>
-          {error && (
-            <div className="text-red-500 mt-5 text-center">{error}</div>
-          )}
         </div>
       )}
     </div>

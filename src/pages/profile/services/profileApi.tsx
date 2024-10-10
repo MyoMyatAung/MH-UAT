@@ -156,6 +156,21 @@ export const profileApi = createApi({
         body: formData, // Passing the FormData directly
       }),
     }),
+    getSocial: builder.query<any, { type: string; action: string }>({
+      query: ({ type, action }) => {
+        return `/user/get_social_login_url?type=${type}&action=${action}`;
+      },
+    }),
+    socialCallback: builder.query<any, { type: string; code: string }>({
+      query: ({ type, code }) => ({
+        url: `/user/social_login_callback`,
+        method: "POST",
+        body: {
+          type,
+          code,
+        },
+      }),
+    }),
   }),
 });
 
@@ -171,7 +186,9 @@ export const {
   useChangeEmailMutation,
   useChangePhnumberMutation,
   useChangePasswordMutation,
+  useLazyGetSocialQuery,
   useLazySendCodeQuery,
   useCheckCaptchaMutation,
   useChangeAvatarMutation,
+  useLazySocialCallbackQuery,
 } = profileApi;

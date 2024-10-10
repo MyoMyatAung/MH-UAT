@@ -285,7 +285,7 @@ const Favorite = () => {
                   fill="#565454"
                 />
               </svg>
-              <p className="no_history">No Favorites</p>
+              <p className="no_history">空空如也</p>
             </div>
           </div>
         )}
