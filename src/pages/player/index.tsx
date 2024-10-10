@@ -84,7 +84,7 @@ const DetailPage: React.FC = () => {
     setAdsData(data);
     console.log("data is=>", data);
   };
-  
+
   // Fetch the movie details based on the provided id
   const getMovieDetail = async () => {
     const loginResponse = await localStorage.getItem("authToken");
