@@ -93,7 +93,7 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
   };
 
   return (
-    <div className="w-screen h-screen absolute z-[9090909] bg-[#161619] p-[20px]">
+    <div className=" fixed top-0 w-screen h-screen  z-[9090900909] bg-[#161619] p-[20px]">
       <div className="flex justify-between w-2/3">
         <img src={back} alt="Back" onClick={handleBack} />
         <h1 className="text-white text-[16px] font-semibold leading-[20px]">
