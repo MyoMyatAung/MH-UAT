@@ -9,9 +9,11 @@ const LazyLoadImage = ({ src, alt, width, height, className, ...props }) => {
           if (entry.isIntersecting) {
             if (imgRef.current && imgRef.current !== null) {
               imgRef.current.src = src;
-              if (imgRef.current && imgRef.current !== null) {
-                imgRef.current.style.opacity = "1";
-              }
+              imgRef.current.onload = () => {
+                if (imgRef.current && imgRef.current !== null) {
+                  imgRef.current.style.opacity = "1";
+                }
+              };
             }
 
             observer.disconnect();
