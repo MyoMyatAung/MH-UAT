@@ -24,9 +24,9 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
   const [panding, setPanding] = useState(false);
   const [accessToken, setToken] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("aunkyawin2035@gmail.com");
-  const [password, setPassword] = useState("asdf1234");
-  const [confirmPassword, setConfirmPassword] = useState("asdf1234");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [showVerify, setShowVerify] = useState<boolean>(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
@@ -79,7 +79,7 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
         />
       )}
       {isVisible && (
-        <div className=" w-screen h-screen bg-[#161619] absolute z-[99990088]">
+        <div className=" w-screen h-screen bg-[#161619] fixed top-0 z-[99990088]">
           {openCaptcha && <Capt />}
           <div className="p-[20px]">
             {/* head */}
