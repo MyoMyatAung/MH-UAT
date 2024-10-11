@@ -7,12 +7,13 @@ const LazyLoadImage = ({ src, alt, width, height, className, ...props }) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            if (imgRef.current) {
+            if (imgRef.current && imgRef.current !== null) {
               imgRef.current.src = src;
-              imgRef.current.onload = () => {
+              if (imgRef.current && imgRef.current !== null) {
                 imgRef.current.style.opacity = "1";
-              };
+              }
             }
+
             observer.disconnect();
           }
         });
