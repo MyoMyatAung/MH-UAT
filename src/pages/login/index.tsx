@@ -3,15 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import "./login.css";
 import logo from "../../assets/login/logo.png";
 import Button from "../../components/login/Button";
-import blue from "../../assets/login/blue.png";
-import eye from "../../assets/login/eye.png";
-import weChat from "../../assets/login/weChat.png";
 import { useDispatch } from "react-redux";
 import {
   setLoginOpen,
   setSignupOpen,
   setAuthModel,
 } from "../../features/login/ModelSlice";
+import WeChatLogin from "../../components/login/WeChatLogin";
+import QQLogin from "../../components/login/QQlogin";
+import WelboLogin from "../../components/login/WelboLogin";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
@@ -68,9 +68,9 @@ const Login: React.FC = () => {
               Link account with
             </p>
             <div className="flex gap-[22px]">
-              <img className="w-[50px] h-[50px]" src={weChat} alt="WeChat" />
-              <img className="w-[50px] h-[50px]" src={blue} alt="Blue" />
-              <img className="w-[50px] h-[50px]" src={eye} alt="Eye" />
+              <WeChatLogin />
+              <QQLogin />
+              <WelboLogin />
             </div>
           </div>
         </motion.div>

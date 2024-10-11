@@ -34,6 +34,7 @@ const Player = React.lazy(() => import("./pages/player"));
 const Detail = React.lazy(() => import("./pages/explorer/Detail"));
 const History = React.lazy(() => import("./pages/profile/History"));
 const Settings = React.lazy(() => import("./pages/profile/Settings"));
+const Callback = React.lazy(() => import("./pages/callback"));
 const Notifications = React.lazy(() => import("./pages/profile/Notifications"));
 const Info = React.lazy(() => import("./pages/profile/Info"));
 const Nickname = React.lazy(() => import("./pages/profile/Nickname"));
@@ -67,6 +68,7 @@ const App: React.FC = () => {
     location.pathname.startsWith("/search_overlay") ||
     location.pathname.startsWith("/search") ||
     location.pathname.startsWith("/profile") ||
+    location.pathname.startsWith("/social_callback");
     location.pathname.startsWith("/info") ||
     location.pathname.startsWith("/nickname") ||
     location.pathname.startsWith("/username") ||
@@ -143,6 +145,7 @@ const App: React.FC = () => {
                 <Route path="/info" element={<Info />} />
                 <Route path="/nickname" element={<Nickname />} />
                 <Route path="/username" element={<Username />} />
+                <Route path="/social_callback" element={<Callback />} />
                 <Route path="/update_email" element={<Email />} />
                 <Route path="/update_phone" element={<Phnumber />} />
                 <Route path="/update_password" element={<Password />} />
