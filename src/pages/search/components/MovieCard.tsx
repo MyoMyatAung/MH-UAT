@@ -1,25 +1,68 @@
-import React from "react";
+import React, { useState, startTransition } from "react";
 import { Link } from "react-router-dom";
 import ImageWithPlaceholder from "./ImgPlaceholder";
-
 import { useDispatch, useSelector } from "react-redux";
 import { selectFavData, setFavData } from "../slice/FavoriteSlice";
+import { useCollectMovieMutation } from "../../profile/services/profileApi";
+import { setAuthModel } from "../../../features/login/ModelSlice";
 
-const MovieCard = ({ movie }: { movie: any }) => {
+const MovieCard = ({
+  movie,
+  updateMovieCollectStatus,
+}: {
+  movie: any;
+  updateMovieCollectStatus: (movieId: number, isCollect: boolean) => void; // Function to update is_collect status
+}) => {
   const dispatch = useDispatch();
+  const [collectMovie] = useCollectMovieMutation();
   const favorites = useSelector(selectFavData);
 
-  const isFavorite = favorites.some((favorite) => favorite.id === movie.id);
+  const isLoggedIn = localStorage.getItem("authToken");
+  const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
+  const token = parsedLoggedIn?.data?.access_token;
 
-  const addFavorite = (e: any) => {
+  const handleAddFavorite = async (e: any) => {
     e.preventDefault();
-    dispatch(setFavData(movie));
+    if (!token) {
+      startTransition(() => {
+        dispatch(setAuthModel(true)); // Open the login modal
+      });
+    } else {
+      try {
+        await collectMovie({
+          movie_id: movie.id,
+          is_collect: true,
+        }).unwrap();
+        updateMovieCollectStatus(movie.id, true); // Update the is_collect status in the UI
+      } catch (error) {
+        console.error("Failed to add favorite:", error);
+      }
+    }
+  };
+
+  const handleRemoveFavorite = async (e: any) => {
+    e.preventDefault();
+    if (!token) {
+      startTransition(() => {
+        dispatch(setAuthModel(true)); // Open the login modal
+      });
+    } else {
+      try {
+        await collectMovie({
+          movie_id: movie.id,
+          is_collect: false,
+        }).unwrap();
+        updateMovieCollectStatus(movie.id, false); // Update the is_collect status in the UI
+      } catch (error) {
+        console.error("Failed to remove favorite:", error);
+      }
+    }
   };
 
   return (
     <div className="space-y-1.5 p-3">
       <div className="flex items-stretch gap-5 relative">
-        <Link to={`/`} className="relative">
+        <Link to={`/player/${movie?.id}`} className="relative">
           <ImageWithPlaceholder
             src={movie?.cover}
             alt={`Picture of ${movie?.name}`}
@@ -37,7 +80,7 @@ const MovieCard = ({ movie }: { movie: any }) => {
         <div className="card-content flex-grow min-w-0">
           <div className="flex flex-col">
             <div className="flex justify-between items-center"></div>
-            <Link to={`/`}>
+            <Link to={`/player/${movie?.id}`}>
               <h1
                 className="detail-head-text truncate w-full"
                 // Apply the highlighted text with color
@@ -76,7 +119,10 @@ const MovieCard = ({ movie }: { movie: any }) => {
           </div>
 
           <div className="watch-main mt-2 flex gap-2">
-            <Link to={`/`} className="watch flex items-center">
+            <Link
+              to={`/player/${movie?.id}`}
+              className="watch flex items-center"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -92,10 +138,12 @@ const MovieCard = ({ movie }: { movie: any }) => {
               <span>查看详情</span>
             </Link>
             <button
-              onClick={addFavorite}
+              onClick={
+                movie.is_collect ? handleRemoveFavorite : handleAddFavorite
+              }
               className="star_watch flex items-center"
             >
-              {isFavorite ? (
+              {movie.is_collect ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -110,7 +158,7 @@ const MovieCard = ({ movie }: { movie: any }) => {
                     />
                   </g>
                   <defs>
-                    <clipPath id="clip0_4_2182">
+                    <clipPath id="clip0_4_2182)">
                       <rect
                         width="16"
                         height="16"

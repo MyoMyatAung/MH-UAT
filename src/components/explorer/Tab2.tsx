@@ -1,81 +1,111 @@
+import { useEffect, useState } from "react";
+import { useGetWeeklyMoviesQuery } from "../../pages/explorer/services/explorerAPi";
+import MovieCard from "./MovieCard";
+import { Link } from "react-router-dom";
+
 const Tab2 = () => {
+  const [currentIndex, setCurrentIndex] = useState<any>(null);
+  const [movieData, setMovieData] = useState([]);
+
+  const getMovieData = async (week: any) => {
+    const res = await fetch(
+      `https://cc3e497d.qdhgtch.com:2345/api/v1/movie/weekly?week_day=${week}`
+    );
+    const data = await res.json();
+    setMovieData(data?.data);
+    // console.log(data);
+  };
+
+  const today = new Date();
+  const currentDate = today.getDate(); // Get only the day of the month
+  // console.log(currentDate);
+  function getDatesForCurrentWeek() {
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+
+    const startOfWeek = new Date(today); // Clone today's date
+    startOfWeek.setDate(today.getDate() - currentDay); // Set to Sunday (start of the week)
+
+    const dates = [];
+
+    // Loop to get the date of each day of the week
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(startOfWeek); // Clone the start date
+      date.setDate(startOfWeek.getDate() + i); // Increment by i days
+      dates.push(date.getDate()); // Get only the day (date)
+    }
+
+    return dates;
+  }
+
+  // Usage example:
+  const currentWeekDates = getDatesForCurrentWeek();
+
+  const weekdays = ["一", "二", "三", "四", "五", "六", "日"];
+
+  useEffect(() => {
+    let index = -1;
+    for (let i = 0; i < currentWeekDates.length; i++) {
+      if (currentWeekDates[i] === currentDate) {
+        index = i;
+        break; // Stop the loop once we find the element
+      }
+    }
+    setCurrentIndex(index + 1);
+    getMovieData(index + 1);
+  }, [currentDate]);
+
+  useEffect(() => {
+    getMovieData(currentIndex);
+  }, [currentIndex]);
+
+  // console.log(currentIndex, "ci");
 
   return (
-    <div>
-      <div className="w-full px-3">
-        <nav className="flex gap-8 overflow-x-scroll no-scrollbar py-4">
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">13</span>
-            <span className="text-[14px]">一</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">14</span>
-            <span className="text-[14px]">二</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px] bg-gray-800 rounded-full w-[30px] h-[30px] flex justify-center items-center">
-              今
-            </span>
-            <span className="text-[14px]">三</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">16</span>
-            <span className="text-[14px]">四</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">17</span>
-            <span className="text-[14px]">五</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">18</span>
-            <span className="text-[14px]">六</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">19</span>
-            <span className="text-[14px]">日</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">13</span>
-            <span className="text-[14px]">一</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">13</span>
-            <span className="text-[14px]">一</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">13</span>
-            <span className="text-[14px]">一</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">13</span>
-            <span className="text-[14px]">一</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1">
-            <span className="text-[16px]">13</span>
-            <span className="text-[14px]">一</span>
-          </button>
-        </nav>
-      </div>
-      <div className="grid grid-cols-3 md:gird-cols-4 lg:grid-cols-6 gap-3 pb-32 px-3">
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+    <div className="pb-32 min-h-screen">
+      <nav className="py-4">
+        <div className="grid grid-cols-7 mb-2">
+          {currentWeekDates?.map((date, index) => (
+            <button
+              key={date}
+              className={`text-white text-[16px] text-center`}
+              onClick={() => setCurrentIndex(index + 1)}
+            >
+              <span
+                className={`${
+                  currentDate === date && "bg-gray-700 px-1.5 py-1 rounded-full"
+                }`}
+              >
+                {currentDate === date ? "今" : date}
+              </span>
+            </button>
+          ))}
+        </div>
+        <div className="grid grid-cols-7">
+          {weekdays?.map((day, index) => (
+            <button
+              key={day}
+              onClick={() => setCurrentIndex(index + 1)}
+              className={`${
+                currentIndex === index + 1 ? "text-white" : "text-[#FFFFFF99]"
+              } text-[14px] text-center`}
+            >
+              {day}
+            </button>
+          ))}
+        </div>
+      </nav>
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 px-3">
+        {movieData?.map((list: any) => (
+          <Link
+            to={`/player/${list?.id}`}
+            key={list?.id}
+            // onClick={() => handleMovieClick(list.id)}
+            className="mx-auto"
+          >
+            <MovieCard movie={list} height={"200px"} />
+          </Link>
+        ))}
       </div>
     </div>
   );

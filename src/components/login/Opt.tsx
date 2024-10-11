@@ -62,13 +62,13 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
         registerEmail(email, password, otpCode) // Registration for email
         .then((registerResponse) => {
           // Store registration response (e.g., auth token) in localStorage
-          localStorage.setItem("authToken", JSON.stringify(registerResponse));
-          dispatch(setOpenUserNameForm(true))
+          localStorage.setItem("authToken", JSON.stringify(registerResponse.data));
+
           // Redirect to home after registration
           // setTimeout(() => {
           //   navigate("/home");
           // }, 1000);
-        })          .catch((error) => console.error("Error during registration:", error));
+        }).catch((error) => console.error("Error during registration:", error));
       } else if (phone && password) {
         registerPhone(phone, password, otpCode) // Registration for phone
           .then(() => navigate("/profile"))

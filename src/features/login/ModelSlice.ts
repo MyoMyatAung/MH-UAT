@@ -10,8 +10,9 @@ interface model {
   captchaKey: string;
   openSignUpEmailModel: boolean;
   openSignUpPhoneModel: boolean;
-  openUserNameForm: boolean;
   social_id: string;
+  openUserNameForm : boolean,
+  panding : boolean
 }
 
 const initialState: model = {
@@ -26,6 +27,7 @@ const initialState: model = {
   openSignUpPhoneModel: false,
   openUserNameForm: false,
   social_id: "",
+  panding : false
 };
 
 export const modelSlice = createSlice({
@@ -68,7 +70,10 @@ export const modelSlice = createSlice({
     setSocial_id: (state, action) => {
       state.social_id = action.payload;
     },
-  },
+    setPanding: (state, action) => {            //no need
+    state.panding = action.payload;
+    },
+  }
 });
 
 export const {
@@ -83,6 +88,7 @@ export const {
   setSignUpPhone,
   setOpenUserNameForm,
   setSocial_id,
+  setPanding
 } = modelSlice.actions;
 
 export default modelSlice.reducer;

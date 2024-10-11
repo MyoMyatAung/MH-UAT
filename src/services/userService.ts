@@ -81,7 +81,6 @@ export const login = async (
       timestamp: new Date().getTime(),
     };
 
-    console.log("formData is=<", formData);
     // Step 2: Encrypt the data
     const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
 
@@ -128,7 +127,6 @@ export const registerEmail = async (
 
   const signature = generateSignature(encryptedData);
 
-  console.log(formData);
   try {
     const response = await axios.post(
       "https://cc3e497d.qdhgtch.com:2345/api/v1/user/register/email",
@@ -179,7 +177,6 @@ export const registerPhone = async (
   const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY); // Encrypt the data
   const signature = generateSignature(encryptedData); // Generate the signature
 
-  console.log(formData);
   try {
     const response = await axios.post(
       "https://cc3e497d.qdhgtch.com:2345/api/v1/user/register/phone",
@@ -230,8 +227,6 @@ export const getOtp = async (
       timestamp: new Date().getTime(), // Add timestamp for extra security
     };
 
-    console.log(formData);
-
     // Step 3: Encrypt the data
     const encryptedData = encryptWithRsa(JSON.stringify(formData), PUBLIC_KEY);
 
@@ -245,8 +240,6 @@ export const getOtp = async (
         signature: signature,
       },
     });
-
-    console.log("OTP Request successful:", otpResponse.data);
   } catch (error) {
     console.error("Error requesting OTP:", error);
   }
