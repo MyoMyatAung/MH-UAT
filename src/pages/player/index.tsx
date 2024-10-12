@@ -277,7 +277,7 @@ const DetailPage: React.FC = () => {
             </div>
           )}
           
-          <div className="overflow-y-scroll">
+          <div className={`${activeTab === 'tab-1' && 'overflow-y-scroll'}`}>
             <DetailSection
               adsData={adsData}
               movieDetail={movieDetail} // Pass movie details to DetailSection
