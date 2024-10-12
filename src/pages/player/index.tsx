@@ -282,7 +282,8 @@ const DetailPage: React.FC = () => {
   };
 
   const navigateBackFunction = () => {
-    navigate(-1); // Go back to the previous page
+    navigate('/home')
+    // navigate(-1); // Go back to the previous page
   };
 
   const changeSource = (playfrom: PlayFrom) => {
