@@ -7,6 +7,7 @@ import EpisodeSelector from "./video/EpisodeSelector";
 import Loader from "../search/components/Loader";
 import noPlayImage from "../../assets/noplay.svg";
 import RecommendedList from "./video/RecommendedList";
+import AdsSection from "./video/AdsSection";
 
 interface Episode {
   episode_id: number | null;
@@ -88,18 +89,18 @@ const DetailPage: React.FC = () => {
 
     const handleCountdown = async () => {
       if (
-        (autoSwitch > -1 &&
+        (autoSwitch > 0 &&
           !(
             (selectedEpisode && selectedEpisode.ready_to_play) ||
             (currentEpisode && currentEpisode.ready_to_play)
           )) ||
-        (autoSwitch > -1 && videoError)
+        (autoSwitch > 0 && videoError)
       ) {
         // Start the interval and store the interval ID
         interval = setInterval(() => {
           setAutoSwitch((prevCount) => prevCount - 1);
         }, 1000);
-      } else if (autoSwitch === -1) {
+      } else if (autoSwitch === 0) {
         // Clear the interval when the countdown reaches 0
         clearInterval(interval);
 
@@ -234,7 +235,7 @@ const DetailPage: React.FC = () => {
           }
         }
       } else {
-        setCurrentEpisode(playFrom[0].list[0]); // Set the first episode as default
+        setCurrentEpisode(playFrom[0]?.list[0]); // Set the first episode as default
         setResumeTime(0);
       }
     } else if (playFrom?.[0]?.list?.[0]) {
@@ -411,9 +412,13 @@ const DetailPage: React.FC = () => {
                   onEpisodeSelect={handleEpisodeSelect}
                   selectedEpisode={selectedEpisode || currentEpisode}
                 />
+
+            <div className="mt-4 px-4">
+              <AdsSection adsData={adsData} />
+            </div>
+            <RecommendedList data={movieDetail} />
               </>
             )}
-            <RecommendedList data={movieDetail} />
           </div>
         </>
       )}
