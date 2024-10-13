@@ -13,7 +13,7 @@ import {
 } from "../../services/userService";
 import back from "../../assets/login/back.svg";
 import { showToast } from "../../pages/profile/error/ErrorSlice";
-import { useSignUpEmailMutation } from "../../features/login/RegisterApi";
+import { useSignUpEmailMutation, useSignUpPhoneMutation } from "../../features/login/RegisterApi";
 
 interface OptProps {
   email?: string;
@@ -27,6 +27,7 @@ interface messg {
 
 const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
   const [signUpEmail, { isLoading, error }] = useSignUpEmailMutation();
+  const [signUpPhone] = useSignUpPhoneMutation()
 
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(""));
   const [timer, setTimer] = useState<number>(59);
@@ -81,12 +82,11 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
             email_code: otpCode,
           }).unwrap(); // Unwrap the promise to handle errors
           if (result && result.msg) {
-            console.log("Result message:", result.msg);
+            // console.log("Result message:", result.msg);
             dispatch(setOtpOpen(false));
             navigate("/profile");
             dispatch(showToast({ message: result?.msg, type: "error" }));
             localStorage.setItem("authToken", JSON.stringify(result));
-
           }
           console.log("Result", result);
 
@@ -100,6 +100,31 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
           }
         }
       } else if (phone && password) {
+        try {
+          console.log(phone)
+          const result = await signUpPhone({
+            phone,
+            password,
+            email_code: otpCode,
+          }).unwrap(); // Unwrap the promise to handle errors
+          if (result && result.msg) {
+            // console.log("Result message:", result.msg);
+            dispatch(setOtpOpen(false));
+            navigate("/profile");
+            dispatch(showToast({ message: result?.msg, type: "error" }));
+            localStorage.setItem("authToken", JSON.stringify(result));
+          }
+          console.log("Result", result);
+
+          // console.log(result?.msg)
+        } catch (error: any) {
+          console.log("pok ka ya error :", error);
+          if (error.data.msg) {
+            dispatch(setOtpOpen(false));
+            navigate("/profile");
+            dispatch(showToast({ message: error.data.msg, type: "error" }));
+          }
+        }
         registerPhone(phone, password, otpCode) // Registration for phone
           .then(() => navigate("/profile"))
           .catch((error) =>

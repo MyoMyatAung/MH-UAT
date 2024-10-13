@@ -7,6 +7,12 @@ interface SignUpEmailArgs {
   email_code: string;
 }
 
+interface SignUpPhoneArgs {
+    phone: string;
+    password: string;
+    email_code: string;
+  }
+
 // Define the response type to include both data and msg
 interface SignUpResponse {
   data: any; // Adjust this to the actual expected data structure from the API
@@ -35,7 +41,7 @@ const RegisterApi = createApi({
 
           const msg = data.msg;
 
-          console.log("Registration successful:", data,msg);
+        //   console.log("Registration successful:", data,msg);
         
         } catch (error: any) {
           console.error(
@@ -46,8 +52,36 @@ const RegisterApi = createApi({
         }
       },
     }),
+    signUpPhone: builder.mutation<SignUpResponse, SignUpPhoneArgs>({
+        query: ({ phone, password, email_code }) => ({
+          url: "/v1/user/register/phone",
+          method: "POST",
+          body: {
+            phone,
+            password,
+            email_code,
+          },
+        }),
+        async onQueryStarted(arg, { queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled; // Get the response data
+  
+            const msg = data.msg;
+  
+            console.log("Registration successful:", data,msg);
+          
+          } catch (error: any) {
+            console.error(
+              "Registration error:",
+              error.error?.data || error.message
+            );
+            throw error;
+          }
+        },
+      }),
+
   }),
 });
 
-export const { useSignUpEmailMutation } = RegisterApi;
+export const { useSignUpEmailMutation , useSignUpPhoneMutation } = RegisterApi;
 export default RegisterApi;
