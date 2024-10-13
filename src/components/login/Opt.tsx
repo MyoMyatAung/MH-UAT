@@ -1,9 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setOpenUserNameForm, setOtpOpen, setSignUpEmail } from "../../features/login/ModelSlice";
-import { getOtp, registerEmail, registerPhone } from "../../services/userService";
+import {
+  setOpenUserNameForm,
+  setOtpOpen,
+  setSignUpEmail,
+} from "../../features/login/ModelSlice";
+import {
+  getOtp,
+  registerEmail,
+  registerPhone,
+} from "../../services/userService";
 import back from "../../assets/login/back.svg";
+import { showToast } from "../../pages/profile/error/ErrorSlice";
+import { useSignUpEmailMutation } from "../../features/login/RegisterApi";
 
 interface OptProps {
   email?: string;
@@ -11,8 +21,13 @@ interface OptProps {
   phone?: string;
   setIsVisible: (isVisible: boolean) => void;
 }
+interface messg {
+  msg: string;
+}
 
 const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
+  const [signUpEmail, { isLoading, error }] = useSignUpEmailMutation();
+
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(""));
   const [timer, setTimer] = useState<number>(59);
   const [buttonText, setButtonText] = useState<string>("59 s");
@@ -42,7 +57,7 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
     }
   }, [captchaCode, email]);
 
-  const handleOTPChange = (index: number, value: string) => {
+  const handleOTPChange = async (index: number, value: string) => {
     const updatedOTP = [...otpDigits];
     updatedOTP[index] = value;
     setOtpDigits(updatedOTP);
@@ -59,16 +74,31 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
       const otpCode = updatedOTP.join("");
 
       if (email && password) {
-        registerEmail(email, password, otpCode) // Registration for email
-        .then((registerResponse) => {
-          // Store registration response (e.g., auth token) in localStorage
-          localStorage.setItem("authToken", JSON.stringify(registerResponse.data));
+        try {
+          const result = await signUpEmail({
+            email,
+            password,
+            email_code: otpCode,
+          }).unwrap(); // Unwrap the promise to handle errors
+          if (result && result.msg) {
+            console.log("Result message:", result.msg);
+            dispatch(setOtpOpen(false));
+            navigate("/profile");
+            dispatch(showToast({ message: result?.msg, type: "error" }));
+            localStorage.setItem("authToken", JSON.stringify(result));
 
-          // Redirect to home after registration
-          // setTimeout(() => {
-          //   navigate("/home");
-          // }, 1000);
-        }).catch((error) => console.error("Error during registration:", error));
+          }
+          console.log("Result", result);
+
+          // console.log(result?.msg)
+        } catch (error: any) {
+          console.log("pok ka ya error :", error);
+          if (error.data.msg) {
+            dispatch(setOtpOpen(false));
+            navigate("/profile");
+            dispatch(showToast({ message: error.data.msg, type: "error" }));
+          }
+        }
       } else if (phone && password) {
         registerPhone(phone, password, otpCode) // Registration for phone
           .then(() => navigate("/profile"))
@@ -120,8 +150,7 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
           Verification code sent ,{" "}
           {/* <span className="text-white">DevelopX10@gmail.com</span> /{" "} */}
           {/* <span className="text-white">+868880818.</span> */}
-           Please check your
-          messages and spam folder.
+          Please check your messages and spam folder.
         </p>
       </div>
 
