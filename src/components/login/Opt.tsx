@@ -13,7 +13,11 @@ import {
 } from "../../services/userService";
 import back from "../../assets/login/back.svg";
 import { showToast } from "../../pages/profile/error/ErrorSlice";
-import { useSignUpEmailMutation, useSignUpPhoneMutation } from "../../features/login/RegisterApi";
+import {
+  useSignUpEmailMutation,
+  useSignUpPhoneMutation,
+} from "../../features/login/RegisterApi";
+import ErrorToast from "../../pages/profile/error/ErrorToast";
 
 interface OptProps {
   email?: string;
@@ -27,7 +31,7 @@ interface messg {
 
 const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
   const [signUpEmail, { isLoading, error }] = useSignUpEmailMutation();
-  const [signUpPhone] = useSignUpPhoneMutation()
+  const [signUpPhone] = useSignUpPhoneMutation();
 
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(""));
   const [timer, setTimer] = useState<number>(59);
@@ -92,44 +96,47 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
 
           // console.log(result?.msg)
         } catch (error: any) {
-          console.log("pok ka ya error :", error);
-          if (error.data.msg) {
+          if (error.data.msg === "无效验证码") {
+            console.log("code error", error.data.msg);
+            dispatch(showToast({ message: error.data.msg, type: "error" }));
+          } else if (error.data.msg) {
             dispatch(setOtpOpen(false));
             navigate("/profile");
             dispatch(showToast({ message: error.data.msg, type: "error" }));
           }
+          console.log("pok ka ya error :", error);
         }
       } else if (phone && password) {
         try {
-          console.log(phone)
+          // console.log(phone, otpCode);
+          console.log(otpCode)
           const result = await signUpPhone({
             phone,
             password,
-            email_code: otpCode,
-          }).unwrap(); // Unwrap the promise to handle errors
+            sms_code	: otpCode,
+          }).unwrap();
           if (result && result.msg) {
             // console.log("Result message:", result.msg);
             dispatch(setOtpOpen(false));
             navigate("/profile");
-            dispatch(showToast({ message: result?.msg, type: "error" }));
+            dispatch(showToast({ message: result?.msg, type: "success" }));
             localStorage.setItem("authToken", JSON.stringify(result));
           }
           console.log("Result", result);
 
           // console.log(result?.msg)
         } catch (error: any) {
-          console.log("pok ka ya error :", error);
-          if (error.data.msg) {
+          if (error.data.msg === "无效验证码" || error.data.msg === "验证码不正确") {
+            console.log("code error", error.data.msg);
+            dispatch(showToast({ message: error.data.msg, type: "error" }));
+          } else if (error.data.msg) {
+            console.log('nom=e')
             dispatch(setOtpOpen(false));
             navigate("/profile");
             dispatch(showToast({ message: error.data.msg, type: "error" }));
           }
+          console.log("pok ka ya error :", error);
         }
-        registerPhone(phone, password, otpCode) // Registration for phone
-          .then(() => navigate("/profile"))
-          .catch((error) =>
-            console.error("Error during phone registration:", error)
-          );
       }
     }
   };
@@ -139,6 +146,10 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
       setTimer(59);
       setOtpDigits(Array(6).fill(""));
       getOtp(captchaCode, captchaKey, email, "email");
+    } else if (phone) {
+      setTimer(59);
+      setOtpDigits(Array(6).fill(""));
+      getOtp(captchaCode, captchaKey, phone, "phone");
     }
   };
 
@@ -192,6 +203,7 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
           {buttonText}
         </button>
       </div>
+      <ErrorToast />
     </div>
   );
 };

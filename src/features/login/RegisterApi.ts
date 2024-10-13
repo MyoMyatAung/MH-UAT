@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-// Define the types for the signUpEmail mutation arguments
 interface SignUpEmailArgs {
   email: string;
   password: string;
@@ -8,12 +7,11 @@ interface SignUpEmailArgs {
 }
 
 interface SignUpPhoneArgs {
-    phone: string;
-    password: string;
-    email_code: string;
-  }
+  phone: string;
+  password: string;
+  sms_code	: string;
+}
 
-// Define the response type to include both data and msg
 interface SignUpResponse {
   data: any; // Adjust this to the actual expected data structure from the API
   msg: string; // Define msg here
@@ -37,51 +35,48 @@ const RegisterApi = createApi({
       }),
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled; // Get the response data
-
+          const { data } = await queryFulfilled;
           const msg = data.msg;
 
-        //   console.log("Registration successful:", data,msg);
-        
+          console.log("Registration successful:", msg);
         } catch (error: any) {
-          console.error(
-            "Registration error:",
-            error.error?.data || error.message
-          );
-          throw error;
+          if (error.error?.data) {
+            console.error("Registration failed:", error.error.data);
+          } else {
+            console.error("Registration error:", error.message);
+            // alert(`Error: ${error.message}`);
+          }
         }
       },
     }),
     signUpPhone: builder.mutation<SignUpResponse, SignUpPhoneArgs>({
-        query: ({ phone, password, email_code }) => ({
-          url: "/v1/user/register/phone",
-          method: "POST",
-          body: {
-            phone,
-            password,
-            email_code,
-          },
-        }),
-        async onQueryStarted(arg, { queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled; // Get the response data
-  
-            const msg = data.msg;
-  
-            console.log("Registration successful:", data,msg);
-          
-          } catch (error: any) {
-            console.error(
-              "Registration error:",
-              error.error?.data || error.message
-            );
-            throw error;
-          }
+      query: ({ phone, password, sms_code	 }) => ({
+        url: "/v1/user/register/phone",
+        method: "POST",
+        body: {
+          phone,
+          password,
+          sms_code	,
         },
       }),
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          const msg = data.msg;
 
+          console.log("Registration successful:", msg);
+        } catch (error: any) {
+          if (error.error?.data) {
+            console.error("Registration failed:", error.error.data);
+          } else {
+            console.error("Registration error:", error.message);
+            // alert(`Error: ${error.message}`);
+          }
+        }
+      },
+    }),
   }),
 });
 
-export const { useSignUpEmailMutation , useSignUpPhoneMutation } = RegisterApi;
+export const { useSignUpEmailMutation, useSignUpPhoneMutation } = RegisterApi;
 export default RegisterApi;

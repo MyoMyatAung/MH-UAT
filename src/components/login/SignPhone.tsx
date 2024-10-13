@@ -61,14 +61,20 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(showToast({ message: "手机号格式不正确", type: "error" }));
-    // try {
-    //   dispatch(setCaptchaOpen(true));
-    //   setShowOtp(true);
-    //   setIsVisible(false);
-    // } catch (err) {
-    //   setError("Login failed. Please check your credentials.");
-    // }
+    const phoneRegex = /^(13|14|15|16|17|18|19)\d{9}$/;
+
+    if (!phoneRegex.test(phone)) {
+      setError("手机号格式不正确"); // Invalid phone number format
+      dispatch(showToast({ message: "手机号格式不正确", type: "error" }));
+      return;
+    }
+    try {
+      dispatch(setCaptchaOpen(true));
+      setShowOtp(true);
+      setIsVisible(false);
+    } catch (err) {
+      setError("Login failed. Please check your credentials.");
+    }
   };
 
   const handleClose = () => {
@@ -125,7 +131,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
               >
                 <div className="relative ">
                   <input
-                    type="text"
+                    type="number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     onFocus={() => setIsFocusedEmail(true)}
@@ -192,7 +198,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
                 </button>
               </form>
 
-              {error && <p className="text-red-500 mt-2">{error}</p>}
+              {/* {error && <p className="text-red-500 mt-2">{error}</p>} */}
             </div>
           </motion.div>
         )}
