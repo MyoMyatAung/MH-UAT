@@ -12,6 +12,7 @@ import {
   setLoginOpen,
   setSignupOpen,
 } from "../../features/login/ModelSlice";
+import { showToast } from "../../pages/profile/error/ErrorSlice";
 
 interface SignPhoneProps {
   handleBack2: () => void; // Accept handleBack as a prop
@@ -60,14 +61,14 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      dispatch(setCaptchaOpen(true));
-      console.log("Login successful");
-      setShowOtp(true);
-      setIsVisible(false);
-    } catch (err) {
-      setError("Login failed. Please check your credentials.");
-    }
+    dispatch(showToast({ message: "手机号格式不正确", type: "error" }));
+    // try {
+    //   dispatch(setCaptchaOpen(true));
+    //   setShowOtp(true);
+    //   setIsVisible(false);
+    // } catch (err) {
+    //   setError("Login failed. Please check your credentials.");
+    // }
   };
 
   const handleClose = () => {
@@ -79,7 +80,9 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
-      {openOtp && <Opt setIsVisible={setIsVisible} phone={phone} password={password} />}
+      {openOtp && (
+        <Opt setIsVisible={setIsVisible} phone={phone} password={password} />
+      )}
       {openCaptcha && (
         <Captch isLogin={false} username={phone} password={password} />
       )}
