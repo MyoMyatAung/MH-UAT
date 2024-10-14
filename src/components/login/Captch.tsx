@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, startTransition } from "react";
 import capClose from "../../assets/login/capClose.svg";
 import { useDispatch } from "react-redux";
-import { setCapCode, setCaptchaOpen, setOCapKey, setOtpOpen } from "../../features/login/ModelSlice";
+import {
+  setAuthModel,
+  setCapCode,
+  setCaptchaOpen,
+  setLoginOpen,
+  setOCapKey,
+  setOtpOpen,
+  setSignupOpen,
+} from "../../features/login/ModelSlice";
 import { getCaptcha, login } from "../../services/userService"; // Importing service methods
 import { useNavigate } from "react-router-dom";
+import { showToast } from "../../pages/profile/error/ErrorSlice";
 
 const Captch: React.FC<{
   username: string;
@@ -59,17 +68,19 @@ const Captch: React.FC<{
         captchaCode,
         keyStatus
       );
-      console.log("Login Success:", loginResponse);
-
+      if (loginResponse.errorCode) {
+        dispatch(showToast({ message: loginResponse.msg, type: "error" }));
+      } else {
+        localStorage.setItem("authToken", JSON.stringify(loginResponse));
+      }
       // Set the token in localStorage
-      localStorage.setItem("authToken", JSON.stringify(loginResponse));
 
       // Close the captcha modal and redirect to home (or the desired route)
       dispatch(setCaptchaOpen(false));
 
       // Manually redirect to the home page after login
       setTimeout(() => {
-        navigate("/home");
+        closeAllModals();
       }, 1000);
     } catch (err) {
       setError("Login failed");
@@ -77,9 +88,17 @@ const Captch: React.FC<{
     }
   };
 
+  const closeAllModals = () => {
+    startTransition(() => {
+      dispatch(setAuthModel(false));
+      dispatch(setLoginOpen(false));
+      dispatch(setSignupOpen(false));
+    });
+  };
+
   const handleOtp = () => {
-    dispatch(setCapCode(captchaCode))
-    dispatch(setOCapKey(keyStatus))
+    dispatch(setCapCode(captchaCode));
+    dispatch(setOCapKey(keyStatus));
     dispatch(setCaptchaOpen(false));
     dispatch(setOtpOpen(true));
   };
@@ -87,7 +106,7 @@ const Captch: React.FC<{
   return (
     <div className="fixed inset-0 z-[99999] bg-black/50 backdrop-blur-[12px] w-screen h-screen flex justify-center items-center">
       {captchaImage && (
-        <div className="bg-[#1C1B20] w-[310px] h-[170px] p-[20px]">
+        <div className="bg-[#1C1B20] w-[320px] h-[170px] p-[20px]">
           <div className="flex justify-between items-center pb-[16px]">
             <h1 className="text-white text-[16px] font-[400] text-center">
               Verify
@@ -103,7 +122,7 @@ const Captch: React.FC<{
             <input
               type="text"
               placeholder="Enter Code"
-              className="bg-[#333237] rounded-[4px] text-white p-[10px] focus:outline-none h-[40px]"
+              className="bg-[#333237] rounded-[4px] text-white px-[4px] py-[10px] focus:outline-none h-[40px]"
               value={captchaCode}
               onChange={(e) => setCaptchaCode(e.target.value)}
             />

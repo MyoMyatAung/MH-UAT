@@ -31,7 +31,7 @@ const FilterTag = () => {
 
   return (
     <div className="flex flex-col gap-3 py-5">
-      <div className="flex overflow-x-scroll px-3 gap-10 remove-scrollbar items-center">
+      <div className="flex overflow-x-scroll px-3 gap-6 remove-scrollbar items-center">
         {configData?.data?.movie_search_screen?.type
           ?.filter((data: any) => data?.id !== 0)
           ?.map((item: any, index: any) => (
@@ -54,7 +54,7 @@ const FilterTag = () => {
             </div>
           ))}
       </div>
-      <div className="flex overflow-x-scroll px-3 gap-10 remove-scrollbar items-center">
+      <div className="flex overflow-x-scroll px-3 gap-6 remove-scrollbar items-center">
         {configData?.data?.movie_search_screen?.sort?.map(
           (item: any, index: any) => (
             <div className="relative" key={index}>
@@ -62,8 +62,8 @@ const FilterTag = () => {
                 onClick={() => dispatch(setSort(item?.value))}
                 className={`${
                   sort === item?.value
-                    ? "bg-gray-500/35 px-5 py-1 text-xs"
-                    : "text-[14px]"
+                    ? "bg-gray-500/35 px-4 py-1 text-[14px]"
+                    : "text-[14px]  px-4 py-1"
                 } whitespace-nowrap py-2 rounded-full hover:text-white transition-colors`}
               >
                 {item?.name}
@@ -73,7 +73,7 @@ const FilterTag = () => {
         )}
       </div>
 
-      <div className="flex overflow-x-scroll px-3 gap-10 remove-scrollbar items-center">
+      <div className="flex overflow-x-scroll px-3 gap-6 remove-scrollbar items-center">
         {filteredTags?.map(
           (data: any) =>
             data?.class &&
@@ -85,9 +85,13 @@ const FilterTag = () => {
                     dispatch(setClass(item));
                   }}
                   className={`${
-                    activeClass === index
-                      ? "bg-gray-500/35 px-5 py-1 text-xs"
-                      : "text-[14px]"
+                    classData
+                      ? classData === item
+                        ? "bg-gray-500/35 px-4 py-1 text-[14px]"
+                        : "text-[14px]  px-4 py-1"
+                      : activeClass === index
+                      ? "bg-gray-500/35 px-4 py-1 text-[14px]"
+                      : "text-[14px]  px-4 py-1"
                   } whitespace-nowrap py-2 rounded-full hover:text-white transition-colors`}
                 >
                   {item}
@@ -96,7 +100,7 @@ const FilterTag = () => {
             ))
         )}
       </div>
-      <div className="flex overflow-x-scroll px-3 gap-10 remove-scrollbar items-center">
+      <div className="flex overflow-x-scroll px-3 gap-6 remove-scrollbar items-center">
         {filteredTags?.map(
           (data: any) =>
             data?.area &&
@@ -108,9 +112,13 @@ const FilterTag = () => {
                     dispatch(setArea(item));
                   }}
                   className={`${
-                    activeArea === index
-                      ? "bg-gray-500/35 px-5 py-1 text-xs"
-                      : "text-[14px]"
+                    area
+                      ? area === item
+                        ? "bg-gray-500/35 px-4 py-1 text-[14px]"
+                        : "text-[14px]  px-4 py-1"
+                      : activeArea === index
+                      ? "bg-gray-500/35 px-4 py-1 text-[14px]"
+                      : "text-[14px]  px-4 py-1"
                   } whitespace-nowrap py-2 rounded-full hover:text-white transition-colors`}
                 >
                   {item}
@@ -120,7 +128,7 @@ const FilterTag = () => {
         )}
       </div>
 
-      <div className="flex overflow-x-scroll px-3 gap-10 remove-scrollbar items-center">
+      <div className="flex overflow-x-scroll px-3 gap-6 remove-scrollbar items-center">
         {filteredTags?.map(
           (data: any) =>
             data?.year &&
@@ -132,9 +140,13 @@ const FilterTag = () => {
                     dispatch(setYear(item));
                   }}
                   className={`${
-                    activeYear === index
-                      ? "bg-gray-500/35 px-5 py-1 text-xs"
-                      : "text-[14px]"
+                    year
+                      ? year === item
+                        ? "bg-gray-500/35 px-4 py-1 text-[14px]"
+                        : "text-[14px]  px-4 py-1"
+                      : activeYear === index
+                      ? "bg-gray-500/35 px-4 py-1 text-[14px]"
+                      : "text-[14px]  px-4 py-1"
                   } whitespace-nowrap py-2 rounded-full hover:text-white transition-colors`}
                 >
                   {item}

@@ -47,9 +47,9 @@ const Header: FC = () => {
           </div>
         </div>
       </div>
-
-      <div className="w-full ">
-        <nav className="flex overflow-x-scroll gradient-bg-home mt-1 px-3 gap-3">
+      <br/>
+      <div className="w-full">
+        <nav className="flex overflow-x-scroll px-3 gap-3 remove-scrollbar">
           {configData?.map((item: any, index: any) => (
             <div
               className="relative"

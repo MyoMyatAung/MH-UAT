@@ -1,15 +1,10 @@
 import React from 'react';
-import { Episode } from '../../../model/videoModel';
-
-interface EpisodeSelectorProps {
-  episodes: Episode[];
-  selectedEpisode: Episode | null;
-  onEpisodeSelect: (episode: Episode) => void;
-}
+import { EpisodeSelectorProps } from '../../../model/videoModel';
 
 const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({ episodes, selectedEpisode, onEpisodeSelect }) => {
+  console.log('episodes is=>', episodes);
   return (
-    <div className="overflow-x-auto whitespace-nowrap m-4 bg-black"> {/* Horizontal scroll container */}
+    <div className="overflow-x-auto whitespace-nowrap m-4 bg-background remove-scrollbar"> {/* Horizontal scroll container */}
       <div className="inline-flex space-x-3"> {/* Inline flex for horizontal layout */}
         {episodes.map((episode) => (
           <button
@@ -17,10 +12,10 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({ episodes, selectedEpi
             onClick={() => onEpisodeSelect(episode)}
             className={`py-2 px-4 rounded-lg focus:outline-none relative ${
               selectedEpisode?.episode_id === episode.episode_id
-                ? 'bg-gray-800 text-white'
-                : 'bg-gray-700 text-gray-300'
+                ? 'bg-episodeSelected text-white'
+                : 'bg-source text-white'
             }`}
-            style={{ minWidth: '100px', maxWidth: '120px' }}  // Adjust width for uniformity
+            style={{ minWidth: '100px' }}  // Adjust width for uniformity
           >
             <span>{episode.episode_name}</span>
 

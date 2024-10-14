@@ -3,16 +3,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import back from "../../../assets/login/back.svg";
 import { setPasswordRecoveryFotgot } from "../../../services/userService";
-import { setCapCode ,setOCapKey} from "../../../features/login/ModelSlice";
+import { setCapCode, setOCapKey } from "../../../features/login/ModelSlice";
+import {
+  useGetCodeForgotQuery,
+  usePasswordRecoveryMutation,
+} from "../../../features/login/RegisterApi";
+import { showToast } from "../../../pages/profile/error/ErrorSlice";
 
 interface OptProps {
-  password: string,
-  confirmPassword: string,
-  accessToken : string,
-  setShowVerify: (isVisible: boolean) => void; 
+  send_type: string;
+  password: string;
+  confirmPassword: string;
+  accessToken: string;
+  setShowVerify: (isVisible: boolean) => void;
 }
 
-const Verify: React.FC<OptProps> = ({password,confirmPassword,accessToken,setShowVerify}) => {
+const Verify: React.FC<OptProps> = ({
+  password,
+  confirmPassword,
+  accessToken,
+  setShowVerify,
+  send_type,
+}) => {
+  // console.log(send_type, accessToken);
+  const { data: codeData } = useGetCodeForgotQuery(
+    { send_type, session_token: accessToken || "" },
+    { skip: !accessToken }
+  );
+  // console.log(codeData);
+
+  const [passwordRecovery, { error }] = usePasswordRecoveryMutation();
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(""));
   const [timer, setTimer] = useState<number>(59);
   const [buttonText, setButtonText] = useState<string>("59 s");
@@ -20,6 +40,11 @@ const Verify: React.FC<OptProps> = ({password,confirmPassword,accessToken,setSho
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (codeData) {
+      console.log("Code data fetched:", codeData);
+    }
+  }, [codeData]);
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -32,7 +57,7 @@ const Verify: React.FC<OptProps> = ({password,confirmPassword,accessToken,setSho
     return () => clearInterval(countdown);
   }, [timer]);
 
-  const handleOTPChange = (index: number, value: string) => {
+  const handleOTPChange = async (index: number, value: string) => {
     const updatedOTP = [...otpDigits];
     updatedOTP[index] = value;
     setOtpDigits(updatedOTP);
@@ -48,8 +73,28 @@ const Verify: React.FC<OptProps> = ({password,confirmPassword,accessToken,setSho
     // Handle OTP submission when all digits are filled
     if (updatedOTP.every((digit) => digit)) {
       const otpCode = updatedOTP.join("");
-      if(otpCode){
-        setPasswordRecoveryFotgot(password,confirmPassword,otpCode,accessToken)
+      if (otpCode) {
+        try {
+          const {data,error} = await passwordRecovery({
+            password,
+            repassword: confirmPassword,
+            session_token: accessToken,
+            forget_code: otpCode,
+          });
+          console.log(error);
+          if(data){
+            navigate("/profile")
+            console.log('set success')
+          }
+          if (error) {
+            dispatch(
+              showToast({ message: "验证码错误", type: "error" })
+            );
+            // console.log("'", result.error);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };
@@ -57,9 +102,9 @@ const Verify: React.FC<OptProps> = ({password,confirmPassword,accessToken,setSho
   const resendOtp = () => {};
 
   const handleBack = () => {
-    setShowVerify(false)
-    dispatch(setCapCode(""))
-    dispatch(setOCapKey(""))
+    setShowVerify(false);
+    dispatch(setCapCode(""));
+    dispatch(setOCapKey(""));
   };
 
   return (
@@ -90,8 +135,7 @@ const Verify: React.FC<OptProps> = ({password,confirmPassword,accessToken,setSho
           Verification code sent ,{""}
           {/* <span className="text-white">DevelopX10@gmail.com</span> /{" "} */}
           {/* <span className="text-white">+868880818.</span> */}
-           Please check your
-          messages and spam folder.
+          Please check your messages and spam folder.
         </p>
       </div>
 

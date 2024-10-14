@@ -4,47 +4,13 @@ import {
   faThumbsUp,
   faPaperPlane,
   faSpinner,
-  faReply,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import ProfileImg from "../../../assets/profile.png";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setAuthModel } from "../../../features/login/ModelSlice";
-
-interface CommentProps {
-  movieId: string;
-}
-
-interface Comment {
-  id: number;
-  movie_id: string;
-  user: {
-    id: number;
-    nickname: string;
-    avatar: string;
-    level: string;
-  };
-  content: string;
-  type: string;
-  likes: number;
-  create_time: string;
-  replies?: Reply[];
-}
-
-interface Reply {
-  id: number;
-  comment_id: number;
-  parent_id: number;
-  user: {
-    id: number;
-    nickname: string;
-    avatar: string;
-    level: string;
-  };
-  content: string;
-  create_time: string;
-}
+import {CommentProps, Comment } from '../../../model/commentModel';
 
 const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -94,6 +60,10 @@ const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
 
   // Like a comment
   const likeComment = async (commentId: number) => {
+    if(!isLoggedIn) {
+      dispatch(setAuthModel(true));
+      return;
+    }
     const loginResponse = await localStorage.getItem("authToken");
     const loginInfo = loginResponse ? JSON.parse(loginResponse || "") : null;
     const authorization =
@@ -253,15 +223,15 @@ const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
   }, [replyingTo]);
 
   return (
-    <div className="comment-section p-1 rounded-md">
+    <div className="comment-section h-auto flex flex-col rounded-md">
       {
         comments && comments.length > 0 ? 
         <InfiniteScroll
         dataLength={comments.length}
         next={() => setPage((prevPage) => prevPage + 1)}
         hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
-        endMessage={<p>No more comments</p>}
+        loader={<h4 className="text-white">Loading...</h4>}
+        // endMessage={<p className="text-white">No more comments</p>}
       >
         {comments.map((comment) => (
           <div
@@ -269,7 +239,7 @@ const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
             className="comment border-b border-gray-700 pb-4 mb-4 relative"
           >
             {/* Like button at the top right corner */}
-            <button
+            <button disabled={!isLoggedIn}
               onClick={() => likeComment(comment.id)}
               className="absolute top-0 right-0 m-2 text-gray-400 hover:text-blue-500"
             >
@@ -326,7 +296,7 @@ const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
                         <span className="username text-white font-bold">
                           {reply?.user?.nickname}
                         </span>
-                        <span className="badge bg-blue-500 text-xs text-white px-2 py-1 ml-2 rounded">
+                        <span className="badge bg-blue-500 text-xs text-white px-4 py-1 ml-2 rounded">
                           {reply?.user?.level}
                         </span>
                       </div>
@@ -354,7 +324,7 @@ const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
           </div>
         ))}
       </InfiniteScroll> : 
-      <div className="flex justify-center items-center text-center h-[40vh]">
+      <div className="flex justify-center items-center text-center h-[60vh]">
       <div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -555,7 +525,7 @@ const CommentComponent: React.FC<CommentProps> = ({ movieId }) => {
       
 
       {/* Create new comment or reply */}
-      {isLoggedIn ? <div className="create-comment mt-6 flex items-center justify-center rounded-lg w-full">
+      {isLoggedIn ? <div className="create-comment sticky bg-background left-0 bottom-0 p-2 flex items-center justify-center rounded-lg w-full">
         <img
           src={ProfileImg}
           alt="User Avatar"

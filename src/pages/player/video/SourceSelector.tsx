@@ -1,50 +1,15 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight, faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import ModalComponent from "./EpisodeModal";
+import { Episode, MovieDetail } from '../../../model/videoModel';
 
-interface Episode {
-  episode_id: number | null;
-  episode_name: string;
-  play_url: string;
-  from_code: string;
-  ready_to_play: boolean;
-}
-
-interface MovieDetail {
-  name: string;
-  code: string;
-  area: string;
-  year: string;
-  score: string;
-  content: string;
-  cover: string;
-  type_name: string;
-  tags: { name: string }[];
-  comments_count: string;
-  popularity_score: number;
-  play_from: {
-    name: string;
-    code: string;
-    list: Episode[];
-    total: number | null;
-    tips: string;
-  }[];
-  members: { name: string; type: number }[];
-}
-
-interface PlayFrom {
-  name: string;
-  total: number | null;
-  tips: string;
-  code: string;
-}
 
 interface SourceSelectorProps {
   episodes: Episode[]; // Episodes list
-  onEpisodeChange: (episode: Episode) => void; // Callback to change the current episode
+  // onEpisodeChange: (episode: Episode) => void; // Callback to change the current episode
   onEpisodeSelect: (episode: Episode) => void;
-  changeSource: (playfrom: PlayFrom) => void;
+  changeSource: (playfrom: any) => void;
   selectedEpisode: Episode | null;
   movieDetail: MovieDetail;
   selectedSource: number;
@@ -53,7 +18,7 @@ interface SourceSelectorProps {
 
 const SourceSelector: React.FC<SourceSelectorProps> = ({
   episodes,
-  onEpisodeChange,
+  // onEpisodeChange,
   onEpisodeSelect,
   selectedEpisode,
   changeSource,
@@ -61,6 +26,7 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
   selectedSource,
   setSelectedSource
 }) => {
+  console.log('episodes is=>', episodes);
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   const [source, setSource] = useState<"episodes" | "sources">("episodes"); // Modal state
 
@@ -70,7 +36,7 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
   // Close the modal
   const closeModal = () => setIsModalOpen(false);
   return (
-    <div className="bg-black p-4 mb-4">
+    <div className="bg-background p-4 mb-4">
       {/* Section header with title and expand all */}
       <div className="flex justify-between items-center mb-2">
         <h4 className="text-white text-base font-bold">Episodes</h4>

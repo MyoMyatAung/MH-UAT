@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ImageWithPlaceholder from "../../pages/search/components/ImgPlaceholder";
@@ -37,8 +38,33 @@ const ContinueWatching = () => {
     const formattedDuration = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     return formattedDuration;
   }
+
+  const handleFavoritesClick = () => {
+    if (!token) {
+      // If not logged in, open the login modal
+      startTransition(() => {
+        dispatch(setAuthModel(true));
+      });
+    } else {
+      // If logged in, redirect to the favorites page
+      navigate("/favorites");
+    }
+  };
+  const handleHistoryClick = () => {
+    if (!token) {
+      // If not logged in, open the login modal
+      startTransition(() => {
+        dispatch(setAuthModel(true));
+      });
+    } else {
+      // If logged in, redirect to the favorites page
+      navigate("/history");
+    }
+  };
+  console.log(movies?.length, "ml");
   return (
     <>
+
       {/* Horizontal Scrolling Movie List */}
       {token && movies?.length !== 0 && (
         <div className="max-md:px-3 px-10">
@@ -61,7 +87,8 @@ const ContinueWatching = () => {
                   <div className="absolute watchedDuration bottom-[2px] right-[3px] ">
                     {formatDuration(movie?.current_time)}
                   </div>
-                </div>
+</div>
+
 
                 <div className="watchlist-item-progress">
                   <div

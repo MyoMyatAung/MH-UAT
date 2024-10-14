@@ -28,14 +28,19 @@ const FilteredByType = () => {
 
   const getMoviesByType = async (id: any) => {
     setIsLoading(true);
-    const { data } = await axios.get(
-      `https://cc3e497d.qdhgtch.com:2345/api/v1/movie/screen/list?type_id=${id}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}`
-    );
-    if (data?.data?.list?.length >= 0) setIsLoading(false);
-    setMovieData(data?.data?.list);
+    try {
+
+      const { data } = await axios.get(
+        `https://cc3e497d.qdhgtch.com:2345/api/v1/movie/screen/list?type_id=${id}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}`
+      );
+      if (data?.data?.list?.length >= 0) setIsLoading(false);
+      setMovieData(data?.data?.list);
+    } catch (err) {
+      console.log('err is=>', err);
+    }
   };
   const { data: configData } = useGetHeaderTopicsQuery();
-  const filteredTags = configData?.data?.movie_screen?.filter?.filter(
+  const filteredTags: any = configData?.data?.movie_screen?.filter?.filter(
     (data: any) => data?.id === activeTab
   );
 
@@ -46,9 +51,9 @@ const FilteredByType = () => {
 
   useEffect(() => {
     dispatch(setSort(configData?.data?.movie_screen?.sort[0]?.value));
-    dispatch(setClass(filteredTags[0]?.class[0]));
-    dispatch(setArea(filteredTags[0]?.area[0]));
-    dispatch(setYear(filteredTags[0]?.year[0]));
+    dispatch(setClass(filteredTags && filteredTags[0]?.class[0]));
+    dispatch(setArea(filteredTags && filteredTags[0]?.area[0]));
+    dispatch(setYear(filteredTags && filteredTags[0]?.year[0]));
   }, []);
 
   return (
