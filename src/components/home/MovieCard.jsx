@@ -8,7 +8,7 @@ const MovieCard = ({ movie, height }) => {
     <div className="movie-item max-sm:h-auto cursor-default relative">
       <Link className="block relative zoom-effect" to={`/player/${movie?.id}`}>
         <div
-          className={`relative img_a h-[153px] w-[114px] border-none ${
+          className={`relative img_a h-[153px] w-full border-none ${
             height ? `max-sm:h-[${height}]` : "max-sm:h-[153px]"
           }`}
         >
@@ -33,7 +33,7 @@ const MovieCard = ({ movie, height }) => {
 
       <div className="text-container">
         <div className="movie-info">
-          <h2 className="text-[12px] mt-3 leading-[18px] font-confortFont font-[400] text-white two-line-truncate">
+          <h2 className="text-[12px] mt-3 leading-[18px] font-confortFont font-[400] text-white truncate">
             {he.decode(movie?.name || "Unknown Title")}
           </h2>
         </div>
