@@ -33,7 +33,7 @@ const RegisterApi = createApi({
         try {
           const { data } = await queryFulfilled;
           const msg = data.msg;
-          console.log("Registration successful:", msg);
+          // console.log("Registration successful:", msg);
         } catch (error: any) {
           if (error.error?.data) {
             console.error("Registration failed:", error.error.data);
