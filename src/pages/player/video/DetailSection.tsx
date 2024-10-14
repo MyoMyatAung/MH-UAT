@@ -194,11 +194,11 @@ const DetailSection: React.FC<DetailSectionProps> = ({
               <h2 className="text-[16px] font-semibold text-white">
                 {movieDetail.name || "暂无标题"}
               </h2>
-              <div className="info text-gray-400 text-sm flex justify-between items-center overflow-x-auto space-x-2 mt-2">
+              <div className="info text-white/40 text-sm flex justify-between items-start overflow-x-auto space-x-2 mt-2">
                 {/* Left Section: Flames, year, area, and tags */}
-                <div className="left-section flex items-center flex-wrap space-x-2 max-w-[80%] text-[12px]">
-                  <div className="rating flex items-center">
-                    <div className="flames flex">
+                <div className="left-section flex items-center flex-wrap space-x-2 w-[80%] overflow-x-auto text-[14px]">
+                  {/* <span className="rating flex items-center"> */}
+                    <span className="flames">
                       {Array.of(movieDetail?.popularity_score)?.map((item) => (
                         <img src={rate} key={item} alt="" />
                       ))}
@@ -209,8 +209,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
                             {flame}
                           </span>
                         ))} */}
-                    </div>
-                  </div>
+                    </span>
+                  {/* </span> */}
                   <span>{movieDetail.year}</span>
                   <span>/</span>
                   <span>{movieDetail.area}</span>
@@ -233,7 +233,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
                   className="right-section flex items-center"
                   onClick={handleDetailClick}
                 >
-                  <span className="font-semibold text-[12px]">简介</span>
+                  <span className="font-semibold text-[14px]">简介</span>
                   <FontAwesomeIcon
                     icon={faChevronRight}
                     className="text-md ml-1"
@@ -255,7 +255,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
                     isStarred ? "w-[22px] h-auto -mt-2" : "h-7 mb-2"
                   }`}
                 />
-                <span className="text-gray-200 text-[12px]">收藏</span>
+                <span className="text-white/40 text-[14px]">收藏</span>
               </button>
 
               <button
@@ -263,7 +263,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
                 className="flex flex-col items-center px-4 py-2 rounded-md"
               >
                 <img src={info} alt="" className="h-7 mb-2" />
-                <span className="text-gray-200 text-[12px]">反馈/求片</span>
+                <span className="text-white/40 text-[14px]">反馈/求片</span>
               </button>
 
               <button
@@ -271,12 +271,15 @@ const DetailSection: React.FC<DetailSectionProps> = ({
                 className="action-btn flex flex-col items-center px-4 py-2 rounded-md"
               >
                 <img src={share} alt="" className="h-7 mb-2" />
-                <span className="text-gray-200 text-[12px]">分享</span>
+                <span className="text-white/40 text-[14px]">分享</span>
               </button>
             </div>
             {/* Warning Message */}
-            <div className="warning p-2 bg-gray-800 rounded-md text-sm text-white text-center">
-              切勿相信视频中的任何广告，谨防上当受骗！
+            <div className="warning bg-gray-800 rounded-md text-white text-center">
+              <div className="warning-content">
+                <span className="warning-text">切勿相信视频中的任何广告，谨防上当受骗！</span>
+                <span className="warning-text">切勿相信视频中的任何广告，谨防上当受骗！</span>
+              </div>
             </div>
           </div>
         )}
@@ -294,7 +297,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
           </div>
         ) : (
           <div className="mt-4">
-            <AdsSection adsData={adsData} />
+            {adsData && <AdsSection adsData={adsData} />}
           </div>
         )}
       </div>
