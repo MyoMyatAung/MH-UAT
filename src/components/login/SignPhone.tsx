@@ -38,7 +38,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
     const lengthValid = password.length >= 8 && password.length <= 25;
     const containsLetters = /[a-zA-Z]/.test(password);
     const containsNumbers = /\d/.test(password);
-    return lengthValid && (containsLetters || containsNumbers);
+    return lengthValid && containsLetters && containsNumbers;
   };
   const variants = {
     hidden: { y: 300 },
@@ -90,7 +90,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
         <Opt setIsVisible={setIsVisible} phone={phone} password={password} />
       )}
       {openCaptcha && (
-        <Captch isLogin={false} username={phone} password={password} />
+        <Captch  setIsVisible={setIsVisible} isLogin={false} username={phone} password={password} />
       )}
       <AnimatePresence>
         {isVisible && (
