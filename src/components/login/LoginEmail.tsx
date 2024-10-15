@@ -99,7 +99,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ handleBack }) => {
         <AnimatePresence>
           {isVisible && (
             <motion.div
-              className="login_box h-[480px] fixed bottom-0 z-[9999] w-screen  py-4 px-[20px] bg-gray-800 rounded-t-2xl"
+              className="login_box h-[480px] fixed bottom-0 z-[99999] w-screen  py-4 px-[20px] bg-gray-800 rounded-t-2xl"
               initial="hidden"
               animate="visible"
               exit="exit"
