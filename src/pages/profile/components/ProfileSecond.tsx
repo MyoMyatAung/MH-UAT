@@ -4,7 +4,7 @@ const ProfileSecond = () => {
   return (
     <div className="profile-div">
       <div className="profile-div-main w-full">
-        {/* <Link to={"/"} className="p-first">
+        <Link to={"/share"} className="p-first">
           <div className="flex gap-3 items-center">
             <div>
               <svg
@@ -39,7 +39,7 @@ const ProfileSecond = () => {
               </g>
             </svg>
           </div>
-        </Link> */}
+        </Link>
         <Link
           to={"https://cc3e497d.qdhgtch.com:1333/help"}
           target="_blank"
