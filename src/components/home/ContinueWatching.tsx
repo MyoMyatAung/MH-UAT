@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ImageWithPlaceholder from "../../pages/search/components/ImgPlaceholder";
 import { useGetRecordQuery } from "../../pages/profile/services/profileApi";
 import "./home.css";
+import { useDispatch } from "react-redux";
 
 const ContinueWatching = () => {
   const { data } = useGetRecordQuery(); // Fetch favorite movies list from API
@@ -37,7 +38,6 @@ const ContinueWatching = () => {
     return formattedDuration;
   }
 
-  console.log(movies?.length, "ml");
   return (
     <>
       {/* Horizontal Scrolling Movie List */}

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCaptchaOpen } from "../../features/login/ModelSlice";
 import axios from "axios";
 import Capt from "./forgot/Capt";
-import { RecoverPassword } from "../../services/userService";
+// import { RecoverPassword } from "../../services/userService";
 import Panding from "./Panding";
 import Verify from "./forgot/Varify";
 import { showToast } from "../../pages/profile/error/ErrorSlice";
@@ -26,9 +26,9 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
   const [panding, setPanding] = useState(false);
   const [accessToken, setToken] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("aunkyawin2035@gmail.com");
-  const [password, setPassword] = useState("asdf1234");
-  const [confirmPassword, setConfirmPassword] = useState("asdf1234");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [showVerify, setShowVerify] = useState<boolean>(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
@@ -40,7 +40,7 @@ const ForgotPass: React.FC<ForgotPassProps> = ({ setForgot }) => {
     const lengthValid = password.length >= 8 && password.length <= 25;
     const containsLetters = /[a-zA-Z]/.test(password);
     const containsNumbers = /\d/.test(password);
-    return lengthValid && (containsLetters || containsNumbers);
+    return lengthValid && containsLetters && containsNumbers;
   };
 
   const show = () => {

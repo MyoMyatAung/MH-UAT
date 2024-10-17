@@ -49,7 +49,7 @@ const Capt: React.FC<CaptProp> = ({ email, password, confirmPassword }) => {
 
   useEffect(() => {
     if (tokenData) {
-      console.log("Token data:", tokenData);
+      console.log("Token data:");
       // Handle the token and proceed further
     }
   }, [tokenData, graphicKey]);
@@ -88,15 +88,15 @@ const Capt: React.FC<CaptProp> = ({ email, password, confirmPassword }) => {
           setIsemail("phone");
         }
         setToken(session_token);
-        console.log(" here is", email, phone, session_token);
+        // console.log(" here is", email, phone, session_token);
         setShowVerify(true);
       } else if(!tokenData && graphicKey) {
-        console.log("user not exist");
+        // console.log("user not exist");
         dispatch(setCaptchaOpen(false));
         dispatch(showToast({ message: "找不到用户", type: "error" }));
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -127,20 +127,20 @@ const Capt: React.FC<CaptProp> = ({ email, password, confirmPassword }) => {
               />
             </div>
             <div className="flex justify-center items-center gap-[4px]">
-              <input
-                type="text"
-                placeholder="Enter Code"
-                className="bg-[#333237] rounded-[4px] text-white p-[10px] focus:outline-none h-[40px]"
-                value={captchaCode}
-                onChange={(e) => setCaptchaCode(e.target.value)}
-              />
-              <img
-                className="w-[87px] h-[40px]"
-                src={captchaImage}
-                alt="Captcha"
-              />
-            </div>
-            <button
+            <input
+              type="number"
+              placeholder="Enter Code"
+              className="bg-[#333237] rounded-[4px] text-white p-[10px] focus:outline-none h-[40px]"
+              value={captchaCode}
+              onChange={(e) => setCaptchaCode(e.target.value)}
+            />
+            <img
+              className="w-[87px] h-[40px]"
+              src={captchaImage}
+              alt="Captcha"
+            />
+          </div>
+            <button 
               onClick={handleSubmit}
               className={`mt-[16px] w-full rounded-[4px] p-[10px] text-[14px] font-[400] ${
                 isButtonDisabled
@@ -152,9 +152,9 @@ const Capt: React.FC<CaptProp> = ({ email, password, confirmPassword }) => {
             >
               Sure
             </button>
-            {error && (
+            {/* {error && (
               <div className="text-red-500 mt-2 text-center">{error}</div>
-            )}
+            )} */}
           </div>
         )}
       </div>
