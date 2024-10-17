@@ -22,6 +22,7 @@ import Favorite from "./pages/profile/Favorite";
 import Loader from "./pages/search/components/Loader";
 import ErrorToast from "./pages/profile/error/ErrorToast";
 import Landing from "./components/Landing";
+import Share from "./pages/share";
 
 // Lazy load the pages
 const Home = React.lazy(() => import("./pages/home"));
@@ -76,7 +77,8 @@ const App: React.FC = () => {
     location.pathname.startsWith("/update_phone") ||
     location.pathname.startsWith("/update_password") ||
     location.pathname.startsWith("/bind") ||
-    location.pathname.startsWith("/contact");
+    location.pathname.startsWith("/contact") ||
+    location.pathname.startsWith("/share")
 
   const hideHeader = location.pathname.startsWith("/explorer");
   useEffect(() => {
@@ -152,6 +154,7 @@ const App: React.FC = () => {
                 <Route path="/update_password" element={<Password />} />
                 <Route path="/bind" element={<Bind />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/share" element={<Share />} />
               </Routes>
             </Suspense>
             <ErrorToast />
