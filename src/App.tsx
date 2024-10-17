@@ -44,6 +44,7 @@ const Phnumber = React.lazy(() => import("./pages/profile/Phnumber"));
 const Password = React.lazy(() => import("./pages/profile/Password"));
 const Bind = React.lazy(() => import("./pages/profile/Bind"));
 const Contact = React.lazy(() => import("./pages/profile/Contact"));
+const Invite = React.lazy(() => import("./pages/profile/Invite"));
 
 // ProtectedRoute component to handle route guarding
 // const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -78,7 +79,8 @@ const App: React.FC = () => {
     location.pathname.startsWith("/update_password") ||
     location.pathname.startsWith("/bind") ||
     location.pathname.startsWith("/contact") ||
-    location.pathname.startsWith("/share")
+    location.pathname.startsWith("/share") ||
+    location.pathname.startsWith("/invite");
 
   const hideHeader = location.pathname.startsWith("/explorer");
   useEffect(() => {
@@ -155,6 +157,7 @@ const App: React.FC = () => {
                 <Route path="/bind" element={<Bind />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/share" element={<Share />} />
+                <Route path="/invite" element={<Invite />} />
               </Routes>
             </Suspense>
             <ErrorToast />
