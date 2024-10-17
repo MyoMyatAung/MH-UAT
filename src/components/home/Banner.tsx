@@ -2,7 +2,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 const Banner = ({ list }: { list: any }) => {
   return (
-    <div className="mt-[115px] max-md:px-3 px-10">
+    <div className="mt-[140px] max-md:px-3 px-10">
       <div className="">
         <div className="relative">
           <Carousel showThumbs={false} showArrows={false} showStatus={false}>
