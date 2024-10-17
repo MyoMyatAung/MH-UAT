@@ -32,7 +32,7 @@ const Share: React.FC<ShareProps> = ({}) => {
   const token = parsedLoggedIn?.data?.access_token;
 
   const { data: userData, error } = useGetUserQuery(token);
-  //   console.log(userData);
+  console.log(userData);
   const navigate = useNavigate();
   const handleCopy = () => {
     if (userData) {
@@ -207,7 +207,7 @@ const Share: React.FC<ShareProps> = ({}) => {
         </div>
         <p className=" line"></p>
         {/* invited */}
-        <div className=" flex flex-col items-center justify-center gap-[8px]">
+        <div onClick={() => navigate("/share/member")} className=" flex flex-col items-center justify-center gap-[8px]">
           <h1 className=" text-[18px] font-[600] text-white/70">
             {userData?.data?.invite_user_num}
           </h1>
@@ -221,7 +221,7 @@ const Share: React.FC<ShareProps> = ({}) => {
         </div>
       </div>
       {/* two button */}
-      <div className="flex justify-center items-center py-[30px] gap-[16px]">
+      <div className="flex justify-center items-center py-[30px] gap-[16px] pb-[30px]">
         {/* copy */}
         <div
           onClick={handleShareLink}
