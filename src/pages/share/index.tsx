@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./share.css";
 import bg1 from "../../assets/share/bg1.png";
 import back from "../../assets/share/back.svg";
@@ -6,6 +6,8 @@ import down from "../../assets/share/down.svg";
 import friend from "../../assets/share/friend.svg";
 import copy from "../../assets/share/copy.svg";
 import form from "../../assets/share/form.svg";
+import link from "../../assets/share/link.svg";
+import linkD from "../../assets/share/linkD.svg";
 import fire from "../../assets/share/fire.png";
 import dolar from "../../assets/share/dolar.svg";
 import go from "../../assets/share/go.svg";
@@ -14,6 +16,7 @@ import { useGetShareScanQuery } from "../../features/share/ShareApi";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetUserQuery } from "../profile/services/profileApi";
 import { showToast } from "../profile/error/ErrorSlice";
+import { toPng } from "html-to-image";
 
 interface ShareProps {}
 
@@ -22,13 +25,14 @@ const Share: React.FC<ShareProps> = ({}) => {
   const { data } = useGetShareScanQuery({ qr_create: "1" });
   console.log(data);
   const [copySuccess, setCopySuccess] = useState(false);
+  const imageRef = useRef<HTMLDivElement>(null);
 
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
 
   const { data: userData, error } = useGetUserQuery(token);
-  console.log(userData);
+  //   console.log(userData);
   const navigate = useNavigate();
   const handleCopy = () => {
     if (userData) {
@@ -42,6 +46,39 @@ const Share: React.FC<ShareProps> = ({}) => {
         .catch(() => {
           dispatch(showToast({ message: "复制失败", type: "error" }));
           setCopySuccess(false);
+        });
+    }
+  };
+
+  const handleShareLink = () => {
+    if (data) {
+      const link = data?.data?.link;
+      console.log(link);
+      navigator.clipboard
+        .writeText(link)
+        .then(() => {
+          dispatch(showToast({ message: "已复制", type: "success" }));
+          setCopySuccess(true);
+        })
+        .catch(() => {
+          dispatch(showToast({ message: "复制失败", type: "error" }));
+          setCopySuccess(false);
+        });
+    }
+  };
+
+  const handleSaveAsImage = () => {
+    if (imageRef.current) {
+      toPng(imageRef.current, { cacheBust: true })
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.href = dataUrl;
+          link.download = "share-info.png";
+          link.click();
+          dispatch(showToast({ message: "保存成功", type: "success" }));
+        })
+        .catch((err) => {
+          console.error("Failed to generate image:", err);
         });
     }
   };
@@ -111,7 +148,10 @@ const Share: React.FC<ShareProps> = ({}) => {
       </div>
       {/* scan */}
       {data && (
-        <div className=" flex justify-center items-center pt-[30px]">
+        <div
+          ref={imageRef}
+          className=" flex justify-center items-center pt-[30px]"
+        >
           <div className="scan py-6 px-10 flex flex-col justify-center items-center gap-[16px]">
             <img
               className=" w-[180px] h-[180px]"
@@ -136,7 +176,7 @@ const Share: React.FC<ShareProps> = ({}) => {
         </div>
       )}
       {/* alert */}
-      <div className=" flex justify-center items-center">
+      <div className=" flex justify-center items-center pt-[20px]">
         <div className="fire_box w-[320 px-[12px] py-[4px] flex gap-[7px] justify-center items-center">
           <img src={fire} alt="" />
           <h1 className=" poin text-white/70 text-[12px]">
@@ -165,6 +205,7 @@ const Share: React.FC<ShareProps> = ({}) => {
             <img src={go} alt="" />
           </div>
         </div>
+        <p className=" line"></p>
         {/* invited */}
         <div className=" flex flex-col items-center justify-center gap-[8px]">
           <h1 className=" text-[18px] font-[600] text-white/70">
@@ -177,6 +218,25 @@ const Share: React.FC<ShareProps> = ({}) => {
 
             <img src={go} alt="" />
           </div>
+        </div>
+      </div>
+      {/* two button */}
+      <div className="flex justify-center items-center py-[30px] gap-[16px]">
+        {/* copy */}
+        <div
+          onClick={handleShareLink}
+          className=" flex gap-[8px] link_button px-[14px] py-[12px]"
+        >
+          <img src={link} alt="" />
+          <h1 className=" text-white text-[16px] font-[400]">复制分享链接</h1>
+        </div>
+        {/* down and save qr card */}
+        <div
+          onClick={handleSaveAsImage}
+          className=" flex gap-[8px] link_button px-[14px] py-[12px]"
+        >
+          <img src={linkD} alt="" />
+          <h1 className=" text-white text-[16px] font-[400]">复制分享链接</h1>
         </div>{" "}
       </div>
     </div>
