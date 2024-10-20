@@ -108,9 +108,13 @@ const FilteredByType = () => {
                     dataLength={movieData.length} //This is important field to render the next data
                     next={fetchData}
                     hasMore={true}
-                    loader={<h4>Loading...</h4>}
+                    loader={
+                      <div className="flex justify-center items-center w-full pb-20">
+                        <Loader />
+                      </div>
+                    }
                   >
-                    {/* {items} */}
+                    {/* {item} */}
                   </InfiniteScroll>
                 </div>
               )}
