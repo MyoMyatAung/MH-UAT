@@ -21,7 +21,7 @@ import {
 const FilteredByType = () => {
   const activeTab = useSelector((state: any) => state.home.activeTab);
   const [movieData, setMovieData] = useState([]);
-  const [pageSize, setPageSize] = useState(30);
+  const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const sort = useSelector((state: any) => state.home.sort);
