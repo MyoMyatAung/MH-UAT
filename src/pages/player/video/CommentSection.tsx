@@ -7,12 +7,13 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import ProfileImg from "../../../assets/profile.png";
-import OptionIcon from '../../../assets/option.svg';
+import OptionIcon from "../../../assets/option.svg";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch } from "react-redux";
 import { setAuthModel } from "../../../features/login/ModelSlice";
 import { CommentProps, Comment } from "../../../model/commentModel";
 import { showToast } from "../../../pages/profile/error/ErrorSlice";
+import Popup from "./Popup";
 
 const CommentComponent: React.FC<CommentProps> = ({
   movieId,
@@ -26,6 +27,7 @@ const CommentComponent: React.FC<CommentProps> = ({
   const [hasMore, setHasMore] = useState(true);
   const commentInputRef = useRef<HTMLInputElement>(null);
   const [isLoggedIn, setIsLoggedLogIn] = useState<boolean>(false);
+  const [openPopup, setOpenPopup ] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,8 +48,8 @@ const CommentComponent: React.FC<CommentProps> = ({
   const fetchComments = async () => {
     try {
       const response = await fetch(
-        // `${process.env.REACT_APP_API_URL}/movie/comments/index?movie_id=${movieId}&page=${page}&pageSize=10`
-        'http://localhost:3000/comments'
+        `${process.env.REACT_APP_API_URL}/movie/comments/index?movie_id=${movieId}&page=${page}&pageSize=10`
+        // "http://localhost:3000/comments"
       );
       const data = await response.json();
       if (data.data.list.length === 0) {
@@ -251,10 +253,7 @@ const CommentComponent: React.FC<CommentProps> = ({
         // >
         <>
           {comments.map((comment) => (
-            <div
-              key={comment.id}
-              className="comment pb-4 mb-4 relative"
-            >
+            <div key={comment.id} className="comment pb-4 mb-4 relative">
               {/* Like button at the top right corner */}
               <button
                 disabled={!isLoggedIn}
@@ -284,18 +283,21 @@ const CommentComponent: React.FC<CommentProps> = ({
                 </div>
                 <div className="comment-actions flex items-center justify-start gap-4 mt-2">
                   <span className="time text-gray-500 text-sm">
-                    {new Date(comment.create_time).toISOString().split('T')[0]}
+                    {new Date(comment.create_time).toISOString().split("T")[0]}
                   </span>
                   <div>
-                  <span className="time text-commentIcon text-sm mr-4">回复</span>
-                  <span className="time text-commentIcon text-sm">删除</span>
+                    <span className="time text-commentIcon text-sm mr-4">
+                      回复
+                    </span>
+                    <span className="time text-commentIcon text-sm">删除</span>
                   </div>
                   <img
-                  src={OptionIcon}
-                  alt=""
-                  className="w-9 h-5 rounded-sm mr-2 mt-0.5"
-                />
-                  
+                    src={OptionIcon}
+                    onClick={()=>setOpenPopup(true)}
+                    alt=""
+                    className="w-9 h-5 rounded-sm mr-2 mt-0.5"
+                  />
+
                   {/* <div className="flex items-center">
                 <button
                   onClick={() => setReplyingTo(comment.id)}
@@ -317,35 +319,46 @@ const CommentComponent: React.FC<CommentProps> = ({
                 <div className="reply-section mt-4 pl-10">
                   {comment.replies.map((reply) => (
                     <div key={reply.id} className="reply mb-4">
-                      <div className="profile flex items-center mb-1">
+                      <div className="profile flex items-center justify-items-center mb-2">
                         <img
-                          src={reply?.user?.avatar}
-                          alt={reply?.user?.nickname}
-                          className="rounded-full mr-2"
+                          src={reply.user?.avatar || ProfileImg}
+                          alt={reply.user?.nickname}
+                          className="w-9 h-9 rounded-full mr-2 mt-3"
                         />
-                        <div>
-                          <span className="username text-commentIcon font-bold">
-                            {reply?.user?.nickname}
-                          </span>
-                          <span className="badge bg-blue-500 text-xs text-white px-4 py-1 ml-2 rounded">
-                            {reply?.user?.level}
-                          </span>
+                        <span className="username text-commentIcon font-bold">
+                          {reply.user?.nickname}
+                        </span>
+                        <img
+                          src={reply.user?.level}
+                          alt={reply.user?.level}
+                          className="h-6 w-auto ml-2"
+                        />
+                      </div>
+                      <div style={{ marginLeft: "46px", marginTop: "-8px" }}>
+                        <div className="comment-text text-gray-300 mb-1">
+                          {reply.content}
                         </div>
-                      </div>
-                      <div className="comment-text text-gray-300 mb-1">
-                        {reply.content}
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <span className="time text-gray-500 text-xs">
-                            {new Date(reply.create_time).toLocaleDateString()}
+                        <div className="comment-actions flex items-center justify-start gap-4 mt-2">
+                          <span className="time text-gray-500 text-sm">
+                            {
+                              new Date(reply.create_time)
+                                .toISOString()
+                                .split("T")[0]
+                            }
                           </span>
-                          <button
-                            onClick={() => deleteCommentOrReply(reply.id, true)}
-                            className="text-gray-400 hover:text-red-500 ml-2"
-                          >
-                            <FontAwesomeIcon icon={faTrash} /> Delete
-                          </button>
+                          <div>
+                            <span className="time text-commentIcon text-sm mr-4">
+                              回复
+                            </span>
+                            <span className="time text-commentIcon text-sm">
+                              删除
+                            </span>
+                          </div>
+                          <img
+                            src={OptionIcon}
+                            alt=""
+                            className="w-9 h-5 rounded-sm mr-2 mt-0.5"
+                          />
                         </div>
                       </div>
                     </div>
@@ -599,6 +612,9 @@ const CommentComponent: React.FC<CommentProps> = ({
           </button>
         </div>
       )}
+
+      {/* Popup */}
+      {openPopup && <Popup setOpenPopup={setOpenPopup}/>}
     </div>
   );
 };
