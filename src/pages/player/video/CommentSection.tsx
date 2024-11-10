@@ -7,6 +7,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import ProfileImg from "../../../assets/profile.png";
+import OptionIcon from '../../../assets/option.svg';
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch } from "react-redux";
 import { setAuthModel } from "../../../features/login/ModelSlice";
@@ -45,8 +46,8 @@ const CommentComponent: React.FC<CommentProps> = ({
   const fetchComments = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/movie/comments/index?movie_id=${movieId}&page=${page}&pageSize=10`
-        // 'http://localhost:3000/comments'
+        // `${process.env.REACT_APP_API_URL}/movie/comments/index?movie_id=${movieId}&page=${page}&pageSize=10`
+        'http://localhost:3000/comments'
       );
       const data = await response.json();
       if (data.data.list.length === 0) {
@@ -237,8 +238,8 @@ const CommentComponent: React.FC<CommentProps> = ({
 
   return (
     <div
-      className="comment-section flex flex-col rounded-md p-3"
-      style={{ height: lowerDivHeight }}
+      className="comment-section flex flex-col rounded-md p-3 overflow-y-auto"
+      style={{ height: lowerDivHeight - 100 }}
     >
       {comments && comments.length > 0 ? (
         //   <InfiniteScroll
@@ -252,7 +253,7 @@ const CommentComponent: React.FC<CommentProps> = ({
           {comments.map((comment) => (
             <div
               key={comment.id}
-              className="comment border-b border-gray-700 pb-4 mb-4 relative"
+              className="comment pb-4 mb-4 relative"
             >
               {/* Like button at the top right corner */}
               <button
@@ -266,9 +267,9 @@ const CommentComponent: React.FC<CommentProps> = ({
                 <img
                   src={comment.user?.avatar || ProfileImg}
                   alt={comment.user?.nickname}
-                  className="w-9 h-9 rounded-full mr-2 mt-2"
+                  className="w-9 h-9 rounded-full mr-2 mt-3"
                 />
-                <span className="username text-white font-bold">
+                <span className="username text-commentIcon font-bold">
                   {comment.user?.nickname}
                 </span>
                 <img
@@ -277,16 +278,24 @@ const CommentComponent: React.FC<CommentProps> = ({
                   className="h-6 w-auto ml-2"
                 />
               </div>
-              <div style={{ marginLeft: "48px", marginTop: "-16px" }}>
-                <div className="comment-text text-gray-300 mb-2">
+              <div style={{ marginLeft: "46px", marginTop: "-8px" }}>
+                <div className="comment-text text-gray-300 mb-1">
                   {comment.content}
                 </div>
-                <div className="comment-actions flex items-center justify-between mt-2">
+                <div className="comment-actions flex items-center justify-start gap-4 mt-2">
                   <span className="time text-gray-500 text-sm">
-                    {new Date(comment.create_time).toLocaleDateString()}
+                    {new Date(comment.create_time).toISOString().split('T')[0]}
                   </span>
-                  <span className="time text-gray-500 text-sm">回复</span>
-                  <span className="time text-gray-500 text-sm">删除</span>
+                  <div>
+                  <span className="time text-commentIcon text-sm mr-4">回复</span>
+                  <span className="time text-commentIcon text-sm">删除</span>
+                  </div>
+                  <img
+                  src={OptionIcon}
+                  alt=""
+                  className="w-9 h-5 rounded-sm mr-2 mt-0.5"
+                />
+                  
                   {/* <div className="flex items-center">
                 <button
                   onClick={() => setReplyingTo(comment.id)}
@@ -315,7 +324,7 @@ const CommentComponent: React.FC<CommentProps> = ({
                           className="rounded-full mr-2"
                         />
                         <div>
-                          <span className="username text-white font-bold">
+                          <span className="username text-commentIcon font-bold">
                             {reply?.user?.nickname}
                           </span>
                           <span className="badge bg-blue-500 text-xs text-white px-4 py-1 ml-2 rounded">
