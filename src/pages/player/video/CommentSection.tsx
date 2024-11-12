@@ -51,8 +51,8 @@ const CommentComponent: React.FC<CommentProps> = ({
   const fetchComments = async () => {
     try {
       const response = await fetch(
-        // `${process.env.REACT_APP_API_URL}/movie/comments/index?movie_id=${movieId}&page=${page}&pageSize=10`
-        "http://localhost:3001/comments"
+        `${process.env.REACT_APP_API_URL}/movie/comments/index?movie_id=${movieId}&page=${page}&pageSize=10`
+        // "http://localhost:3001/comments"
       );
       const data = await response.json();
       if (data.data.list.length === 0) {
