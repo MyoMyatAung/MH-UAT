@@ -18,9 +18,12 @@ import {
   setYear,
 } from "../../pages/home/slice/HomeSlice";
 
+
 const FilteredByType = () => {
   const activeTab = useSelector((state: any) => state.home.activeTab);
-  const [movieData, setMovieData] = useState([]);
+  const [movieData, setMovieData] = useState<any>([]);
+  const [totalPage, setTotalPage] = useState<any>(null);
+  const [hasMore, setHasMore] = useState(true);
   const [pageSize, setPageSize] = useState(9);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,18 +41,22 @@ const FilteredByType = () => {
       );
       if (data?.data?.list?.length >= 0) setIsLoading(false);
       setMovieData(data?.data?.list);
+      setTotalPage(data?.data?.total);
     } catch (err) {
       console.log("err is=>", err);
     }
   };
 
   const fetchData = async () => {
-    setPage(page + 1);
+    setPage((prev) => prev + 1);
     const { data } = await axios.get(
       `${process.env.REACT_APP_API_URL}/movie/screen/list?type_id=${activeTab}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page}`
     );
-    if (data?.data?.list?.length >= 0) setIsLoading(false);
-    setMovieData(movieData.concat(data?.data?.list));
+    if (data?.data?.list?.length >= 0) {
+      setIsLoading(false);
+    }
+    // setMovieData(movieData.concat(data?.data?.list));
+    setMovieData((prev: any) => [...prev, ...data?.data?.list]);
   };
 
   const {
@@ -65,7 +72,14 @@ const FilteredByType = () => {
     getMoviesByType(activeTab);
     window.scrollTo(0, 0);
     setPage(1);
+    setHasMore(true);
   }, [activeTab, sort, area, year, classData]);
+
+  useEffect(() => {
+    if (totalPage <= movieData?.length) {
+      setHasMore(false);
+    }
+  }, [movieData]);
 
   useEffect(() => {
     dispatch(setSort(configData?.data?.movie_screen?.sort[0]?.value));
@@ -74,11 +88,11 @@ const FilteredByType = () => {
     dispatch(setYear(filteredTags && filteredTags[0]?.year[0]));
   }, []);
 
-  // console.log(filteredTags);
-
   if (isloader || isFetching) {
     return null; // Ensure you return null instead of undefined
   }
+
+  console.log(movieData?.length, totalPage);
 
   return (
     <>
@@ -108,9 +122,10 @@ const FilteredByType = () => {
                   <InfiniteScroll
                     dataLength={movieData.length} //This is important field to render the next data
                     next={fetchData}
-                    hasMore={true}
+                    hasMore={hasMore}
                     loader={
                       <div className="flex justify-center items-center w-full pb-20">
+                        {/* {hasMore ? <Loader /> : "No More data"} */}
                         <Loader />
                       </div>
                     }
@@ -123,10 +138,10 @@ const FilteredByType = () => {
             </>
           ) : (
             <div className="text-center flex justify-center items-center w-full pt-32 px-3">
-              <Loader />
-              {/* <h1 className="text-white font-semibold text-[16px]">
-              Movie Data Not Found
-            </h1> */}
+              {/* <Loader /> */}
+              <h1 className="text-white font-semibold text-[16px]">
+                Movie not found
+              </h1>
             </div>
           )}
         </div>
