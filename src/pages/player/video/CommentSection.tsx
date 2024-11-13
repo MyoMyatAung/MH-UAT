@@ -57,7 +57,6 @@ const CommentComponent: React.FC<CommentProps> = ({
       );
       const data = await response.json();
   
-      console.log('shit', comments, data.data.list)
       // Concatenate new comments to existing ones using spread operator (...)
       const updatedComments = comments && comments.length > 0 && comments.length < data.data.total && page > 1 ? [...comments, ...data.data.list] : data.data.list;
   
