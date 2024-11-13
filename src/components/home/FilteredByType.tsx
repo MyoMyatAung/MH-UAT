@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import nodata from "../../assets/nodata.png";
 
 import {
   useGetFilterByMoviesByTypeIdQuery,
@@ -17,7 +18,6 @@ import {
   setArea,
   setYear,
 } from "../../pages/home/slice/HomeSlice";
-
 
 const FilteredByType = () => {
   const activeTab = useSelector((state: any) => state.home.activeTab);
@@ -137,11 +137,12 @@ const FilteredByType = () => {
               )}
             </>
           ) : (
-            <div className="text-center flex justify-center items-center w-full pt-32 px-3">
+            <div className="text-center flex justify-center flex-col items-center w-full pt-32 px-3">
               {/* <Loader /> */}
-              <h1 className="text-white font-semibold text-[16px]">
-                Movie not found
-              </h1>
+              <img src={nodata} className="w-[110px]" alt="" />
+              {/* <h1 className="text-white font-semibold text-[16px]">
+                这里什么都没有...
+              </h1> */}
             </div>
           )}
         </div>
