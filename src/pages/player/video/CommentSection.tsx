@@ -455,7 +455,7 @@ const CommentComponent: React.FC<CommentProps> = ({
                             </div>
                           </div>
                         ) : (
-                          <div className="text-white flex justify-center mt-4 pb-4 items-center text-center">
+                          <div className="text-white flex w-[300px] justify-center mt-4 pb-4 items-center text-center">
                             <Loader />
                           </div>
                         ))}
