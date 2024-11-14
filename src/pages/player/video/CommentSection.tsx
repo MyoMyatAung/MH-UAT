@@ -52,6 +52,9 @@ const CommentComponent: React.FC<CommentProps> = ({
     fetchLoginInfo();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, []);
   // Fetch comments
   const fetchComments = async () => {
     setIsLoading(true);

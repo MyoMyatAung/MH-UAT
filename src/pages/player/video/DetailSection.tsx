@@ -176,6 +176,10 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, []);
+
   return (
     <div className="flex flex-col w-full bg-background">
       {/* Tabs */}

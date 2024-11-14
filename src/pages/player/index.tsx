@@ -192,6 +192,10 @@ const DetailPage: React.FC = () => {
     autoPlayNextEpisode();
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, []);
+  
   const handleVideoError = (errorUrl: string) => {
     if (errorVideoUrl !== errorUrl && errorUrl) {
       setErrorVideoUrl(errorUrl);
