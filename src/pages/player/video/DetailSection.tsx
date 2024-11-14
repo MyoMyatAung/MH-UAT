@@ -31,7 +31,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
   const [isStarred, setIsStarred] = useState<boolean>(
     movieDetail && movieDetail.is_collect ? true : false
   );
-  const { refetch } = useGetListQuery({ page: 1 });
+  const { refetch } = useGetListQuery({ page: 1, type_id: 0 });
   const [showFeedbackModal, setShowFeedbackModal] = useState(false); // For triggering modal
   const [visible, setVisible] = useState(false);
   const [lowerDivHeight, setLowerDivHeight] = useState(0);
