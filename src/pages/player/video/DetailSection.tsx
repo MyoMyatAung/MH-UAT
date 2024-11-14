@@ -177,6 +177,10 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, []);
+
   return (
     <div className="flex flex-col w-full bg-background">
       {/* Tabs */}
@@ -295,6 +299,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
           <div className="mt-4">
             {/* {adsData && <AdsSection adsData={adsData?.player_episode_up} />} */}
             <NewAds section={"player_episode_up"} />
+
           </div>
         )}
       </div>
