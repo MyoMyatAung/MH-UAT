@@ -17,6 +17,7 @@ import FeedbackComponent from "./Feedback";
 import AdsSection from "./AdsSection";
 import { DetailSectionProps } from "../../../model/videoModel";
 import { useGetListQuery } from "../../../pages/profile/services/profileApi";
+import NewAds from "../../../components/NewAds";
 
 const DetailSection: React.FC<DetailSectionProps> = ({
   movieDetail,
@@ -292,7 +293,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
           </div>
         ) : (
           <div className="mt-4">
-            {adsData && <AdsSection adsData={adsData?.player_episode_up} />}
+            {/* {adsData && <AdsSection adsData={adsData?.player_episode_up} />} */}
+            <NewAds section={"player_episode_up"} />
           </div>
         )}
       </div>
