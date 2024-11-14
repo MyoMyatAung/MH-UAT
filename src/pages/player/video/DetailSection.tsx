@@ -24,6 +24,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
   id,
   activeTab,
   setActiveTab,
+  setCommentCount,
+  commentCount
 }) => {
   const [showModal, setShowModal] = useState(false); // For triggering modal
   const dispatch = useDispatch();
@@ -285,7 +287,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
         {activeTab === "tab-2" ? (
           <div id="tab-2" className="block">
             {/* Comment section or other content */}
-            <CommentComponent movieId={id} lowerDivHeight={lowerDivHeight} />
+            <CommentComponent movieId={id} lowerDivHeight={lowerDivHeight} setCommentCount={setCommentCount} 
+            commentCount={commentCount}/>
           </div>
         ) : (
           <div className="mt-4">
