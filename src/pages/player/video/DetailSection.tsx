@@ -291,7 +291,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
             commentCount={commentCount}/>
           </div>
         ) : (
-          <div className="mt-4">
+          <div className="mt-8">
             {adsData && <AdsSection adsDataList={adsData?.player_episode_up} />}
           </div>
         )}
