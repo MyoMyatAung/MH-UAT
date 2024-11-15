@@ -17,6 +17,7 @@ import FeedbackComponent from "./Feedback";
 import AdsSection from "./AdsSection";
 import { DetailSectionProps } from "../../../model/videoModel";
 import { useGetListQuery } from "../../../pages/profile/services/profileApi";
+import NewAds from "../../../components/NewAds";
 
 const DetailSection: React.FC<DetailSectionProps> = ({
   movieDetail,
@@ -24,6 +25,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
   id,
   activeTab,
   setActiveTab,
+  setCommentCount,
+  commentCount
 }) => {
   const [showModal, setShowModal] = useState(false); // For triggering modal
   const dispatch = useDispatch();
@@ -174,6 +177,10 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, []);
+
   return (
     <div className="flex flex-col w-full bg-background">
       {/* Tabs */}
@@ -285,11 +292,14 @@ const DetailSection: React.FC<DetailSectionProps> = ({
         {activeTab === "tab-2" ? (
           <div id="tab-2" className="block">
             {/* Comment section or other content */}
-            <CommentComponent movieId={id} lowerDivHeight={lowerDivHeight} />
+            <CommentComponent movieId={id} lowerDivHeight={lowerDivHeight} setCommentCount={setCommentCount} 
+            commentCount={commentCount}/>
           </div>
         ) : (
           <div className="mt-4">
-            {adsData && <AdsSection adsData={adsData?.player_episode_up} />}
+            {/* {adsData && <AdsSection adsData={adsData?.player_episode_up} />} */}
+            <NewAds section={"player_episode_up"} />
+
           </div>
         )}
       </div>

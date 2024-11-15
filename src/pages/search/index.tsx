@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./search.css";
 import Navbar from "./components/overlay/Navbar";
-import Ads from "./components/Ads";
 import History from "./components/History";
 import Everyone from "./components/Everyone";
 import { useGetAdsQuery, useGetSearchLateQuery } from "./services/searchApi";
 import Rankings from "./components/Rankings";
 import Loader from "./components/Loader";
-import { useLocation } from "react-router-dom";
+import Ads from "../../components/NewAds";
 
 const Search: React.FC = () => {
   const {
@@ -40,7 +39,8 @@ const Search: React.FC = () => {
               <Loader />
             </div>
           ) : (
-            <Ads advert={advert} />
+            // <Ads advert={advert} />
+            <Ads section={"search_input_under"} />
           )}
         </div>
         <History />
