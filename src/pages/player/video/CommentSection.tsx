@@ -28,11 +28,11 @@ const CommentComponent: React.FC<CommentProps> = ({
   const [hasMore, setHasMore] = useState(true);
   const commentInputRef = useRef<HTMLInputElement>(null);
   const [isLoggedIn, setIsLoggedLogIn] = useState<boolean>(false);
-  const [openPopup, setOpenPopup ] = useState(false);
-  const [openReportPopup, setOpenReportPopup ] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [openReportPopup, setOpenReportPopup] = useState(false);
   const [currentSelected, setCurrentSelected] = useState<any>(null);
   const user = useSelector((state: any) => state.user.user);
-  console.log('user is=>', user);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -56,13 +56,19 @@ const CommentComponent: React.FC<CommentProps> = ({
         `${process.env.REACT_APP_API_URL}/movie/comments/index?movie_id=${movieId}&page=${page}&pageSize=10`
       );
       const data = await response.json();
-  
+
       // Concatenate new comments to existing ones using spread operator (...)
-      const updatedComments = comments && comments.length > 0 && comments.length < data.data.total && page > 1 ? [...comments, ...data.data.list] : data.data.list;
-  
-      console.log('updatedComments', updatedComments);
+      const updatedComments =
+        comments &&
+        comments.length > 0 &&
+        comments.length < data.data.total &&
+        page > 1
+          ? [...comments, ...data.data.list]
+          : data.data.list;
+
+      console.log("updatedComments", updatedComments);
       setComments(updatedComments);
-  
+
       // Update hasMore based on total comments and fetched list length
       setHasMore(data.data.total > updatedComments.length);
     } catch (error) {
@@ -213,7 +219,7 @@ const CommentComponent: React.FC<CommentProps> = ({
         );
 
         const data = await response.json();
-        console.log('dagta is=>', data);
+        console.log("dagta is=>", data);
         // if (replyingTo) {
         //   setComments((prevComments) =>
         //     prevComments.map((comment) =>
@@ -250,119 +256,167 @@ const CommentComponent: React.FC<CommentProps> = ({
   }, [replyingTo]);
 
   return (
-    <div
-     
-    >
+    <div>
       {comments && comments.length > 0 ? (
-          <InfiniteScroll
+        <InfiniteScroll
           dataLength={comments.length}
           next={() => setPage((prevPage) => prevPage + 1)}
           hasMore={hasMore}
           loader={<h4 className="text-white">Loading...</h4>}
           // style={{height: lowerDivHeight}}
-           className="comment-section flex flex-col rounded-md p-3 overflow-y-auto"
-      style={{ height: lowerDivHeight - 100 }}
+          className="comment-section flex flex-col rounded-md p-3 overflow-y-auto"
+          style={{ height: lowerDivHeight - 100 }}
         >
-        <>
-          {comments.map((comment) => (
-            <div key={comment.id} className="comment pb-4 relative">
-              {/* Like button at the top right corner */}
-              {comment.status !== 0 && <button
-                disabled={!isLoggedIn}
-                onClick={() => likeComment(comment.id)}
-                className="absolute top-0 right-0 m-2 text-gray-400 hover:text-blue-500"
-              >
-                <FontAwesomeIcon icon={faThumbsUp} /> 
-                <p className="-mt-1">{comment.likes}</p>
-              </button>}
-              <div className="profile flex items-center justify-items-center mb-2">
-                <img
-                  src={comment.user?.avatar || ProfileImg}
-                  alt={comment.user?.nickname}
-                  className="w-9 h-9 rounded-full mr-2 mt-3"
-                />
-                <span className="username text-commentIcon font-bold">
-                  {comment.user?.nickname}
-                </span>
-                <img
-                  src={comment.user?.level}
-                  alt={comment.user?.level}
-                  className="h-6 w-auto ml-2"
-                />
-              </div>
-              <div style={{ marginLeft: "46px", marginTop: "-8px" }}>
-                <div className="comment-text text-gray-300 mb-1">
-                  {comment.content}
-                </div>
-                <div className="comment-actions flex items-center justify-start gap-4 mt-2">
-                  <span className="time text-gray-500 text-sm">
-                    {/* {new Date(comment.create_time * 1000)?.toISOString()?.split('T')[0]} */}
-                    {comment.create_time}
+          <>
+            {comments.map((comment) => (
+              <div key={comment.id} className="comment pb-4 relative">
+                {/* Like button at the top right corner */}
+                {comment.status !== 0 && (
+                  <button
+                    disabled={!isLoggedIn}
+                    onClick={() => likeComment(comment.id)}
+                    className="absolute top-0 right-0 m-2 text-gray-400 hover:text-blue-500"
+                  >
+                    <FontAwesomeIcon icon={faThumbsUp} />
+                    <p className="-mt-1">{comment.likes}</p>
+                  </button>
+                )}
+                <div className="profile flex items-center justify-items-center mb-2">
+                  <img
+                    src={comment.user?.avatar || ProfileImg}
+                    alt={comment.user?.nickname}
+                    className="w-9 h-9 rounded-full mr-2 mt-3"
+                  />
+                  <span className="username text-commentIcon font-bold">
+                    {comment.user?.nickname}
                   </span>
-                  <div>
-                    {comment.status !== 0 && <span className="time text-commentIcon text-sm mr-4" onClick={() => setReplyingTo(comment.id)}                    >
-                      回复
-                    </span>}
-                    {user && user.id && comment.user_id === user.id && <span className="time text-commentIcon text-sm" onClick={()=>deleteCommentOrReply(comment.id, false)}>删除</span>}
-                  </div>
-                  {comment.status !== 0 && <img
-                    src={OptionIcon}
-                    onClick={()=>{setOpenPopup(true); setCurrentSelected(comment)}}
-                    alt=""
-                    className="w-9 h-5 rounded-sm mr-2 mt-0.5"
-                  />}
+                  <img
+                    src={comment.user?.level}
+                    alt={comment.user?.level}
+                    className="h-6 w-auto ml-2"
+                  />
                 </div>
-              </div>
-              {/* Replies */}
-              {comment.replies && comment.replies?.list && comment.replies?.list.length > 0 && (
-                <div className="reply-section mt-2 pl-10">
-                  {comment.replies.list.map((reply: Reply) => (
-                    <div key={reply.id} className="reply">
-                      <div className="profile flex items-center justify-items-center mb-2">
-                        <img
-                          src={reply.user?.avatar || ProfileImg}
-                          alt={reply.user?.nickname}
-                          className="w-9 h-9 rounded-full mr-2 mt-3"
-                        />
-                        <span className="username text-commentIcon font-bold">
-                          {reply.user?.nickname}
+                <div style={{ marginLeft: "46px", marginTop: "-8px" }}>
+                  <div className="comment-text text-gray-300 mb-1">
+                    {comment.content}
+                  </div>
+                  <div className="comment-actions flex items-center justify-start gap-4 mt-2">
+                    <span className="time text-gray-500 text-sm">
+                      {/* {new Date(comment.create_time * 1000)?.toISOString()?.split('T')[0]} */}
+                      {comment.create_time}
+                    </span>
+                    <div>
+                      {comment.status !== 0 && (
+                        <span
+                          className="time text-commentIcon text-sm mr-4"
+                          onClick={() => setReplyingTo(comment.id)}
+                        >
+                          回复
                         </span>
-                        <img
-                          src={reply.user?.level}
-                          alt={reply.user?.level}
-                          className="h-6 w-auto ml-2"
-                        />
-                      </div>
-                      <div style={{ marginLeft: "46px", marginTop: "-8px" }}>
-                        <div className="comment-text text-gray-300 mb-1">
-                          {reply.content}
-                        </div>
-                        <div className="comment-actions flex items-center justify-start gap-4 mt-2">
-                        <span className="time text-gray-500 text-sm">
-                    {new Date(reply.create_time * 1000)?.toISOString()?.split('T')[0]}
-                  </span>
-                  <div>
-                    {comment.status !== 0 && <span className="time text-commentIcon text-sm mr-4" onClick={() => setReplyingTo(comment.id)}                    >
-                      回复
-                    </span>}
-                    {user && user.id && comment.user_id === user.id && <span className="time text-commentIcon text-sm" onClick={()=>deleteCommentOrReply(reply.id, true)}>删除</span>}
-                  </div>
-                  {comment.status !== 0 && <img
-                    src={OptionIcon}
-                    onClick={()=>{setOpenPopup(true); setCurrentSelected(comment)}}
-                    alt=""
-                    className="w-9 h-5 rounded-sm mr-2 mt-0.5"
-                  />}
-                </div>
-                      </div>
+                      )}
+                      {user && user.id && comment.user_id === user.id && (
+                        <span
+                          className="time text-commentIcon text-sm"
+                          onClick={() =>
+                            deleteCommentOrReply(comment.id, false)
+                          }
+                        >
+                          删除
+                        </span>
+                      )}
                     </div>
-                  ))}
+                    {comment.status !== 0 && (
+                      <img
+                        src={OptionIcon}
+                        onClick={() => {
+                          setOpenPopup(true);
+                          setCurrentSelected(comment);
+                        }}
+                        alt=""
+                        className="w-9 h-5 rounded-sm mr-2 mt-0.5"
+                      />
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
-          ))}
-        </>
-        </InfiniteScroll> 
+                {/* Replies */}
+                {comment.replies &&
+                  comment.replies?.list &&
+                  comment.replies?.list.length > 0 && (
+                    <div className="reply-section mt-2 pl-10">
+                      {comment.replies.list.map((reply: Reply) => (
+                        <div key={reply.id} className="reply">
+                          <div className="profile flex items-center justify-items-center mb-2">
+                            <img
+                              src={reply.user?.avatar || ProfileImg}
+                              alt={reply.user?.nickname}
+                              className="w-9 h-9 rounded-full mr-2 mt-3"
+                            />
+                            <span className="username text-commentIcon font-bold">
+                              {reply.user?.nickname}
+                            </span>
+                            <img
+                              src={reply.user?.level}
+                              alt={reply.user?.level}
+                              className="h-6 w-auto ml-2"
+                            />
+                          </div>
+                          <div
+                            style={{ marginLeft: "46px", marginTop: "-8px" }}
+                          >
+                            <div className="comment-text text-gray-300 mb-1">
+                              {reply.content}
+                            </div>
+                            <div className="comment-actions flex items-center justify-start gap-4 mt-2">
+                              <span className="time text-gray-500 text-sm">
+                                {
+                                  new Date(reply.create_time * 1000)
+                                    ?.toISOString()
+                                    ?.split("T")[0]
+                                }
+                              </span>
+                              <div>
+                                {comment.status !== 0 && (
+                                  <span
+                                    className="time text-commentIcon text-sm mr-4"
+                                    onClick={() => setReplyingTo(comment.id)}
+                                  >
+                                    回复
+                                  </span>
+                                )}
+                                {user &&
+                                  user.id &&
+                                  comment.user_id === user.id && (
+                                    <span
+                                      className="time text-commentIcon text-sm"
+                                      onClick={() =>
+                                        deleteCommentOrReply(reply.id, true)
+                                      }
+                                    >
+                                      删除
+                                    </span>
+                                  )}
+                              </div>
+                              {comment.status !== 0 && (
+                                <img
+                                  src={OptionIcon}
+                                  onClick={() => {
+                                    setOpenPopup(true);
+                                    setCurrentSelected(comment);
+                                  }}
+                                  alt=""
+                                  className="w-9 h-5 rounded-sm mr-2 mt-0.5"
+                                />
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+              </div>
+            ))}
+          </>
+        </InfiniteScroll>
       ) : (
         <div
           className="flex justify-center items-center text-center comment-btn"
@@ -608,8 +662,19 @@ const CommentComponent: React.FC<CommentProps> = ({
       )}
 
       {/* Popup */}
-      {openPopup && <Popup setOpenPopup={setOpenPopup} setOpenReportPopup={setOpenReportPopup} currentSelected={currentSelected}/>}
-      {openReportPopup && <ReportPopup setOpenPopup={setOpenPopup} setOpenReportPopup={setOpenReportPopup}/>}
+      {openPopup && (
+        <Popup
+          setOpenPopup={setOpenPopup}
+          setOpenReportPopup={setOpenReportPopup}
+          currentSelected={currentSelected}
+        />
+      )}
+      {openReportPopup && (
+        <ReportPopup
+          setOpenPopup={setOpenPopup}
+          setOpenReportPopup={setOpenReportPopup}
+        />
+      )}
     </div>
   );
 };
