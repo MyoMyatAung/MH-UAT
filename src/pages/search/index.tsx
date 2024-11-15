@@ -7,6 +7,7 @@ import { useGetAdsQuery, useGetSearchLateQuery } from "./services/searchApi";
 import Rankings from "./components/Rankings";
 import Loader from "./components/Loader";
 import Ads from "../../components/NewAds";
+import { useLocation } from "react-router-dom";
 
 const Search: React.FC = () => {
   const {
