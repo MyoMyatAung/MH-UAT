@@ -22,10 +22,11 @@ const Search: React.FC = () => {
   } = useGetSearchLateQuery();
 
   const advert = ads?.data?.search_result_up?.data;
+  const location = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+  }, [location]);
 
   return (
     <>

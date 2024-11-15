@@ -236,6 +236,7 @@ const CommentComponent: React.FC<CommentProps> = ({
         } else {
           setPage(1);
         }
+
         setNewComment("");
         setReplyingTo(null);
         dispatch(showToast({ message: "已发布", type: "success" }));
