@@ -7,7 +7,7 @@ const MovieCard = ({ movie, height }) => {
     <div className="movie-item max-sm:h-auto cursor-default relative mb-3">
       <div className="block relative zoom-effect">
         <div
-          className={`relative w-[114px] img_a h-[150px] border-none ${
+          className={`relative w-[104px] img_a h-[150px] border-none ${
             height ? `max-sm:h-[150px]` : "max-sm:h-[150px]"
           }`}
         >
@@ -18,7 +18,7 @@ const MovieCard = ({ movie, height }) => {
               height ? `max-sm:h-[150px]` : "max-sm:h-[150px]"
             } cursor-default object-cover w-full`}
           />
-          <div className="absolute rounded-bl-lg rounded-br-lg  h-full w-full inset-0 bg-gradient-to-b from-transparent via-black/5 to-black"></div>
+          <div className="testing"></div>
           <div className="flex absolute text-[10px] justify-between items-center px-3 bottom-2 w-full">
             <p>{movie?.dynamic}</p>
             <p>{movie?.type_name}</p>
