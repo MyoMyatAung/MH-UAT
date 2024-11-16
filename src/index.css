@@ -374,13 +374,17 @@ input[type="range"]::-moz-range-thumb {
 
 .cancel-btn {
   width: 100%;
-    margin-top: -1px;
-    padding: 10px 0px;
-    border-top: 8px solid #161619;
-    margin-bottom: 30px;
+  margin-top: -1px;
+  padding: 10px 0px;
+  border-top: 8px solid #161619;
+  margin-bottom: 30px;
 }
 
-input[type=radio]:checked {
+input[type="radio"]:checked {
   border-color: red;
   background-size: 100% 100%;
+}
+
+.testing {
+  @apply absolute rounded-bl-lg rounded-br-lg  h-full w-full inset-0 bg-gradient-to-b from-transparent via-black/5 to-black !important;
 }
