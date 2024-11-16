@@ -18,7 +18,7 @@ const MovieCard = ({ movie, height }) => {
               height ? `max-sm:h-[150px]` : "max-sm:h-[150px]"
             } cursor-default object-cover w-full`}
           />
-          <div className="testing"></div>
+          <div className="absolute rounded-bl-lg rounded-br-lg  h-full w-full inset-0 bg-gradient-to-b from-transparent via-black/5 to-black"></div>
           <div className="flex absolute text-[10px] justify-between items-center px-3 bottom-2 w-full">
             <p>{movie?.dynamic}</p>
             <p>{movie?.type_name}</p>

@@ -385,6 +385,3 @@ input[type="radio"]:checked {
   background-size: 100% 100%;
 }
 
-.testing {
-  @apply absolute rounded-bl-lg rounded-br-lg  h-full w-full inset-0 bg-gradient-to-b from-transparent via-black/5 to-black !important;
-}
