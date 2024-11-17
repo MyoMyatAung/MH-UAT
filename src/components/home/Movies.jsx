@@ -34,10 +34,10 @@ const Movies = ({ movieData }) => {
         <h1 className="">{movieData?.navigator?.title}</h1>
       </div>
       <div className="max-md:mt-5 mt-5">
-        <div className="flex overflow-x-scroll whitespace-nowrap scrollbar-hide gap-4 mt-5">
+        <div className="flex overflow-x-scroll whitespace-nowrap scrollbar-hide gap-2 mt-5">
           {apiMovie?.map((movie) => (
             <div key={movie.id}>
-              <MovieCard movie={movie} height={"200px"} />
+              <MovieCard movie={movie} height={"200px"} isSlider={true} />
             </div>
           ))}
         </div>
