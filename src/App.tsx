@@ -141,7 +141,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      {panding ? (
+      {panding === 0 ? (
         <Landing />
       ) : (
         <div className="flex flex-col min-h-screen">
