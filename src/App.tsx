@@ -88,12 +88,16 @@ const App: React.FC = () => {
 
   const hideHeader = location.pathname.startsWith("/explorer");
   useEffect(() => {
-    dispatch(setPanding(panding ? 1 : 0));
-    const timer = setTimeout(() => {
-      dispatch(setPanding(1));
-    }, 6000);
+    const hasSeenLanding = sessionStorage.getItem("hasSeenLanding");
+    if (!hasSeenLanding) {
+      sessionStorage.setItem("hasSeenLanding", "true"); // Mark as shown
+      dispatch(setPanding(true));
+      const timer = setTimeout(() => {
+        dispatch(setPanding(false));
+      }, 6000);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, [dispatch]);
 
   useEffect(() => {
