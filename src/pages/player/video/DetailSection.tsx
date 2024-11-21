@@ -342,7 +342,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
               </div>
 
               {/* Cast Section */}
-              <h3 className="text-lg font-semibold mt-4">Cast</h3>
+              <h3 className="text-lg font-semibold mt-4">投掷</h3>
               <div className="text-gray-400 text-sm mt-2">
                 <div className="flex space-x-4">
                   {/* Director */}
