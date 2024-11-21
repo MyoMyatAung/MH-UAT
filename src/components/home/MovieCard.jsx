@@ -35,11 +35,16 @@ const MovieCard = ({
         <div className="overlay">
           {/* <img className="h-[40px]" src={videoIcon} alt="" /> */}
         </div>
-        {showDynamic && (
-          <div className="top-0 right-0 search_card_score truncate z-1 absolute w-[40px] flex justify-center items-center">
-            <span>{movie?.dynamic}</span>
+        {movie?.label?.length ? (
+          <div className="absolute top-0 right-0 search_card_score w-[39px] z-10">
+            <p className="truncate text-center">{movie?.label}</p>
           </div>
+        ) : (
+          <></>
         )}
+        {/* <div className="top-0 right-0 search_card_score truncate z-1 absolute w-[40px] flex justify-center items-center">
+          <span>{movie?.label}</span>
+        </div> */}
       </Link>
 
       <div className="text-container">
