@@ -326,7 +326,7 @@ const DetailPage: React.FC = () => {
 
                 <div className="mt-8 px-4">
                 {/* {adsData && <AdsSection adsDataList={adsData?.player_recommend_up} />} */}
-                <NewAds section={"player_recommend_up"} />
+                <NewAds section={"player_recommend_up"} fromMovie={true}/>
                 </div>
                 <RecommendedList data={movieDetail} showRecommandMovie={showRecommandMovie}/>
               </>
