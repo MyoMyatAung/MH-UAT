@@ -21,9 +21,9 @@ const MovieCard = ({
           <LazyLoadImage
             src={movie.cover}
             alt={movie.name}
-            className={`movie_img rounded-lg border-none  cursor-default object-cover w-full`}
+            className={`movie_img rounded-[4px] border-none  cursor-default object-cover w-full`}
           />
-          <div className="absolute rounded-bl-lg rounded-br-lg  h-full w-full inset-0 bg-gradient-to-b from-transparent via-black/5 to-black"></div>
+          <div className="absolute rounded-[4px]  h-full w-full inset-0 bg-gradient-to-b from-transparent via-black/5 to-black"></div>
           <div className="flex absolute text-[10px] justify-between items-center px-3 bottom-2 w-full">
             <p className="flex-1 truncate">{movie?.dynamic}</p>
             <p className="flex-1 flex justify-end">{movie?.type_name}</p>
