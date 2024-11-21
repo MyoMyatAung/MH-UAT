@@ -311,8 +311,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
           </div>
         ) : (
           <div className="mt-4">
-            {adsData && <AdsSection adsDataList={adsData?.player_episode_up} />}
-            {/* <NewAds section={"player_episode_up"} /> */}
+            {/* {adsData && <AdsSection adsDataList={adsData?.player_episode_up} />} */}
+            <NewAds section={"player_episode_up"} />
 
           </div>
         )}
