@@ -54,7 +54,7 @@ const Movies = ({ movieData }) => {
           </h1>
           {/* <h1 className="">{movieData?.navigator?.title}</h1> */}
         </div>
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 pl-3 lg:grid-cols-8 gap-y-5 gap-2 mt-0 pt-2 pb-7 px-3">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 pl-3 lg:grid-cols-8 gap-y-5 gap-2 mt-0 pt-1 pb-2 px-3">
           {apiMovie?.map((movie) => (
             <div key={movie?.id} className="mx-auto w-full">
               <MovieCard movie={movie} height={"200px"} />
