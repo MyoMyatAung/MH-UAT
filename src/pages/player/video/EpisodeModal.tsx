@@ -140,8 +140,8 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                           ? "bg-source text-white"
                           : "bg-episodeSelected  text-white"
                       }`}
-                    >
-                      {episode.episode_name}
+                    > 
+                      {episode.episode_name.length > 7 ? `${episode.episode_name.substring(0, 100)}...` : episode.episode_name}
                       {episode?.episode_id === selectedEpisodeId && (
                         <span className="transform -translate-x-1/2 loader ml-5 -mt-1.5">
                           <div></div>
