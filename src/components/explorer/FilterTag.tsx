@@ -146,7 +146,7 @@ const FilterTag = () => {
                 } items-center justify-center gap-1 transition`}
               >
                 <span>
-                  {sortName}.{classData}.{area}.{year}
+                  {sortName} . {classData} . {area} . {year}
                 </span>
                 <img src={downh} alt="" />
               </div>
