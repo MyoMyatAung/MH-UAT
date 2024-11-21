@@ -54,7 +54,7 @@ const FilterTag = () => {
         const rect = filterTagRef.current.getBoundingClientRect();
         console.log(rect);
 
-        if (rect.top < 300 ) {
+        if (rect.top < 100 ) {
           // dispatch(setShowExploreFilterTag(true));
           setShow(true);
           setShowMenu(false);
