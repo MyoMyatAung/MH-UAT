@@ -54,9 +54,11 @@ const FilterTag = () => {
         if (rect.top < 100) {
           // dispatch(setShowExploreFilterTag(true));
           setShow(true);
+          setShowMenu(false);
         } else {
           // dispatch(setShowExploreFilterTag(false));
           setShow(false);
+          setShowMenu(true);
         }
       }
     };
@@ -98,7 +100,7 @@ const FilterTag = () => {
   }, [area]);
 
   useEffect(() => {
-    if (!show) setShowMenu(false);
+    // if (!show) setShowMenu(!showMenu);
   }, [show]);
 
   useEffect(() => {
