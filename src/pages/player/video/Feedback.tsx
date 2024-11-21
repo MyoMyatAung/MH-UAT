@@ -19,7 +19,7 @@ const FeedbackComponent: React.FC<FeedbackComponentProps> = ({
   onActionComplete,
   isLoading,
   setIsLoading,
-  height,
+  height
 }) => {
   const [selectedIssue, setSelectedIssue] = useState<number>(0);
   const [description, setDescription] = useState<string>("");
