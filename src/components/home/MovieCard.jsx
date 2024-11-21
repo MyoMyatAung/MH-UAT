@@ -25,8 +25,10 @@ const MovieCard = ({
           />
           <div className="absolute rounded-[4px]  h-full w-full inset-0 bg-gradient-to-b from-transparent via-black/5 to-black"></div>
           <div className="flex absolute text-[10px] justify-between items-center px-3 bottom-2 w-full">
-            <p className="flex-1 truncate">{movie?.dynamic}</p>
-            <p className="flex-1 flex justify-end">{movie?.type_name}</p>
+            <p className="flex-1 truncate text-white">{movie?.dynamic}</p>
+            <p className="flex-1 flex justify-end text-white">
+              {movie?.type_name}
+            </p>
           </div>
         </div>
 
@@ -34,8 +36,8 @@ const MovieCard = ({
           {/* <img className="h-[40px]" src={videoIcon} alt="" /> */}
         </div>
         {showDynamic && (
-          <div className="top-0 right-0 search_card_score truncate z-1 absolute">
-            {movie?.dynamic}
+          <div className="top-0 right-0 search_card_score truncate z-1 absolute w-[40px] flex justify-center items-center">
+            <span>{movie?.dynamic}</span>
           </div>
         )}
       </Link>
