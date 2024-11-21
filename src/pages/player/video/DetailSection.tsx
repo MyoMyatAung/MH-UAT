@@ -40,7 +40,6 @@ const DetailSection: React.FC<DetailSectionProps> = ({
   const [visible, setVisible] = useState(false);
   const [lowerDivHeight, setLowerDivHeight] = useState(0);
   const modalRef = useRef<any>(null);
-  const feedbackModalRef = useRef<any>(null);
 
   const handleCopy = () => {
     setVisible(true);
