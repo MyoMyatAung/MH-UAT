@@ -130,7 +130,7 @@ const Capt: React.FC<CaptProp> = ({ email, password, confirmPassword }) => {
             <div className="flex w-full justify-center items-center gap-[4px]">
             <input
               type="number"
-              placeholder="输入代码"
+              placeholder="请输入验证码"
               className="bg-[#333237] w-full rounded-[4px] text-white p-[10px] focus:outline-none h-[40px]"
               value={captchaCode}
               onChange={(e) => setCaptchaCode(e.target.value)}
