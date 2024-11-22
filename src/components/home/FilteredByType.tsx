@@ -30,6 +30,7 @@ const FilteredByType = () => {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const sort = useSelector((state: any) => state.home.sort);
+  const sortName = useSelector((state: any) => state.home.sortName);
   const classData = useSelector((state: any) => state.home.class);
   const area = useSelector((state: any) => state.home.area);
   const year = useSelector((state: any) => state.home.year);
@@ -91,12 +92,12 @@ const FilteredByType = () => {
   }, [movieData]);
 
   useEffect(() => {
-    dispatch(setSort(configData?.data?.movie_screen?.sort[0]?.value));
-    dispatch(setSortName(configData?.data?.movie_screen?.sort[0]?.name));
-    dispatch(setClass(filteredTags && filteredTags[0]?.class[0]));
-    dispatch(setArea(filteredTags && filteredTags[0]?.area[0]));
-    dispatch(setYear(filteredTags && filteredTags[0]?.year[0]));
-  }, []);
+    dispatch(setSort("by_default"));
+    dispatch(setSortName("综合"));
+    dispatch(setClass("类型"));
+    dispatch(setArea("地区"));
+    dispatch(setYear("年份"));
+  }, [activeTab]);
 
   if (isloader || isFetching) {
     return null; // Ensure you return null instead of undefined
