@@ -28,6 +28,7 @@ const FilteredByType = () => {
   const [hasMore, setHasMore] = useState(true);
   const [pageSize, setPageSize] = useState(9);
   const [page, setPage] = useState(1);
+  const [page2, setPage2] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
   const sort = useSelector((state: any) => state.home.sort);
   const sortName = useSelector((state: any) => state.home.sortName);
@@ -58,9 +59,9 @@ const FilteredByType = () => {
   };
 
   const fetchData = async () => {
-    setPage((prev) => prev + 1);
+    setPage2((prev) => prev + 1);
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API_URL}/movie/screen/list?type_id=${activeTab}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page}`
+      `${process.env.REACT_APP_API_URL}/movie/screen/list?type_id=${activeTab}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page2}`
     );
     if (data?.data?.list?.length >= 0) {
       setIsLoading(false);
@@ -82,6 +83,7 @@ const FilteredByType = () => {
     getMoviesByType(activeTab);
     window.scrollTo(0, 0);
     setPage(1);
+    setPage2(2);
     setHasMore(true);
   }, [activeTab, sort, area, year, classData]);
 
