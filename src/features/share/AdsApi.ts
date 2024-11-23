@@ -23,9 +23,9 @@ const AdsApi = createApi({
       query: () => ({
         url: "/advert/config",
         method: "GET",
-        // headers: {
-        //   "X-Client-Version": "3096", // Add your specific header here
-        // },
+        headers: {
+          "X-Client-Version": "3098", // Add your specific header here
+        },
       }),
     }),
   }),
