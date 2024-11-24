@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAdsData } from './playerService';
+import { decryptWithAes } from './newEncryption';
 
 export const useGetHeaderTopicsQuery = () => {
   const [configData, setConfigData] = useState<any>(null);
@@ -14,8 +15,8 @@ export const useGetHeaderTopicsQuery = () => {
   
       console.log('response is=.', response);
       if (response) {
-        // const data = await decryptWithAes(response);
-        setConfigData(response);
+        const data = await decryptWithAes(response);
+        setConfigData(data);
       }
       setError(null);
     } catch (err) {
