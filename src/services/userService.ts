@@ -46,6 +46,7 @@ export const getCaptcha = async () => {
  * @param {string} keyStatus
  * @returns {Promise<object>}
  */
+
 export const login = async (
   username: string,
   password: string,
@@ -53,22 +54,25 @@ export const login = async (
   keyStatus: string
 ) => {
   try {
-    // Step 1: Verify captcha
-    const captchaResult = await fetch(
-      `${process.env.REACT_APP_API_URL}/user/check_captcha`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          convertToSecurePayload({
-            code: captchaCode,
-            key: keyStatus,
-          })
-        ),
-      }
-    );
+    const gg = convertToSecurePayload({
+      code: captchaCode,
+      key: keyStatus,
+      timestamp: new Date().getTime(),
 
-    const captchaResponse = await captchaResult.json();
+    });
+    // const captchaResult = await fetch(
+    //   convertToSecureUrl(`${process.env.REACT_APP_API_URL}/user/check_captcha`),
+    //   {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: gg
+    //   }
+    // );
+
+    const captchaResult = await axios.post(convertToSecureUrl(`${process.env.REACT_APP_API_URL}/user/check_captcha`),gg)
+    console.log(captchaResult)
+
+    const captchaResponse = await captchaResult.data;
     let newCap: { data?: any } = decryptWithAes(captchaResponse) || {};
 
     if (!newCap.data) {
@@ -95,25 +99,28 @@ export const login = async (
       throw new Error("Public key is not defined");
     }
     const encryptedData = encryptWithRsa(JSON.stringify(formData), publicKey);
+    const ll = convertToSecurePayload(formData)
 
     // Step 3: Generate signature
     const signature = generateSignature(encryptedData);
 
     // Step 4: Make the login API call
-    const loginResponse = await fetch(
-      `${process.env.REACT_APP_API_URL}/user/login`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pack: encryptedData,
-          signature,
-        }),
-      }
-    );
+    // const loginResponse = await fetch(
+    //   convertToSecureUrl(`${process.env.REACT_APP_API_URL}/user/login`),
+    //   {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: ll
+    //   }
+    // );
 
-    const dataIsEncrypt = loginResponse.headers.get("x-app-data-encrypt");
-    const resultText = await loginResponse.text();
+    const loginResponse = await axios.post(convertToSecureUrl(`${process.env.REACT_APP_API_URL}/user/login`),ll)
+
+    // const dataIsEncrypt = loginResponse.headers.get("x-app-data-encrypt");
+    const dataIsEncrypt = loginResponse.headers["x-app-data-encrypt"];
+
+    const resultText = await loginResponse.data;
+    console.log(resultText)
 
     // Step 5: Handle the response (decrypt if needed)
     if (!dataIsEncrypt) {
@@ -253,10 +260,10 @@ export const handleSocialLoginCredentials = async (
   try {
     const captchaResult = await axios.post(
       `${process.env.REACT_APP_API_URL}/user/check_captcha`,
-      convertToSecurePayload({
+      {
         code: captchaCode,
         key: keyStatus,
-      })
+      }
     );
 
     const captchaResponse = captchaResult.data;
