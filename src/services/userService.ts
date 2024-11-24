@@ -116,8 +116,10 @@ export const login = async (
 
     const loginResponse = await axios.post(convertToSecureUrl(`${process.env.REACT_APP_API_URL}/user/login`),ll)
 
-    // const dataIsEncrypt = loginResponse.headers.get("x-app-data-encrypt");
-    const dataIsEncrypt = loginResponse.headers["x-app-data-encrypt"];
+    const dataIsEncrypt = loginResponse.headers
+    // const dataIsEncrypt = loginResponse.headers["x-app-data-encrypt"];
+    
+    console.log(dataIsEncrypt,'gg')
 
     const resultText = await loginResponse.data;
     console.log(resultText)
