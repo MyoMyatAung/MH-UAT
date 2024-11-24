@@ -4,6 +4,7 @@ import {
   generateSignature,
   decryptWithAes,
   convertToSecureUrl,
+  convertToSecurePayload,
 } from "./newEncryption";
 
 // GET request
@@ -54,27 +55,30 @@ export const login = async (
   try {
     // Step 1: Verify captcha
     const captchaResult = await fetch(
-      convertToSecureUrl(`${process.env.REACT_APP_API_URL}/user/check_captcha`),
+      `${process.env.REACT_APP_API_URL}/user/check_captcha`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: captchaCode,
-          key: keyStatus,
-        }),
+        body: JSON.stringify(
+          convertToSecurePayload({
+            code: captchaCode,
+            key: keyStatus,
+          })
+        ),
       }
     );
 
     const captchaResponse = await captchaResult.json();
+    let newCap: { data?: any } = decryptWithAes(captchaResponse) || {};
 
-    if (!captchaResponse.data) {
+    if (!newCap.data) {
       throw new Error("Captcha verification failed");
     }
 
     const formData = {
       username,
       password,
-      captcha: captchaResponse.data.key,
+      captcha: newCap.data.key,
       timestamp: new Date().getTime(),
     };
 
@@ -249,10 +253,10 @@ export const handleSocialLoginCredentials = async (
   try {
     const captchaResult = await axios.post(
       `${process.env.REACT_APP_API_URL}/user/check_captcha`,
-      {
+      convertToSecurePayload({
         code: captchaCode,
         key: keyStatus,
-      }
+      })
     );
 
     const captchaResponse = captchaResult.data;
