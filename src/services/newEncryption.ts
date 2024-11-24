@@ -44,10 +44,34 @@ export function urlSafeB64encode(data: string): string {
  * @param {string} data - The data to decrypt
  * @return {object | null} - The decrypted data as a JSON object, or null if decryption fails
  */
+// export function decryptWithAes(data: string): object | null {
+//   try {
+//     const decrypted = CryptoJS.AES.decrypt(
+//       data,
+//       CryptoJS.enc.Utf8.parse(process.env.REACT_APP_AES_KEY || ""),
+//       {
+//         iv: CryptoJS.enc.Utf8.parse(process.env.REACT_APP_AES_IV || ""),
+//         mode: CryptoJS.mode.CBC,
+//         padding: CryptoJS.pad.Pkcs7,
+//       }
+//     );
+//     const decryptedStr = decrypted.toString(CryptoJS.enc.Utf8);
+//     return JSON.parse(decryptedStr);
+//   } catch (err) {
+//     console.error("Decryption error:", err);
+//     return null;
+//   }
+// }
+// import CryptoJS from "crypto-js";
+
 export function decryptWithAes(data: string): object | null {
   try {
+    // Decode the encrypted data (if URL-safe base64 encoding was used)
+    const encryptedData = data.replace(/-/g, "+").replace(/_/g, "/"); // Convert URL-safe base64 to standard base64
+
+    // Decrypt the data
     const decrypted = CryptoJS.AES.decrypt(
-      data,
+      encryptedData,
       CryptoJS.enc.Utf8.parse(process.env.REACT_APP_AES_KEY || ""),
       {
         iv: CryptoJS.enc.Utf8.parse(process.env.REACT_APP_AES_IV || ""),
@@ -55,7 +79,11 @@ export function decryptWithAes(data: string): object | null {
         padding: CryptoJS.pad.Pkcs7,
       }
     );
+
+    // Convert decrypted data to string
     const decryptedStr = decrypted.toString(CryptoJS.enc.Utf8);
+
+    // Parse the JSON string to an object
     return JSON.parse(decryptedStr);
   } catch (err) {
     console.error("Decryption error:", err);
@@ -89,12 +117,16 @@ function createSecureUrl(base: string, formData: Record<string, any>): string {
   const encrypted = encryptWithRsa(JSON.stringify(formData), publicKey);
   const signature = generateSignature(encrypted);
 
-  return `${base}?pack=${encodeURIComponent(encrypted)}&signature=${encodeURIComponent(signature)}`;
+  return `${base}?pack=${encodeURIComponent(
+    encrypted
+  )}&signature=${encodeURIComponent(signature)}`;
 }
 
 export function convertToSecureUrl(apiUrl: string): string {
   const [base, query] = apiUrl.split("?", 2); // Split URL into base and query string
-  const formData = query ? convertUrlToFormData(query) : { timestamp: new Date().getTime() };
+  const formData = query
+    ? convertUrlToFormData(query)
+    : { timestamp: new Date().getTime() };
 
   return createSecureUrl(base, formData);
 }
@@ -106,11 +138,11 @@ export function convertToSecurePayload(formData: any): any {
     throw new Error("Public key is not defined");
   }
 
-  formData['timestamp'] = new Date().getTime()
+  formData["timestamp"] = new Date().getTime();
   const encrypted = encryptWithRsa(JSON.stringify(formData), publicKey);
   const signature = generateSignature(encrypted);
   return {
-      pack: encrypted,
-      signature: signature,
-    }
+    pack: encrypted,
+    signature: signature,
+  };
 }

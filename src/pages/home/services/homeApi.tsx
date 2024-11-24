@@ -1,5 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { convertToSecureUrl, decryptWithAes } from "../../../services/newEncryption";
+import {
+  convertToSecureUrl,
+  decryptWithAes,
+} from "../../../services/newEncryption";
 
 const myFun = async (args: any, api: any, extraOptions: any) => {
   const baseQuery = fetchBaseQuery({
@@ -57,11 +60,15 @@ export const homeApi = createApi({
   //     return headers;
   //   },
   // }),
-baseQuery: myFun,
+  baseQuery: myFun,
   endpoints: (builder) => ({
     getHeaderTopics: builder.query<any, void>({
       query: () => {
         return convertToSecureUrl(`/app/config`);
+      },
+      transformResponse: (response) => {
+        console.log(response);
+        return response;
       },
     }),
     getRecommendedMovies: builder.query<any, void>({
@@ -75,11 +82,14 @@ baseQuery: myFun,
       },
     }),
     getFilterByMoviesByTypeId: builder.query<any, any>({
-      query: (id) => convertToSecureUrl(`/api/v1/movie/screen/list?type_id=${id}`),
+      query: (id) =>
+        convertToSecureUrl(`/api/v1/movie/screen/list?type_id=${id}`),
     }),
     getFilteredData: builder.query<any, any>({
       query: ({ id, sort, classData, area, year, page, pageSize }: any) =>
-        convertToSecureUrl(`/movie/screen?type_id=${id}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page}`),
+        convertToSecureUrl(
+          `/movie/screen?type_id=${id}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page}`
+        ),
     }),
   }),
 });
