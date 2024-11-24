@@ -20,6 +20,7 @@ import {
   setSortName,
 } from "../../pages/home/slice/HomeSlice";
 import NewAds from "../NewAds";
+import { convertToSecureUrl } from "../../services/newEncryption";
 
 const FilteredByType = () => {
   const activeTab = useSelector((state: any) => state.home.activeTab);
@@ -50,7 +51,7 @@ const FilteredByType = () => {
     setIsLoading(true);
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API_URL}/movie/screen/list?type_id=${id}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page}`
+        convertToSecureUrl(`${process.env.REACT_APP_API_URL}/movie/screen/list?type_id=${id}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page}`)
       );
       if (data?.data?.list?.length >= 0) {
         setIsLoading(false);
@@ -69,7 +70,7 @@ const FilteredByType = () => {
   const fetchData = async () => {
     setPage2((prev) => prev + 1);
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API_URL}/movie/screen/list?type_id=${activeTab}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page2}`
+      convertToSecureUrl(`${process.env.REACT_APP_API_URL}/movie/screen/list?type_id=${activeTab}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page2}`)
     );
     if (data?.data?.list?.length >= 0) {
       setIsLoading(false);

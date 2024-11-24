@@ -1,9 +1,10 @@
 // movieService.ts
 import api from './apiService';
+import { convertToSecureUrl, decryptWithAes } from './newEncryption';
 
 export const getMovieDetail = async (id: string) => {
   try {
-    const response = await api.get(`/movie/detail?id=${id}`);
+    const response = await api.get(convertToSecureUrl(`/movie/detail?id=${id}`));
     return response.data;
   } catch (error) {
     console.error('Error fetching movie details:', error);
@@ -13,11 +14,18 @@ export const getMovieDetail = async (id: string) => {
 
 export const getAdsData = async () => {
   try {
-    const response = await api.get('/advert/config', {
+    const response: any = await api.get(convertToSecureUrl('/advert/config'), {
       headers: {
         "X-Client-Version": 3098
       },
     });
+    const dataIsEncrypt = response?.headers?.get("x-app-data-encrypt");
+    const resultText = await response.text();
+
+    // Step 5: Handle the response (decrypt if needed)
+    if (dataIsEncrypt) {
+      return decryptWithAes(resultText);
+    }
     return response.data;
   } catch (error) {
     console.error('Error fetching ads data:', error);
@@ -27,7 +35,7 @@ export const getAdsData = async () => {
 
 export const getEpisodesBySource = async (fromCode: string, movieId: string) => {
   try {
-    const response = await api.get(`/movie_addr/list?from_code=${fromCode}&movie_id=${movieId}`);
+    const response = await api.get(convertToSecureUrl(`/movie_addr/list?from_code=${fromCode}&movie_id=${movieId}`));
     return response.data;
   } catch (error) {
     console.error('Error fetching episodes:', error);
@@ -59,7 +67,7 @@ export const reportPlaybackProgress = async (
 
 export const fetchNextEpisode = async (fromCode: string, movieId: string) => {
   try {
-    const response = await api.get(`/movie_addr/list?from_code=${fromCode}&movie_id=${movieId}`);
+    const response = await api.get(convertToSecureUrl(`/movie_addr/list?from_code=${fromCode}&movie_id=${movieId}`));
     return response.data;
   } catch (error) {
     console.error('Error fetching next episode:', error);

@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { convertToSecureUrl, decryptWithAes } from "../../../services/newEncryption";
 
 export const homeApi = createApi({
   reducerPath: "homeApi",
@@ -22,25 +23,25 @@ export const homeApi = createApi({
   endpoints: (builder) => ({
     getHeaderTopics: builder.query<any, void>({
       query: () => {
-        return `/app/config`;
+        return convertToSecureUrl(`/app/config`);
       },
     }),
     getRecommendedMovies: builder.query<any, void>({
       query: () => {
-        return `/movie/index_recommend`;
+        return convertToSecureUrl(`/movie/index_recommend`);
       },
     }),
     getFilteredMovieByTopic: builder.query<any, void>({
       query: (id) => {
-        return `/movie/${id}/recommend`;
+        return convertToSecureUrl(`/movie/${id}/recommend`);
       },
     }),
     getFilterByMoviesByTypeId: builder.query<any, any>({
-      query: (id) => `/api/v1/movie/screen/list?type_id=${id}`,
+      query: (id) => convertToSecureUrl(`/api/v1/movie/screen/list?type_id=${id}`),
     }),
     getFilteredData: builder.query<any, any>({
       query: ({ id, sort, classData, area, year, page, pageSize }: any) =>
-        `/movie/screen/list?type_id=${id}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page}`,
+        convertToSecureUrl(`/movie/screen?type_id=${id}&&sort=${sort}&&class=${classData}&&area=${area}&&year=${year}&&pageSize=${pageSize}&&page=${page}`),
     }),
   }),
 });

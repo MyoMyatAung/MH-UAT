@@ -63,12 +63,38 @@ export function decryptWithAes(data: string): object | null {
   }
 }
 
-/**
- * URL-safe base64 decoding
- * @param {string} data - The URL-safe base64 encoded data
- * @return {string} - The decoded string
- */
 export function urlSafeB64decode(data: string): string {
   const base64 = data.replace(/-/g, "+").replace(/_/g, "/");
   return base64;
+}
+
+function convertUrlToFormData(url: string): Record<string, any> {
+  const params: any = new URLSearchParams(url);
+  const formData: Record<string, any> = { timestamp: new Date().getTime() };
+
+  for (const [key, value] of params.entries()) {
+    formData[key] = isNaN(value as any) ? value : Number(value); // Convert numeric strings to numbers
+  }
+
+  return formData;
+}
+
+function createSecureUrl(base: string, formData: Record<string, any>): string {
+  const publicKey = process.env.REACT_APP_PUBLIC_KEY_LOGIN;
+
+  if (!publicKey) {
+    throw new Error("Public key is not defined");
+  }
+
+  const encrypted = encryptWithRsa(JSON.stringify(formData), publicKey);
+  const signature = generateSignature(encrypted);
+
+  return `${base}?pack=${encodeURIComponent(encrypted)}&signature=${encodeURIComponent(signature)}`;
+}
+
+export function convertToSecureUrl(apiUrl: string): string {
+  const [base, query] = apiUrl.split("?", 2); // Split URL into base and query string
+  const formData = query ? convertUrlToFormData(query) : { timestamp: new Date().getTime() };
+
+  return createSecureUrl(base, formData);
 }
