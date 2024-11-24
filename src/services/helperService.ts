@@ -53,7 +53,6 @@ export const useGetAdsQuery = () => {
     try {
       const response = await getAdsData();
 
-      console.log("response is=.", response);
       if (response) {
         const data = await decryptWithAes(response);
         setConfigData(data);
@@ -72,7 +71,6 @@ export const useGetAdsQuery = () => {
     fetchAdsTopics();
   }, []);
 
-  console.log("configData is=>", configData);
   return {
     data: configData,
     isLoading,
