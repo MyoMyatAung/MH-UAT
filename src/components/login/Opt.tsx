@@ -22,13 +22,20 @@ interface OptProps {
   email?: string;
   password?: string;
   phone?: string;
+  key: string;
   setIsVisible: (isVisible: boolean) => void;
 }
 interface messg {
   msg: string;
 }
 
-const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
+const Opt: React.FC<OptProps> = ({
+  email,
+  password,
+  phone,
+  setIsVisible,
+  key,
+}) => {
   const [signUpEmail, { isLoading, error }] = useSignUpEmailMutation();
   const [signUpPhone] = useSignUpPhoneMutation();
 
@@ -38,7 +45,7 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { captchaCode, captchaKey, openSignUpEmailModel } = useSelector(
+  const { captchaCode, captchaKey, openSignUpEmailModel , GraphicKey } = useSelector(
     (state: any) => state.model
   );
 
@@ -52,14 +59,15 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
 
     return () => clearInterval(countdown);
   }, [timer]);
+  console.log(GraphicKey)
 
   useEffect(() => {
     if (email) {
-      getOtp(captchaCode, captchaKey, email, "email");
+      getOtp(GraphicKey, email, "email");
     } else if (phone) {
-      getOtp(captchaCode, captchaKey, phone, "phone");
+      getOtp(GraphicKey, phone, "phone");
     }
-  }, [captchaCode, email]);
+  }, [GraphicKey, email]);
 
   const closeAllModals = () => {
     startTransition(() => {
@@ -73,19 +81,19 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
     const updatedOTP = [...otpDigits];
     updatedOTP[index] = value;
     setOtpDigits(updatedOTP);
-  
+
     if (value && index < inputRefs.current.length - 1) {
       inputRefs.current[index + 1]?.focus();
     }
     if (!value && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
-  
+
     // Handle OTP submission when all digits are filled
     if (updatedOTP.every((digit) => digit)) {
       // Remove focus from all inputs
       inputRefs.current.forEach((input) => input?.blur());
-  
+
       const otpCode = updatedOTP.join("");
       try {
         if (email && password) {
@@ -120,18 +128,17 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
       }
     }
   };
-  
 
   const resendOtp = () => {
     if (email) {
       setTimer(59);
       setOtpDigits(Array(6).fill(""));
-      getOtp(captchaCode, captchaKey, email, "email");
+      getOtp( key, email, "email");
       dispatch(showToast({ message: "验证码已成功重新发送", type: "success" }));
     } else if (phone) {
       setTimer(59);
       setOtpDigits(Array(6).fill(""));
-      getOtp(captchaCode, captchaKey, phone, "phone");
+      getOtp( key, phone, "phone");
       dispatch(showToast({ message: "验证码已成功重新发送", type: "success" }));
     }
   };
