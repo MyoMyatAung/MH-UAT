@@ -14,7 +14,7 @@ export const getMovieDetail = async (id: string) => {
 
 export const getAdsData = async () => {
   try {
-    const response: any = await api.get(('https://cc3e497d.qdhgtch.com:2345/api/v1/app/config'), {
+    const response: any = await api.get(convertToSecureUrl('/advert/config'), {
       headers: {
         "X-Client-Version": 3098
       },
