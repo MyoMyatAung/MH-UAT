@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import nodata from "../../assets/nodata.png";
 
-import {
-  useGetFilterByMoviesByTypeIdQuery,
-  useGetHeaderTopicsQuery,
-} from "../../pages/home/services/homeApi";
+import { useGetHeaderTopicsQuery } from "../../services/helperService";
+
 import Movies from "./Movies";
 import axios from "axios";
 import MovieCard from "./MovieCard";

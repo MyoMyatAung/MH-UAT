@@ -14,18 +14,11 @@ export const getMovieDetail = async (id: string) => {
 
 export const getAdsData = async () => {
   try {
-    const response: any = await api.get(convertToSecureUrl('/advert/config'), {
+    const response: any = await api.get(('https://cc3e497d.qdhgtch.com:2345/api/v1/app/config'), {
       headers: {
         "X-Client-Version": 3098
       },
     });
-    const dataIsEncrypt = response?.headers?.get("x-app-data-encrypt");
-    const resultText = await response.text();
-
-    // Step 5: Handle the response (decrypt if needed)
-    if (dataIsEncrypt) {
-      return decryptWithAes(resultText);
-    }
     return response.data;
   } catch (error) {
     console.error('Error fetching ads data:', error);

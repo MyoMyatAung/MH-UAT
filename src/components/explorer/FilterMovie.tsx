@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetHeaderTopicsQuery } from "../../pages/home/services/homeApi";
+import { useGetHeaderTopicsQuery } from "../../services/helperService";
 import MovieCard from "../home/MovieCard";
 import Loader from "../../pages/search/components/Loader";
 import FilterTag from "./FilterTag";

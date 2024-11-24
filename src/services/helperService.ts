@@ -1,0 +1,36 @@
+import { useState, useEffect } from 'react';
+import { getAdsData } from './playerService';
+
+export const useGetHeaderTopicsQuery = () => {
+  const [configData, setConfigData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [error, setError] = useState<any>(null);
+
+  const fetchHeaderTopics = async () => {
+    setIsFetching(true);
+    try {
+      const response = await getAdsData();
+  
+      console.log('response is=.', response);
+      if (response) {
+        // const data = await decryptWithAes(response);
+        setConfigData(response);
+      }
+      setError(null);
+    } catch (err) {
+      console.error('Failed to fetch header topics:', err);
+      setError(err);
+    } finally {
+      setIsLoading(false);
+      setIsFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchHeaderTopics();
+  }, []);
+
+  console.log('configData is=>', configData)
+  return { data: configData, isLoading, isFetching, error, refetch: fetchHeaderTopics };
+};
