@@ -1,6 +1,6 @@
 // movieService.ts
 import api from './apiService';
-import { convertToSecureUrl, decryptWithAes } from './newEncryption';
+import { convertToSecurePayload, convertToSecureUrl, decryptWithAes } from './newEncryption';
 
 export const getMovieDetail = async (id: string) => {
   try {
@@ -51,13 +51,13 @@ export const reportPlaybackProgress = async (
   currentTime: number
 ) => {
   try {
-    const response = await api.post('/movie_play/report', {
+    const response = await api.post('/movie_play/report', convertToSecurePayload({
       movie_id: movieId,
       episode_id: episodeId,
       movie_from: fromCode,
       duration: Math.floor(duration),
       current_time: Math.floor(currentTime),
-    });
+    }));
     return response.data;
   } catch (error) {
     console.error('Error reporting playback progress:', error);

@@ -98,3 +98,19 @@ export function convertToSecureUrl(apiUrl: string): string {
 
   return createSecureUrl(base, formData);
 }
+
+export function convertToSecurePayload(formData: any): any {
+  const publicKey = process.env.REACT_APP_PUBLIC_KEY_LOGIN;
+
+  if (!publicKey) {
+    throw new Error("Public key is not defined");
+  }
+
+  formData['timestamp'] = new Date().getTime()
+  const encrypted = encryptWithRsa(JSON.stringify(formData), publicKey);
+  const signature = generateSignature(encrypted);
+  return {
+      pack: encrypted,
+      signature: signature,
+    }
+}
