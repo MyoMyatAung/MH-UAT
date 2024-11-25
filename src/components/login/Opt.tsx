@@ -38,7 +38,7 @@ const Opt: React.FC<OptProps> = ({
   key,
 }) => {
   const [signUpEmail, { isLoading, error }] = useSignUpEmailMutation();
-  const [signUpPhone] = useSignUpPhoneMutation();
+  const [signUpPhone , {isLoading : phload}] = useSignUpPhoneMutation();
 
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(""));
   const [timer, setTimer] = useState<number>(59);
@@ -46,21 +46,16 @@ const Opt: React.FC<OptProps> = ({
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { captchaCode, captchaKey, openSignUpEmailModel , GraphicKey } = useSelector(
-    (state: any) => state.model
-  );
+  const { captchaCode, captchaKey, openSignUpEmailModel, GraphicKey } =
+    useSelector((state: any) => state.model);
 
-  useEffect(() => {
-    if (email) {
-      getOtp(GraphicKey, email, "email");
-    } 
-  }, [email]);
-
-  useEffect(() => {
-    if (phone) {
-      getOtp(GraphicKey, phone, "phone");
-    } 
-  }, [phone]);
+    useEffect(() => {
+      if (email) {
+        getOtp(GraphicKey, email, "email");
+      } else if (phone) {
+        getOtp(GraphicKey, phone, "phone");
+      }
+    }, [email, phone]);
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -73,8 +68,6 @@ const Opt: React.FC<OptProps> = ({
     return () => clearInterval(countdown);
   }, [timer]);
   // console.log(GraphicKey)
-
-
 
   const closeAllModals = () => {
     startTransition(() => {
@@ -103,7 +96,7 @@ const Opt: React.FC<OptProps> = ({
 
       const otpCode = updatedOTP.join("");
       try {
-        console.log(otpCode)
+        console.log(otpCode);
         if (email && password) {
           const data: any = await signUpEmail({
             email,
@@ -113,7 +106,7 @@ const Opt: React.FC<OptProps> = ({
 
           if (data) {
             const result: any = decryptWithAes(data);
-            console.log(result)
+            console.log(result);
             dispatch(setOtpOpen(false));
             dispatch(showToast({ message: result.msg, type: "error" }));
             localStorage.setItem("authToken", JSON.stringify(result));
@@ -127,7 +120,7 @@ const Opt: React.FC<OptProps> = ({
           }).unwrap();
           if (data) {
             const result: any = decryptWithAes(data);
-            console.log(result)
+            console.log(result);
             dispatch(setOtpOpen(false));
             dispatch(showToast({ message: result.msg, type: "success" }));
             localStorage.setItem("authToken", JSON.stringify(result));
@@ -136,7 +129,7 @@ const Opt: React.FC<OptProps> = ({
         }
       } catch (error: any) {
         const errorMessage = error.data?.msg || "An error occurred";
-        console.log('errorMessage', errorMessage)
+        console.log("errorMessage", errorMessage);
         dispatch(showToast({ message: errorMessage, type: "error" }));
         inputRefs.current.forEach((input) => input?.focus()); // Optional: Refocus on inputs if needed
       }
@@ -147,12 +140,12 @@ const Opt: React.FC<OptProps> = ({
     if (email) {
       setTimer(59);
       setOtpDigits(Array(6).fill(""));
-      getOtp( GraphicKey, email, "email");
+      getOtp(GraphicKey, email, "email");
       dispatch(showToast({ message: "验证码已成功重新发送", type: "success" }));
     } else if (phone) {
       setTimer(59);
       setOtpDigits(Array(6).fill(""));
-      getOtp( GraphicKey, phone, "phone");
+      getOtp(GraphicKey, phone, "phone");
       dispatch(showToast({ message: "验证码已成功重新发送", type: "success" }));
     }
   };
@@ -199,15 +192,21 @@ const Opt: React.FC<OptProps> = ({
       </div>
 
       <div className="w-full flex justify-center items-center">
-        <button
-          disabled={timer > 0}
-          onClick={resendOtp}
-          className={`w-[320px] text-[14px] font-[600] leading-[22px]  mt-[20px] py-[10px] px-[16px] rounded-[80px] ${
-            timer > 0 ? "next_button text-[#777]" : "login_button text-white"
-          }`}
-        >
-          {buttonText}
-        </button>
+        {isLoading || phload ? (
+          <button disabled className="next_button text-[#777] w-[320px] text-[14px] font-[600] leading-[22px]  mt-[20px] py-[10px] px-[16px] rounded-[80px]">
+            加载中..
+          </button>
+        ) : (
+          <button
+            disabled={timer > 0}
+            onClick={resendOtp}
+            className={`w-[320px] text-[14px] font-[600] leading-[22px]  mt-[20px] py-[10px] px-[16px] rounded-[80px] ${
+              timer > 0 ? "next_button text-[#777]" : "login_button text-white"
+            }`}
+          >
+            {buttonText}
+          </button>
+        )}
       </div>
       <ErrorToast />
     </div>
