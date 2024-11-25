@@ -50,6 +50,12 @@ const Opt: React.FC<OptProps> = ({
   );
 
   useEffect(() => {
+    if (email) {
+      getOtp(GraphicKey, email, "email");
+    } 
+  }, [email]);
+
+  useEffect(() => {
     const countdown = setInterval(() => {
       if (timer > 0) setTimer((prev) => prev - 1);
     }, 1000);
@@ -59,15 +65,9 @@ const Opt: React.FC<OptProps> = ({
 
     return () => clearInterval(countdown);
   }, [timer]);
-  console.log(GraphicKey)
+  // console.log(GraphicKey)
 
-  useEffect(() => {
-    if (email) {
-      getOtp(GraphicKey, email, "email");
-    } else if (phone) {
-      getOtp(GraphicKey, phone, "phone");
-    }
-  }, [GraphicKey, email]);
+
 
   const closeAllModals = () => {
     startTransition(() => {
@@ -96,6 +96,7 @@ const Opt: React.FC<OptProps> = ({
 
       const otpCode = updatedOTP.join("");
       try {
+        console.log(otpCode)
         if (email && password) {
           const result = await signUpEmail({
             email,
@@ -133,12 +134,12 @@ const Opt: React.FC<OptProps> = ({
     if (email) {
       setTimer(59);
       setOtpDigits(Array(6).fill(""));
-      getOtp( key, email, "email");
+      getOtp( GraphicKey, email, "email");
       dispatch(showToast({ message: "验证码已成功重新发送", type: "success" }));
     } else if (phone) {
       setTimer(59);
       setOtpDigits(Array(6).fill(""));
-      getOtp( key, phone, "phone");
+      getOtp( GraphicKey, phone, "phone");
       dispatch(showToast({ message: "验证码已成功重新发送", type: "success" }));
     }
   };
