@@ -58,78 +58,88 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   };
 
   useEffect(() => {
+    let hls: Hls | null = null;
+  
     const initializePlayer = () => {
       if (videoElementRef.current && videoUrl) {
         const art = new Artplayer({
           container: videoElementRef.current,
           url: videoUrl,
-          //   autoSize: true,
           autoplay: true,
           playbackRate: true,
           setting: true,
           fullscreen: true,
           airplay: true,
-          // fullscreenWeb: true,
-          //   pip: true,
           moreVideoAttr: {
             playsInline: true,
           },
         });
-
+  
         // Use Hls.js for HLS streams
         if (Hls.isSupported() && videoUrl.includes(".m3u8")) {
-          const hls = new Hls();
+          hls = new Hls();
           hls.loadSource(videoUrl);
           hls.attachMedia(art.video);
-          // Handle Hls.js errors
+  
+          // Handle HLS errors
           hls.on(Hls.Events.ERROR, (_, data) => {
             if (data.fatal) {
-              setTimeout(() => {
-                handleVideoError(videoUrl);
-              }, 1000);
+              console.error("HLS error:", data);
+              handleVideoError(videoUrl);
             }
           });
         } else if (art.video.canPlayType("application/vnd.apple.mpegurl")) {
           art.video.src = videoUrl; // For Safari and iOS
         }
-
+  
         // Adjust video ratio based on the video's actual dimensions
         art.once("video:loadedmetadata", () => {
           const videoWidth = art.video.videoWidth;
           const videoHeight = art.video.videoHeight;
           setVideoRatio(videoHeight / videoWidth); // Set the dynamic aspect ratio
         });
-
+  
         // Set resume time if available
         art.once("ready", () => {
           if (resumeTime > 0) {
             art.currentTime = resumeTime;
           }
         });
-
+  
         playerRef.current = art;
       }
     };
-
+  
     initializePlayer();
-
+  
     return () => {
+      // Clean up HLS and ArtPlayer
+      if (hls) {
+        hls.destroy(); // Stop HLS requests
+        hls = null;
+      }
       if (playerRef.current) {
-        playerRef.current.destroy();
+        playerRef.current.pause();
+        playerRef.current.video.src = ""; // Clear video source
+        playerRef.current.destroy(); // Destroy ArtPlayer
+        playerRef.current = null;
       }
     };
   }, [videoUrl, resumeTime]);
-
-  const handleBack = async() => {
+  
+  const handleBack = async () => {
     if (playerRef.current) {
-      // Report progress before going back
-      await reportProgress(playerRef.current.currentTime, playerRef.current.duration);
+      // Report progress before navigating back
+      reportProgress(playerRef.current.currentTime, playerRef.current.duration);
       playerRef.current.pause();
+      playerRef.current.video.src = ""; // Stop video requests
+      playerRef.current.destroy();
+      playerRef.current = null;
       refetch();
     }
-    refetch();
     onBack();
   };
+  
 
   const handlePiP = () => {
     if (document.pictureInPictureEnabled && playerRef.current) {
@@ -141,21 +151,44 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   };
 
-  const handleUserActivity = () => {
-    // Show the controls when there's activity
-    setIsControlsVisible(true);
+  // const handleUserActivity = () => {
+  //   // Show the controls when there's activity
+  //   setIsControlsVisible(true);
 
-    // Clear any existing timeout
-    if (inactivityTimeout.current) {
-      clearTimeout(inactivityTimeout.current);
-    }
+  //   // Clear any existing timeout
+  //   if (inactivityTimeout.current) {
+  //     clearTimeout(inactivityTimeout.current);
+  //   }
 
-    // Set a timeout to hide controls after 3 seconds of inactivity
-    inactivityTimeout.current = window.setTimeout(() => {
-      setIsControlsVisible(false);
-    }, 3000);
-  };
+  //   // Set a timeout to hide controls after 3 seconds of inactivity
+  //   inactivityTimeout.current = window.setTimeout(() => {
+  //     setIsControlsVisible(false);
+  //   }, 3000);
+  // };
 
+
+  // useEffect(() => {
+  //   // Attach event listeners for user activity
+  //   const player = document.getElementById("my-player");
+  //   if (player) {
+  //     player.addEventListener("mousemove", handleUserActivity);
+  //     player.addEventListener("keydown", handleUserActivity);
+  //     player.addEventListener("touchstart", handleUserActivity);
+  //   }
+
+  //   // Cleanup event listeners on unmount
+  //   return () => {
+  //     if (inactivityTimeout.current) {
+  //       clearTimeout(inactivityTimeout.current);
+  //     }
+  //     if (player) {
+  //       player.removeEventListener("mousemove", handleUserActivity);
+  //       player.removeEventListener("keydown", handleUserActivity);
+  //       player.removeEventListener("touchstart", handleUserActivity);
+  //     }
+  //   };
+  // }, []);
+  
   return (
     <div id="my-player" className="relative w-full bg-black">
       {/* Back button */}
