@@ -120,12 +120,13 @@ const Opt: React.FC<OptProps> = ({
             setTimeout(() => closeAllModals(), 1000);
           }
         } else if (phone && password) {
-          const result = await signUpPhone({
+          const data: any = await signUpPhone({
             phone,
             password,
             sms_code: otpCode,
           }).unwrap();
-          if (result && result.msg) {
+          if (data) {
+            const result: any = decryptWithAes(data);
             console.log(result)
             dispatch(setOtpOpen(false));
             dispatch(showToast({ message: result.msg, type: "success" }));
