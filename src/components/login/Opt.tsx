@@ -56,6 +56,12 @@ const Opt: React.FC<OptProps> = ({
   }, [email]);
 
   useEffect(() => {
+    if (phone) {
+      getOtp(GraphicKey, phone, "phone");
+    } 
+  }, [phone]);
+
+  useEffect(() => {
     const countdown = setInterval(() => {
       if (timer > 0) setTimer((prev) => prev - 1);
     }, 1000);
@@ -104,6 +110,7 @@ const Opt: React.FC<OptProps> = ({
             email_code: otpCode,
           }).unwrap();
           if (result && result.msg) {
+            console.log(result)
             dispatch(setOtpOpen(false));
             dispatch(showToast({ message: result.msg, type: "error" }));
             localStorage.setItem("authToken", JSON.stringify(result));
@@ -116,6 +123,7 @@ const Opt: React.FC<OptProps> = ({
             sms_code: otpCode,
           }).unwrap();
           if (result && result.msg) {
+            console.log(result)
             dispatch(setOtpOpen(false));
             dispatch(showToast({ message: result.msg, type: "success" }));
             localStorage.setItem("authToken", JSON.stringify(result));
@@ -124,6 +132,7 @@ const Opt: React.FC<OptProps> = ({
         }
       } catch (error: any) {
         const errorMessage = error.data?.msg || "An error occurred";
+        console.log(errorMessage)
         dispatch(showToast({ message: errorMessage, type: "error" }));
         inputRefs.current.forEach((input) => input?.focus()); // Optional: Refocus on inputs if needed
       }

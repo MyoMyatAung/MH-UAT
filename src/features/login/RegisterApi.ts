@@ -29,12 +29,14 @@ const RegisterApi = createApi({
           email,
           password,
           email_code,
+          timestamp: new Date().getTime(),
         }),
-      }),
+      }), 
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          const msg = data.msg;
+          const  data  = await queryFulfilled;
+          console.log(data)
+          // const msg = data.msg;
           // console.log("Registration successful:", msg);
         } catch (error: any) {
           if (error.error?.data) {
@@ -49,11 +51,12 @@ const RegisterApi = createApi({
       query: ({ phone, password, sms_code }) => ({
         url: "/user/register/phone",
         method: "POST",
-        body: {
+        body: convertToSecurePayload({
           phone,
           password,
           sms_code,
-        },
+          timestamp: new Date().getTime(),
+        }),
       }),
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
