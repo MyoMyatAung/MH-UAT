@@ -17,6 +17,7 @@ import {
   useSignUpPhoneMutation,
 } from "../../features/login/RegisterApi";
 import ErrorToast from "../../pages/profile/error/ErrorToast";
+import { decryptWithAes } from "../../services/newEncryption";
 
 interface OptProps {
   email?: string;
@@ -104,12 +105,14 @@ const Opt: React.FC<OptProps> = ({
       try {
         console.log(otpCode)
         if (email && password) {
-          const result = await signUpEmail({
+          const data: any = await signUpEmail({
             email,
             password,
             email_code: otpCode,
           }).unwrap();
-          if (result && result.msg) {
+
+          if (data) {
+            const result: any = decryptWithAes(data);
             console.log(result)
             dispatch(setOtpOpen(false));
             dispatch(showToast({ message: result.msg, type: "error" }));
@@ -132,7 +135,7 @@ const Opt: React.FC<OptProps> = ({
         }
       } catch (error: any) {
         const errorMessage = error.data?.msg || "An error occurred";
-        console.log(errorMessage)
+        console.log('errorMessage', errorMessage)
         dispatch(showToast({ message: errorMessage, type: "error" }));
         inputRefs.current.forEach((input) => input?.focus()); // Optional: Refocus on inputs if needed
       }
