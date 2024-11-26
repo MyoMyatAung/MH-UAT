@@ -190,24 +190,24 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     };
   }, []);
   
-  useEffect(() => {
-    const handleScroll = () => {
-      const playerElement = videoElementRef.current;
-      if (!playerElement) return;
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const playerElement = videoElementRef.current;
+  //     if (!playerElement) return;
 
-      const rect = playerElement.getBoundingClientRect();
-      console.log('rect top is=>', rect);
-      // const isOutOfView = rect.top < 0;
+  //     const rect = playerElement.getBoundingClientRect();
+  //     console.log('rect top is=>', rect);
+  //     // const isOutOfView = rect.top < 0;
 
-      // Minimize player when scrolled out of view
-      // setIsMinimized(isOutOfView);
-    };
+  //     // Minimize player when scrolled out of view
+  //     // setIsMinimized(isOutOfView);
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   return (
     <div id="my-player" className={`relative w-full bg-black ${reHeight ? 'h-[40vh]' : ''}`}>
