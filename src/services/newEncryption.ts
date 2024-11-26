@@ -108,9 +108,8 @@ function convertUrlToFormData(url: string): Record<string, any> {
 }
 
 function createSecureUrl(base: string, formData: Record<string, any>): string {
-  console.log('process.env.REACT_APP_PUBLIC_KEY is=>', process.env.REACT_APP_PUBLIC_KEY);
-  const publicKey = "-----BEGIN 9RSA PUBLIC KEY-----\nMIIBCgKCAQEA02F/kPg5A2NX4qZ5JSns+bjhVMCC6JbTiTKpbgNgiXU+Kkorg6Dj76gS68gB8llhbUKCXjIdygnHPrxVHWfzmzisq9P9awmXBkCk74Skglx2LKHa/mNz9ivg6YzQ5pQFUEWS0DfomGBXVtqvBlOXMCRxp69oWaMsnfjnBV+0J7vHbXzUIkqBLdXSNfM9Ag5qdRDrJC3CqB65EJ3ARWVzZTTcXSdMW9i3qzEZPawPNPe5yPYbMZIoXLcrqvEZnRK1oak67/ihf7iwPJqdc+68ZYEmmdqwunOvRdjq89fQMVelmqcRD9RYe08v+xDxG9Co9z7hcXGTsUquMxkh29uNawIDAQAB\n-----END RSA PUBLIC KEY-----" // process.env.REACT_APP_PUBLIC_KEY;
-
+  const publicKey = process.env.REACT_APP_PUBLIC_KEY;
+  
   if (!publicKey) {
     throw new Error("Public key is not defined");
   }
