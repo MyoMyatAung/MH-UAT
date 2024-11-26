@@ -141,6 +141,20 @@ export const login = async (
   }
 };
 
+export const signup = async ({ email, password, email_code }: any) => {
+  let bd = convertToSecurePayload({
+    email,
+    password,
+    email_code,
+    timestamp: new Date().getTime(),
+  });
+  const { data } = await axios.post(
+    `${process.env.REACT_APP_API_URL}/user/register/email`,
+    bd
+  );
+  return decryptWithAes(data);
+};
+
 export const check_captchaRegister = async (
   captchaCode: string,
   keyStatus: string
