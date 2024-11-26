@@ -46,6 +46,20 @@ export const getAdsData = async () => {
   }
 };
 
+export const fetchCommentData = async (id: string, page: number = 1) => {
+  try {
+    const response: any = await api.get(convertToSecureUrl(`${process.env.REACT_APP_API_URL}/movie/comments/index?movie_id=${id}&page=${page}&pageSize=10`), {
+      headers: {
+        "X-Client-Version": 3098,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching ads data:", error);
+    throw error;
+  }
+};
+
 export const getEpisodesBySource = async (
   fromCode: string,
   movieId: string

@@ -15,10 +15,11 @@ import {
   getAdsData,
   getEpisodesBySource,
   reportPlaybackProgress,
-  parsePlaybackUrl
+  parsePlaybackUrl,
+  fetchCommentData
 } from "../../services/playerService";
 import NewAds from "../../components/NewAds";
-import { convertToSecureUrl } from "../../services/newEncryption";
+import { convertToSecureUrl, decryptWithAes } from "../../services/newEncryption";
 import PlayerLoading from './video/PlayerLoading';
 
 const DetailPage: React.FC = () => {
@@ -45,13 +46,11 @@ const DetailPage: React.FC = () => {
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(
-        convertToSecureUrl(`${process.env.REACT_APP_API_URL}/movie/comments/index?movie_id=${id}&page=${1}&pageSize=10`)
-        // "http://localhost:3001/comments"
-      );
-      const data = await response.json();
-      setCommentCount(data.data.total);
-      console.log('data is=>', data);
+      const response: any = await fetchCommentData(id || '');
+      if (response) {
+        const data: any = await decryptWithAes(response);
+        setCommentCount(data?.data?.total);
+      }
     } catch (err) {
       console.log('err is=>', err);
     }
@@ -68,23 +67,11 @@ const DetailPage: React.FC = () => {
         if (res.data?.[0]) {
           setWholePageError(false);
         } 
-        // else {
-        //   setWholePageError(true);
-        //   setErrorVideoUrl(res.data?.[0]?.play_url);
-        // }
         return;
       } catch (error) {
         console.error("Error auto-playing next episode:", error);
       }
     }
-    // console.log('hello')
-    // setTimeout(()=>{
-    //   setVisible(true);
-    //   setWholePageError(true);
-    // }, 1000);
-    // setTimeout(()=>{
-    //   setVisible(false);
-    // }, 3000)
   };
 
   useEffect(() => {
@@ -128,44 +115,39 @@ const DetailPage: React.FC = () => {
           const episodeIndex = mvDetail?.play_from[
             sourceIndex
           ]?.list?.findIndex(
-            (x: any) => x.episode_id === playBackInfo.episode_id
+            // eslint-disable-next-line eqeqeq
+            (x: any) => x.episode_id == playBackInfo.episode_id
           );
+          console.log('episodeIndex is=>', episodeIndex);
           if (episodeIndex > -1) {
-            setCurrentEpisode(
-              mvDetail?.play_from[sourceIndex]?.list[episodeIndex]
-            );
+            const mvData = mvDetail?.play_from[sourceIndex]?.list[episodeIndex];
+            console.log('mvData is=>', mvData);
+            if(!mvData.ready_to_play) {
+              const parseData = await parsePlaybackUrl(mvData.episode_id, mvData.from_code, mvData.play_url, '1');
+              mvData.play_url = parseData?.data?.play_url;
+            }
+            setCurrentEpisode(mvData);
             setEpisodes(mvDetail?.play_from[sourceIndex]?.list);
             setResumeTime(playBackInfo.current_time);
             return;
+          } else {
+
           }
         }
-        // if (!playBackInfo.ready_to_play) {
-        //   setWholePageError(true);
-        //   setErrorVideoUrl(playBackInfo?.play_url);
-        // }
       } else {
         // Fallback to the first available episode
         if (mvDetail?.play_from?.[0]?.list?.[0]) {
           const mvData = mvDetail?.play_from[0].list[0];
           if(!mvData.ready_to_play) {
             const parseData = await parsePlaybackUrl(mvData.episode_id, mvData.from_code, mvData.play_url, '1');
-            console.log('response', parseData);
             mvData.play_url = parseData?.data?.play_url;
           }
-          console.log('mvData is=>', mvData);
           setCurrentEpisode(mvData);
           setResumeTime(0);
           setEpisodes(mvDetail?.play_from[0].list);
         } else {
           setWholePageError(true);
         }
-        // if (
-        //   mvDetail?.play_from?.[0]?.list?.[0] &&
-        //   !mvDetail?.play_from?.[0]?.list?.[0].ready_to_play
-        // ) {
-        //   setWholePageError(true);
-        //   setErrorVideoUrl(mvDetail?.play_from?.[0]?.list?.[0].play_url);
-        // }
         if(mvDetail?.play_from && mvDetail?.play_from.length === 0) {
           setWholePageError(true);
         }
