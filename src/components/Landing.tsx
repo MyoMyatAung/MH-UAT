@@ -26,7 +26,7 @@ const Landing: React.FC = () => {
   }, [data, cur]);
 
   // console.log("img data =", cc);
-  console.log(skip)
+  // console.log(skip)
 
   useEffect(() => {
     if (imgLoad) {
