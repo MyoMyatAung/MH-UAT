@@ -20,7 +20,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const playerRef = useRef<any>(null);
   const videoElementRef = useRef<HTMLDivElement>(null);
   const [videoRatio, setVideoRatio] = useState(9 / 16); // Default to 16:9 ratio
-  const { refetch } = useGetRecordQuery(); // Fetch favorite movies list from API
+  const isLoggedIn = localStorage.getItem("authToken");
+  const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
+  const token = parsedLoggedIn?.data?.access_token;
+  const { refetch } = useGetRecordQuery(undefined, { skip: !token }); // Fetch favorite movies list from API
   const [isControlsVisible, setIsControlsVisible] = useState(true);
   const inactivityTimeout = useRef<number | null>(null);
 
@@ -120,10 +123,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     };
   }, [videoUrl, resumeTime]);
 
-  const handleBack = async() => {
+  const handleBack = async () => {
     if (playerRef.current) {
       // Report progress before going back
-      await reportProgress(playerRef.current.currentTime, playerRef.current.duration);
+      await reportProgress(
+        playerRef.current.currentTime,
+        playerRef.current.duration
+      );
       playerRef.current.pause();
       playerRef.current.destroy();
       refetch();
@@ -157,7 +163,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   //   }, 3000);
   // };
 
-
   // useEffect(() => {
   //   // Attach event listeners for user activity
   //   const player = document.getElementById("my-player");
@@ -179,36 +184,36 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   //     }
   //   };
   // }, []);
-  
+
   return (
     <div id="my-player" className="relative w-full bg-black">
       {/* Back button */}
-      {isControlsVisible && 
-      <>
-      <div className="absolute top-0 left-0 p-4 z-50">
-        <button onClick={handleBack} className="text-white flex">
-        <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                d="M7.828 11H20V13H7.828L13.192 18.364L11.778 19.778L4 12L11.778 4.22198L13.192 5.63598L7.828 11Z"
-                fill="white"
-              />
-            </svg>
-          {selectedEpisode?.episode_name}
-        </button>
-      </div>
-      <div className="absolute top-0 right-0 p-4 z-50">
-        <button className="text-white" onClick={handlePiP}>
-          <img src={floatingScreen} alt="PiP" className="h-5 w-5" />
-        </button>
-      </div>
-      </>
-      }
+      {isControlsVisible && (
+        <>
+          <div className="absolute top-0 left-0 p-4 z-50">
+            <button onClick={handleBack} className="text-white flex">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M7.828 11H20V13H7.828L13.192 18.364L11.778 19.778L4 12L11.778 4.22198L13.192 5.63598L7.828 11Z"
+                  fill="white"
+                />
+              </svg>
+              {selectedEpisode?.episode_name}
+            </button>
+          </div>
+          <div className="absolute top-0 right-0 p-4 z-50">
+            <button className="text-white" onClick={handlePiP}>
+              <img src={floatingScreen} alt="PiP" className="h-5 w-5" />
+            </button>
+          </div>
+        </>
+      )}
 
       {/* Video element wrapper */}
       <div
