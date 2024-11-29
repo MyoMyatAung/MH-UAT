@@ -12,6 +12,7 @@ import {
   SignUpResponse,
   comfirmResponse,
 } from "registerType";
+import { convertToSecurePayload } from "../../services/newEncryption";
 
 const RegisterApi = createApi({
   reducerPath: "RegisterSignApi",
@@ -24,16 +25,18 @@ const RegisterApi = createApi({
       query: ({ email, password, email_code }) => ({
         url: "/user/register/email",
         method: "POST",
-        body: {
+        body: convertToSecurePayload({
           email,
           password,
           email_code,
-        },
+          timestamp: new Date().getTime(),
+        }),
       }),
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          const msg = data.msg;
+          const data = await queryFulfilled;
+          console.log(data);
+          // const msg = data.msg;
           // console.log("Registration successful:", msg);
         } catch (error: any) {
           if (error.error?.data) {
@@ -48,11 +51,12 @@ const RegisterApi = createApi({
       query: ({ phone, password, sms_code }) => ({
         url: "/user/register/phone",
         method: "POST",
-        body: {
+        body: convertToSecurePayload({
           phone,
           password,
           sms_code,
-        },
+          timestamp: new Date().getTime(),
+        }),
       }),
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
@@ -96,10 +100,11 @@ const RegisterApi = createApi({
       query: ({ email, graphicKey }) => ({
         url: `/user/forget/get_token`,
         method: "GET",
-        params: {
+        params: convertToSecurePayload({
           username: email,
           captcha: graphicKey,
-        },
+          timestamp: new Date().getTime(),
+        }),
       }),
     }),
     getCodeForgot: builder.query<GetTCodeResponse, GetCodeArgs>({
@@ -116,18 +121,18 @@ const RegisterApi = createApi({
       query: ({ password, repassword, session_token, forget_code }) => ({
         url: "/user/forget/set_pass",
         method: "POST",
-        body: {
+        body: convertToSecurePayload({
           password: password,
           repassword: repassword,
           session_token: session_token,
           forget_code: forget_code,
-        },
+        }),
       }),
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           const msg = data.msg;
-          return msg
+          return msg;
           // console.log("set successful:", msg);
         } catch (error: any) {
           if (error.error?.data) {
@@ -135,7 +140,7 @@ const RegisterApi = createApi({
               const errorMsg = error.error.data.msg; // Extract the error message
               const errorCode = error.error.data.errorCode; // Extract the error code
               console.error("Set failed:", errorMsg, "Error Code:", errorCode);
-              return errorMsg
+              return errorMsg;
             }
           } else {
             console.error("set error:", error.message);

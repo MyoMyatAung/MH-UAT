@@ -20,13 +20,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const playerRef = useRef<any>(null);
   const videoElementRef = useRef<HTMLDivElement>(null);
   const [videoRatio, setVideoRatio] = useState(9 / 16); // Default to 16:9 ratio
-  const isLoggedIn = localStorage.getItem("authToken");
-  const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
-  const token = parsedLoggedIn?.data?.access_token;
-  const { refetch } = useGetRecordQuery(undefined, { skip: !token }); // Fetch favorite movies list from API
-  const [isControlsVisible, setIsControlsVisible] = useState(true);
+  const { refetch } = useGetRecordQuery(); // Fetch favorite movies list from API
+  const [isControlsVisible, setIsControlsVisible] = useState(false);
   const inactivityTimeout = useRef<number | null>(null);
-
+  const [reHeight, setReHeight] = useState(false);
   // Function to get token from localStorage
   const getToken = () => {
     const isLoggedIn = localStorage.getItem("authToken");
@@ -61,38 +58,38 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   };
 
   useEffect(() => {
+    let hls: Hls | null = null;
+
     const initializePlayer = () => {
       if (videoElementRef.current && videoUrl) {
         const art = new Artplayer({
           container: videoElementRef.current,
           url: videoUrl,
-          //   autoSize: true,
           autoplay: true,
           playbackRate: true,
           setting: true,
           fullscreen: true,
           airplay: true,
-          // fullscreenWeb: true,
-          //   pip: true,
-          moreVideoAttr: {
-            playsInline: true,
-          },
+          // miniProgressBar: true,
+          // moreVideoAttr: {
+          //   playsInline: true,
+          // },
         });
 
         // Use Hls.js for HLS streams
         if (Hls.isSupported() && videoUrl.includes(".m3u8")) {
-          const hls = new Hls();
+          hls = new Hls();
           hls.loadSource(videoUrl);
           hls.attachMedia(art.video);
-          // Handle Hls.js errors
+
+          // Handle HLS errors
           hls.on(Hls.Events.ERROR, (_, data) => {
             if (data.fatal) {
-              setTimeout(() => {
-                handleVideoError(videoUrl);
-              }, 1000);
+              console.error("HLS error:", data);
+              handleVideoError(videoUrl);
             }
           });
-        } else if (art.video.canPlayType("application/vnd.apple.mpegurl")) {
+        } else {
           art.video.src = videoUrl; // For Safari and iOS
         }
 
@@ -101,10 +98,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           const videoWidth = art.video.videoWidth;
           const videoHeight = art.video.videoHeight;
           setVideoRatio(videoHeight / videoWidth); // Set the dynamic aspect ratio
+          setReHeight(videoWidth < videoHeight);
         });
 
         // Set resume time if available
         art.once("ready", () => {
+          art.notice.show = '';
+
+          art.mask.show = false;
           if (resumeTime > 0) {
             art.currentTime = resumeTime;
           }
@@ -117,26 +118,50 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     initializePlayer();
 
     return () => {
+      // Clean up HLS and ArtPlayer
+      if (hls) {
+        hls.destroy(); // Stop HLS requests
+        hls = null;
+      }
       if (playerRef.current) {
-        playerRef.current.destroy();
+        playerRef.current.pause();
+        playerRef.current.video.src = ""; // Clear video source
+        playerRef.current.destroy(); // Destroy ArtPlayer
+        playerRef.current = null;
       }
     };
   }, [videoUrl, resumeTime]);
 
   const handleBack = async () => {
     if (playerRef.current) {
-      // Report progress before going back
-      await reportProgress(
-        playerRef.current.currentTime,
-        playerRef.current.duration
-      );
+      // Report progress before navigating back
+      reportProgress(playerRef.current.currentTime, playerRef.current.duration);
       playerRef.current.pause();
+      playerRef.current.video.src = ""; // Stop video requests
       playerRef.current.destroy();
+      playerRef.current = null;
       refetch();
     }
-    refetch();
     onBack();
   };
+
+  useEffect(() => {
+    const interval = setInterval(async() => {
+      if (playerRef.current) {
+        
+        const token = getToken();
+        if (token) {
+          reportProgress(
+            playerRef.current.currentTime,
+            playerRef.current.duration
+          );
+          refetch();
+        }
+      }
+    }, 5000); // 5 seconds interval
+
+    return () => clearInterval(interval); // Cleanup interval on unmount
+  }, []);
 
   const handlePiP = () => {
     if (document.pictureInPictureEnabled && playerRef.current) {
@@ -148,45 +173,80 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   };
 
-  // const handleUserActivity = () => {
-  //   // Show the controls when there's activity
-  //   setIsControlsVisible(true);
+  const handleUserActivity = () => {
+    // Show the controls when there's activity
+    setIsControlsVisible(true);
 
-  //   // Clear any existing timeout
-  //   if (inactivityTimeout.current) {
-  //     clearTimeout(inactivityTimeout.current);
-  //   }
+    // Clear any existing timeout
+    if (inactivityTimeout.current) {
+      clearTimeout(inactivityTimeout.current);
+    }
 
-  //   // Set a timeout to hide controls after 3 seconds of inactivity
-  //   inactivityTimeout.current = window.setTimeout(() => {
-  //     setIsControlsVisible(false);
-  //   }, 3000);
-  // };
+    // Set a timeout to hide controls after 3 seconds of inactivity
+    inactivityTimeout.current = window.setTimeout(() => {
+      setIsControlsVisible(false);
+    }, 3000);
+  };
+
+  const handleTouchMove = () => {
+    // Immediately hide the controls during a touch slide
+    setIsControlsVisible(false);
+  
+    // Optionally, clear any existing timeout to avoid re-showing the controls prematurely
+    if (inactivityTimeout.current) {
+      clearTimeout(inactivityTimeout.current);
+    }
+  };
+  
+  useEffect(() => {
+    // Attach event listeners for user activity
+    const player = document.getElementById("my-player");
+    if (player) {
+      player.addEventListener("touchmove", handleTouchMove);
+      player.addEventListener("mousemove", handleUserActivity);
+      player.addEventListener("keydown", handleUserActivity);
+      player.addEventListener("touchstart", handleUserActivity);
+      player.addEventListener("touchmove", handleTouchMove);
+    }
+
+    // Cleanup event listeners on unmount
+    return () => {
+      if (inactivityTimeout.current) {
+        clearTimeout(inactivityTimeout.current);
+      }
+      if (player) {
+        player.removeEventListener("mousemove", handleUserActivity);
+        player.removeEventListener("keydown", handleUserActivity);
+        player.removeEventListener("touchstart", handleUserActivity);
+        player.addEventListener("touchmove", handleTouchMove);
+      }
+    };
+  }, []);
 
   // useEffect(() => {
-  //   // Attach event listeners for user activity
-  //   const player = document.getElementById("my-player");
-  //   if (player) {
-  //     player.addEventListener("mousemove", handleUserActivity);
-  //     player.addEventListener("keydown", handleUserActivity);
-  //     player.addEventListener("touchstart", handleUserActivity);
-  //   }
+  //   const handleScroll = () => {
+  //     const playerElement = videoElementRef.current;
+  //     if (!playerElement) return;
 
-  //   // Cleanup event listeners on unmount
+  //     const rect = playerElement.getBoundingClientRect();
+  //     console.log('rect top is=>', rect);
+  //     // const isOutOfView = rect.top < 0;
+
+  //     // Minimize player when scrolled out of view
+  //     // setIsMinimized(isOutOfView);
+  //   };
+
+  //   window.addEventListener("scroll", handleScroll);
   //   return () => {
-  //     if (inactivityTimeout.current) {
-  //       clearTimeout(inactivityTimeout.current);
-  //     }
-  //     if (player) {
-  //       player.removeEventListener("mousemove", handleUserActivity);
-  //       player.removeEventListener("keydown", handleUserActivity);
-  //       player.removeEventListener("touchstart", handleUserActivity);
-  //     }
+  //     window.removeEventListener("scroll", handleScroll);
   //   };
   // }, []);
 
   return (
-    <div id="my-player" className="relative w-full bg-black">
+    <div
+      id="my-player"
+      className={`relative w-full bg-black ${reHeight ? "h-[40vh]" : ""}`}
+    >
       {/* Back button */}
       {isControlsVisible && (
         <>
@@ -217,13 +277,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
       {/* Video element wrapper */}
       <div
-        className="relative w-full"
+        className={`relative w-full ${reHeight ? "h-[40vh]" : ""}`}
         style={{ paddingTop: `${videoRatio * 100}%` }}
       >
         {/* Video element */}
         <div
           ref={videoElementRef}
-          className="absolute top-0 left-0 w-full h-full"
+          className={`absolute top-0 left-0 w-full ${
+            reHeight ? "h-[40vh]" : "h-full"
+          }`}
         ></div>
       </div>
     </div>

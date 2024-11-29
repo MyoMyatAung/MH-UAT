@@ -22,6 +22,8 @@ import Favorite from "./pages/profile/Favorite";
 import Loader from "./pages/search/components/Loader";
 import ErrorToast from "./pages/profile/error/ErrorToast";
 import Landing from "./components/Landing";
+import BannerAds from './components/BannerAds';
+import { useGetAdsQuery } from "./services/helperService";
 // import Menber from "./pages/share/member";
 // import Share from "./pages/share";
 
@@ -59,6 +61,7 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const { openAuthModel, openLoginModel, openSignupModel, panding } =
     useSelector((state: any) => state.model);
+    const { data, isLoading } = useGetAdsQuery();
 
   const location = useLocation();
   // const isLoggedIn = localStorage.getItem("authToken"); // Check if the user is authenticated
@@ -92,11 +95,6 @@ const App: React.FC = () => {
     if (!hasSeenLanding) {
       sessionStorage.setItem("hasSeenLanding", "true"); // Mark as shown
       dispatch(setPanding(true));
-      const timer = setTimeout(() => {
-        dispatch(setPanding(false));
-      }, 3000);
-
-      return () => clearTimeout(timer);
     }
   }, [dispatch]);
 
@@ -134,10 +132,13 @@ const App: React.FC = () => {
 
   return (
     <>
+     {data?.data && 
+     <>
       {panding ? (
-        <Landing />
+        <Landing data={data}/>
       ) : (
         <div className="flex flex-col min-h-screen">
+          {/* <BannerAds /> */}
           {/* Conditionally render Header */}
           {!hideHeaderFooter && !hideHeader && <Header />}
 
@@ -197,6 +198,8 @@ const App: React.FC = () => {
           {/* </div> */}
         </div>
       )}
+      </>
+    }
     </>
   );
 };

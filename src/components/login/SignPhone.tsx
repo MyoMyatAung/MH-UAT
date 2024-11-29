@@ -22,6 +22,8 @@ interface SignPhoneProps {
 }
 
 const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
+  const [key, setKey] = useState("");
+
   const dispatch = useDispatch();
   const { openCaptcha, openOtp } = useSelector((state: any) => state.model);
   const [showOtp, setShowOtp] = useState(false);
@@ -109,10 +111,12 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
   return (
     <div className="min-h-screen flex items-center justify-center overflow-hidden">
       {openOtp && (
-        <Opt setIsVisible={setIsVisible} phone={phone} password={password} />
+        <Opt key={key} setIsVisible={setIsVisible} phone={phone} password={password} />
       )}
       {openCaptcha && (
         <Captch
+        key={key}
+        setKey={setKey}
           setIsVisible={setIsVisible}
           isLogin={false}
           username={phone}
@@ -122,7 +126,7 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            className="login_box h-[480px] fixed bottom-0 z-[99999] w-full max-w-md py-4 px-[20px] bg-gray-800 rounded-t-2xl"
+            className="login_box h-[480px] fixed bottom-0 z-[99999] w-screen py-4 px-[20px] bg-gray-800 rounded-t-2xl"
             initial="hidden"
             animate="visible"
             exit="exit"
