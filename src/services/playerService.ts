@@ -18,15 +18,13 @@ export const getMovieDetail = async (id: string) => {
   }
 };
 
-const settings = JSON.parse(localStorage.getItem("movieAppSettings") || "{}");
-
-export const getconfigData = async () => {
+export const getconfigData = async (settings: any) => {
   try {
     const response: any = await api.get(convertToSecureUrl("/app/config"), {
       headers: {
         "X-Client-Version": 3098,
         "X-Client-Setting": JSON.stringify({
-          "pure-mode": settings.filterToggle ? 1 : 0,
+          "pure-mode": settings?.filterToggle ? 1 : 0,
         }),
       },
     });
