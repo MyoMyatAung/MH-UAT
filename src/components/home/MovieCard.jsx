@@ -18,8 +18,13 @@ const MovieCard = ({
         to={`/player/${movie?.id}`}
       >
         <div className={`img_a relative  w-full border-none`}>
-          <LazyLoadImage
+          {/* <LazyLoadImage
             src={movie.cover}
+            alt={movie.name}
+            className={`movie_img rounded-[4px] border-none  cursor-default object-cover w-full`}
+          /> */}
+          <img
+            src={movie.cover?.length ? movie?.cover : cardSkeleton}
             alt={movie.name}
             className={`movie_img rounded-[4px] border-none  cursor-default object-cover w-full`}
           />
