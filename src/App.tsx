@@ -172,7 +172,7 @@ const App: React.FC = () => {
             <div className="flex flex-col min-h-screen">
               {/* <BannerAds /> */}
               {/* Conditionally render Header */}
-              {!hideHeaderFooter && !hideHeader && !isScrolling && <Header />}
+              {!hideHeaderFooter && !hideHeader && <Header />}
 
               <div className="flex-grow">
                 <Suspense
@@ -214,7 +214,7 @@ const App: React.FC = () => {
               </div>
 
               {/* Conditionally render FooterNav */}
-              {!hideHeaderFooter && !isScrolling && <FooterNav />}
+              {!hideHeaderFooter && <FooterNav />}
               {location.pathname.startsWith("/profile") && <FooterNav />}
 
               {(openAuthModel || openLoginModel || openSignupModel) && (
