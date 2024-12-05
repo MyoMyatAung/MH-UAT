@@ -18,6 +18,7 @@ const Main = () => {
 
   const { data: userData, refetch } = useGetUserQuery(undefined);
   const user = userData?.data;
+  // console.log(user)
 
   const navigate = useNavigate();
 
@@ -27,35 +28,35 @@ const Main = () => {
   const bottomSheetRef = useRef<HTMLDivElement | null>(null);
 
   // Check if running on iOS
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  // const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-  // Request camera and file permissions
-  const requestPermissions = async () => {
-    try {
-      if (isIOS) {
-        // Explicit check for navigator.mediaDevices
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-          throw new Error("Camera or file access is not supported on iOS.");
-        }
+  // // Request camera and file permissions
+  // const requestPermissions = async () => {
+  //   try {
+  //     if (isIOS) {
+  //       // Explicit check for navigator.mediaDevices
+  //       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+  //         throw new Error("Camera or file access is not supported on iOS.");
+  //       }
 
-        // Try accessing camera
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
+  //       // Try accessing camera
+  //       const stream = await navigator.mediaDevices.getUserMedia({
+  //         video: true,
+  //       });
 
-        stream.getTracks().forEach((track) => track.stop()); // Close the stream
-      } else {
-        console.log("Permissions are not required on non-iOS devices.");
-      }
-    } catch (error) {
-      dispatch(
-        showToast({
-          message: "无法获取相机或文件权限。",
-          type: "error",
-        })
-      );
-    }
-  };
+  //       stream.getTracks().forEach((track) => track.stop()); // Close the stream
+  //     } else {
+  //       console.log("Permissions are not required on non-iOS devices.");
+  //     }
+  //   } catch (error) {
+  //     dispatch(
+  //       showToast({
+  //         message: "无法获取相机或文件权限。",
+  //         type: "error",
+  //       })
+  //     );
+  //   }
+  // };
 
   const handleSubmit = async (file: any) => {
     if (!file) {
@@ -104,7 +105,7 @@ const Main = () => {
   };
 
   const openBottomSheet = async () => {
-    await requestPermissions(); // Request permissions before opening bottom sheet
+    // await requestPermissions(); // Request permissions before opening bottom sheet
     setShowBottomSheet(true);
 
     setTimeout(() => {
@@ -136,7 +137,7 @@ const Main = () => {
       if (user?.inviter_id !== 0) {
         dispatch(
           showToast({
-            message: "Already invited",
+            message: "已填写邀请码",
             type: "success",
           })
         );
@@ -314,7 +315,7 @@ const Main = () => {
               </div>
               <div className="flex items-center gap-1">
                 <p className="info-main-text">
-                  {user?.email ? user?.email : "Not yet"}
+                  {user?.email ? user?.email : "未绑定"}
                 </p>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -339,8 +340,8 @@ const Main = () => {
                   {user?.phone
                     ? user?.phone !== "0"
                       ? user?.phone
-                      : "Not yet"
-                    : "Not yet"}
+                      : "未绑定"
+                    : "未绑定"}
                 </p>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
