@@ -104,7 +104,7 @@ const Share: React.FC<ShareProps> = ({}) => {
     }
   };
   return (
-    <div className="bg-background h-screen flex flex-col justify-between p-5">
+    <div className="bg-background h-screen flex flex-col justify-between p-5 gap-[10px]">
       {/* header */}
       <div className="flex justify-between items-center">
         <Link to="/profile">
@@ -125,6 +125,7 @@ const Share: React.FC<ShareProps> = ({}) => {
           </a>
         </div> */}
       </div>
+      <div className=" flex flex-col gap-[20px]">
       {/* scan */}
       <div className="">
         {invite ? (
@@ -196,7 +197,7 @@ const Share: React.FC<ShareProps> = ({}) => {
           </div>
         </div>
       </div>
-
+      </div>
       {/* alert */}
       {/* <div className=" flex justify-center items-center pt-[20px]">
         <div className="fire_box w-[320 px-[12px] py-[4px] flex gap-[7px] justify-center items-center">
