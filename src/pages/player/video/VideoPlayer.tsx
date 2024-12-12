@@ -124,13 +124,28 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             }
           }, 3000);
         });
-
         playerRef.current = art;
       }
     };
 
     initializePlayer();
 
+    // Orientation change listener
+    const handleOrientationChange = () => {
+      if (playerRef && playerRef.current) {
+        console.log(
+          "playerRef.current is=.",
+          playerRef.current,
+          window.innerHeight,
+          window.innerWidth
+        );
+        playerRef.current.fullscreen =
+          window.innerWidth > window.innerHeight ? false : true;
+      }
+    };
+
+    // Add the event listener for orientation change
+    window.addEventListener("orientationchange", handleOrientationChange);
     return () => {
       // Clean up HLS and ArtPlayer
       if (hls) {
