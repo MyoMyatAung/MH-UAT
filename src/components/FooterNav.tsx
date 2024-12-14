@@ -37,14 +37,16 @@ const Footer: FC = () => {
   // Scroll event listener to detect scroll direction
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > lastScrollY && window.scrollY > 100) {
-        // Scrolling down, hide the header
-        setIsHeaderVisible(false);
-      } else if (window.scrollY < lastScrollY) {
-        // Scrolling up, show the header
-        setIsHeaderVisible(true);
+      if (location.pathname === "/social") {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+          // Scrolling down, hide the header
+          setIsHeaderVisible(false);
+        } else if (window.scrollY < lastScrollY) {
+          // Scrolling up, show the header
+          setIsHeaderVisible(true);
+        }
+        setLastScrollY(window.scrollY);
       }
-      setLastScrollY(window.scrollY);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -58,7 +60,7 @@ const Footer: FC = () => {
       // className={`bg-[#1f1f21] fixed  transition-all duration-300 w-full shadow-lg z-50 ${
       //   isHeaderVisible ? "bottom-0" : "-bottom-[135px]"
       // }`}
-      className={`bg-[#1f1f21] fixed  transition-all duration-300 w-full shadow-lg z-50 bottom-0`}
+      className={`bg-[#1f1f21] fixed  transition-all duration-300 w-full shadow-lg z-[200] bottom-0`}
     >
       <div className="flex pt-4 justify-around items-center py-2">
         {/* Home Icon */}

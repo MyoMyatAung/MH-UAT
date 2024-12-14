@@ -84,9 +84,10 @@ const Navbar = () => {
   return (
     <div className="h-full bg-background">
       <div
-        className={`fixed bg-background p-3 w-full z-[99] pb-3  transition-all duration-300 ${
-          isHeaderVisible ? "top-0" : "-top-[135px]"
-        }`}
+        // className={`fixed bg-background p-3 w-full z-[99] pb-3  transition-all duration-300 ${
+        //   isHeaderVisible ? "top-0" : "-top-[135px]"
+        // }`}
+        className={`fixed bg-background p-3 w-full z-[99] pb-3 transition-all duration-300 top-0`}
       >
         <nav className="flex flex-wrap gap-4 items-center">
           {tabs.map((tab, index) => (
