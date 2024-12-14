@@ -24,6 +24,7 @@
     "html-to-image": "^1.11.11",
     "i18next": "^23.15.1",
     "jsencrypt": "^3.3.2",
+    "lozad": "^1.16.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.0.2",
@@ -69,6 +70,7 @@
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
+    "@types/lozad": "^1.16.4",
     "@types/video-react": "^0.15.8",
     "@types/video.js": "^7.3.58",
     "autoprefixer": "^10.4.20",

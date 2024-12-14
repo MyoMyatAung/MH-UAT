@@ -25,6 +25,8 @@ import Landing from "./components/Landing";
 import BannerAds from "./components/BannerAds";
 import { useGetAdsQuery } from "./services/helperService";
 import { setIsScrolling } from "./pages/home/slice/HomeSlice";
+import Social from "./pages/social";
+import Short from "./pages/short";
 // import Menber from "./pages/share/member";
 // import Share from "./pages/share";
 
@@ -77,6 +79,8 @@ const App: React.FC = () => {
     location.pathname.startsWith("/search_overlay") ||
     location.pathname.startsWith("/search") ||
     location.pathname.startsWith("/profile") ||
+    location.pathname.startsWith("/social") ||
+    location.pathname.startsWith("/short") ||
     location.pathname.startsWith("/social_callback") ||
     location.pathname.startsWith("/info") ||
     location.pathname.startsWith("/nickname") ||
@@ -91,22 +95,34 @@ const App: React.FC = () => {
     location.pathname.startsWith("/share/member");
 
   const hideHeader = location.pathname.startsWith("/explorer");
-  
+
   const sendMessageToNative = (message: string) => {
-    if ((window as any).webkit && (window as any).webkit.messageHandlers && (window as any).webkit.messageHandlers.jsBridge) {
+    if (
+      (window as any).webkit &&
+      (window as any).webkit.messageHandlers &&
+      (window as any).webkit.messageHandlers.jsBridge
+    ) {
       (window as any).webkit.messageHandlers.jsBridge.postMessage(message);
     }
   };
 
   useEffect(() => {
-    if(data?.data) {
-      if((location.pathname === '/' || location.pathname.startsWith("/search") || 
-      location.pathname.startsWith("/search_overlay")) && !panding) {
-        sendMessageToNative('showHomeScreen');
-      } else if(location.pathname.startsWith("/profile") && !panding){
-        sendMessageToNative('showProfileScreen');
-      } else if(location.pathname !== '/' && !location.pathname.startsWith("/profile") && !panding) {
-        sendMessageToNative('hideGradient');
+    if (data?.data) {
+      if (
+        (location.pathname === "/" ||
+          location.pathname.startsWith("/search") ||
+          location.pathname.startsWith("/search_overlay")) &&
+        !panding
+      ) {
+        sendMessageToNative("showHomeScreen");
+      } else if (location.pathname.startsWith("/profile") && !panding) {
+        sendMessageToNative("showProfileScreen");
+      } else if (
+        location.pathname !== "/" &&
+        !location.pathname.startsWith("/profile") &&
+        !panding
+      ) {
+        sendMessageToNative("hideGradient");
       }
     }
   }, [location.pathname]);
@@ -209,6 +225,8 @@ const App: React.FC = () => {
                     <Route path="/search_overlay" element={<Search />} />
 
                     <Route path="/explorer" element={<Explorer />} />
+                    <Route path="/social" element={<Social />} />
+                    <Route path="/short" element={<Short />} />
                     <Route path="/explorer/:id" element={<Detail />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/player/:id" element={<Player />} />
@@ -236,6 +254,8 @@ const App: React.FC = () => {
               {/* Conditionally render FooterNav */}
               {!hideHeaderFooter && <FooterNav />}
               {location.pathname.startsWith("/profile") && <FooterNav />}
+              {location.pathname.startsWith("/social") && <FooterNav />}
+              {location.pathname.startsWith("/short") && <FooterNav />}
 
               {(openAuthModel || openLoginModel || openSignupModel) && (
                 <div

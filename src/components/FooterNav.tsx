@@ -9,6 +9,10 @@ import explorerIcon from "../assets/explorer.png";
 import explorerSelectedIcon from "../assets/explorerSelected.png";
 import profileIcon from "../assets/profile.png";
 import profileSelectedIcon from "../assets/profileSelected.png";
+import beforePostIcon from "../assets/beforepost.png";
+import afterPostIcon from "../assets/afterpost.png";
+import beforeShortIcon from "../assets/beforeshort.png";
+import afterShortIcon from "../assets/aftershort.png";
 
 const Footer: FC = () => {
   const { t } = useTranslation();
@@ -24,6 +28,10 @@ const Footer: FC = () => {
       setSelectedMenu("explorer");
     } else if (location.pathname === "/profile") {
       setSelectedMenu("profile");
+    } else if (location.pathname === "/social") {
+      setSelectedMenu("social");
+    } else if (location.pathname === "/short") {
+      setSelectedMenu("short");
     }
   }, [location.pathname]);
   // Scroll event listener to detect scroll direction
@@ -47,11 +55,11 @@ const Footer: FC = () => {
   }, [lastScrollY]);
   return (
     <footer
-      className={`bg-[#1f1f21] fixed  transition-all duration-300 w-full shadow-lg z-50 ${
+      className={`bg-[#1f1f21] fixed  transition-all duration-300 w-full shadow-lg z-[99] ${
         isHeaderVisible ? "bottom-0" : "-bottom-[135px]"
       }`}
     >
-      <div className="flex justify-around items-center py-2">
+      <div className="flex pt-4 justify-around items-center py-2">
         {/* Home Icon */}
         <Link
           to="/"
@@ -97,6 +105,48 @@ const Footer: FC = () => {
             } text-[10px]`}
           >
             {t("footer.explorer")}
+          </span>
+        </Link>
+        {/* Explorer Icon */}
+        <Link
+          to="/social"
+          className="flex flex-col items-center"
+          onClick={() => setSelectedMenu("social")}
+        >
+          <div className="rounded-full">
+            <img
+              src={selectedMenu === "social" ? afterPostIcon : beforePostIcon}
+              alt="Social"
+              className="h-8 w-[48px] mb-2 -mt-[10px] "
+            />
+          </div>
+          <span
+            className={`${
+              selectedMenu === "social" ? "text-white" : "text-white/80"
+            } text-[10px]`}
+          >
+            广场
+          </span>
+        </Link>
+        {/* Explorer Icon */}
+        <Link
+          to="/short"
+          className="flex flex-col items-center"
+          onClick={() => setSelectedMenu("short")}
+        >
+          <div className="rounded-full">
+            <img
+              src={selectedMenu === "short" ? afterShortIcon : beforeShortIcon}
+              alt="Short"
+              className="h-6"
+            />
+          </div>
+          <span
+            className={`${
+              selectedMenu === "short" ? "text-white" : "text-white/80"
+            } text-[10px] mt-[6px]`}
+          >
+            短剧
           </span>
         </Link>
 
