@@ -68,9 +68,10 @@ const Tab2 = () => {
 
   const weekdays = ["一", "二", "三", "四", "五", "六", "日"];
 
-  const { data, refetch, isFetching, isLoading } = useGetWeeklyMoviesQuery(activeWeek);
+  const { data, refetch, isFetching, isLoading } =
+    useGetWeeklyMoviesQuery(activeWeek);
 
-  console.log('isLoading is+>,', isFetching);
+  console.log("isLoading is+>,", isFetching);
   useEffect(() => {
     let index = -1;
     for (let i = 0; i < currentWeekDates.length; i++) {
@@ -93,7 +94,7 @@ const Tab2 = () => {
 
   return (
     <div className="pb-32 min-h-screen">
-      <nav className="py-4">
+      <nav className="py-4 sticky top-[50px] z-50 bg-background">
         <div className="grid grid-cols-7 mb-2">
           {currentWeekDates?.map((date, index) => (
             <button
