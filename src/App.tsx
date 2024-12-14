@@ -167,37 +167,6 @@ const App: React.FC = () => {
     });
   };
 
-  const isScrolling = useSelector((state: any) => state.home.isScrolling);
-
-  useEffect(() => {
-    let timer: any;
-
-    const handleScroll = () => {
-      dispatch(setIsScrolling(true));
-
-      // Clear the timer if it's already set
-      if (timer) {
-        clearTimeout(timer);
-      }
-
-      // Set a timer to reset the isScrolling state after scrolling stops
-      timer = setTimeout(() => {
-        dispatch(setIsScrolling(false));
-      }, 150); // Adjust delay to detect when scrolling stops
-    };
-
-    // Attach the scroll event listener
-    window.addEventListener("scroll", handleScroll);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (timer) clearTimeout(timer);
-    };
-  }, []);
-
-  // console.log(isScrolling, "isScrolling");
-
   return (
     <>
       {data?.data && (
