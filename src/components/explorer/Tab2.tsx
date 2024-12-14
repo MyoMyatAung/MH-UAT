@@ -103,6 +103,7 @@ const Tab2 = () => {
               onClick={() => {
                 setCurrentIndex(index + 1);
                 dispatch(setActiveWeek(index + 1));
+                window.scrollTo(0, 0);
               }}
             >
               <span
@@ -127,6 +128,7 @@ const Tab2 = () => {
               onClick={() => {
                 setCurrentIndex(index + 1);
                 dispatch(setActiveWeek(index + 1));
+                window.scrollTo(0, 0);
               }}
               className={`${
                 activeWeek === index + 1 ? "text-white" : "text-[#FFFFFF99]"
