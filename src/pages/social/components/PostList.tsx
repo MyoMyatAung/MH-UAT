@@ -145,7 +145,6 @@ const PostList = ({
     }
 
     try {
-      console.log(postId);
       const response = await likePost({
         post_id: postId,
         is_like: !currentStatus.liked,

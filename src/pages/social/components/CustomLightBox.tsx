@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSwipeable } from "react-swipeable";
 
 const CustomLightbox = ({
   images,
@@ -6,45 +7,29 @@ const CustomLightbox = ({
   onClose,
   initialIndex,
 }: {
-  images: any;
-  isOpen: any;
-  onClose: any;
-  initialIndex: any;
+  images: { resourceURL: string }[];
+  isOpen: boolean;
+  onClose: () => void;
+  initialIndex: number;
 }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  let touchStart: number | null = null;
 
-  const handleSwipe = (direction: any) => {
-    if (direction === "left" && currentIndex < images.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else if (direction === "right" && currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (currentIndex < images.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      }
+    },
+    onSwipedRight: () => {
+      if (currentIndex > 0) {
+        setCurrentIndex(currentIndex - 1);
+      }
+    },
+    trackMouse: true, // Allows mouse swiping for debugging
+  });
 
-  const handleTouchStart = (e: any) => {
-    touchStart = e.touches[0].clientX;
-  };
+  if (!isOpen) return null;
 
-  const handleTouchMove = (e: any) => {
-    if (!touchStart) return;
-    const currentTouch = e.touches[0].clientX;
-    const diff = touchStart - currentTouch;
-
-    if (diff > 50) {
-      // Swipe left
-      handleSwipe("left");
-      touchStart = null;
-    } else if (diff < -50) {
-      // Swipe right
-      handleSwipe("right");
-      touchStart = null;
-    }
-  };
-
-  const handleTouchEnd = () => {
-    touchStart = null;
-  };
   const sendMessageToNative = (message: string) => {
     if (
       (window as any).webkit &&
@@ -59,21 +44,29 @@ const CustomLightbox = ({
     sendMessageToNative("showDownload");
   };
 
-  if (!isOpen) return null;
-
   return (
     <div className="lightbox-overlay">
       <div
         className="lightbox-content"
         onClick={(e) => e.stopPropagation()}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        {...swipeHandlers}
       >
-        <img
-          src={images[currentIndex].resourceURL}
-          alt={`Slide ${currentIndex + 1}`}
-        />
+        <div
+          className="lightbox-slider"
+          style={{
+            transform: `translateX(-${currentIndex * 100}%)`,
+            transition: "transform 0.3s ease",
+          }}
+        >
+          {images.map((image, index) => (
+            <img
+              key={index}
+              src={image.resourceURL}
+              alt={`Slide ${index + 1}`}
+              className="lightbox-slide"
+            />
+          ))}
+        </div>
         <button className="index-close" onClick={onClose}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
