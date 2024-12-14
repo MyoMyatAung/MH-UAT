@@ -178,7 +178,7 @@ const FilterTag = () => {
             <>
               <div
                 onClick={filterTagHandler}
-                className={`mt-3 text-white text-[14px] ${
+                className={`mt-3 pb-3 text-white text-[14px] ${
                   showMenu ? "hidden" : "flex"
                 } items-center justify-center gap-1 transition`}
               >
