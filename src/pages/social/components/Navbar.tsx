@@ -96,7 +96,7 @@ const Navbar = () => {
               className={`inline-flex whitespace-nowrap social_nav transition-all duration-200 ease-in-out relative hover:text-white ${
                 activeTab === index
                   ? "text-white text-[20px]"
-                  : "text-[#FFFFFFB3] text-[18px]"
+                  : "text-[#FFFFFFB3] text-[20px]"
               }`}
               onClick={() => handleTabClick(index)}
               style={{
