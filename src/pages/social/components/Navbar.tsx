@@ -8,7 +8,7 @@ import PostList from "./PostList";
 import Ads from "../../../components/NewAds";
 
 const Navbar = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(2);
   const [page, setPage] = useState(1);
   const [dataList, setDataList] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -19,7 +19,7 @@ const Navbar = () => {
     data: postsData,
     isLoading: postsLoading,
     isFetching: postsFetching,
-  } = useGetPostsQuery({ page }, { skip: activeTab !== 0 });
+  } = useGetFollowPostsQuery({ page }, { skip: activeTab !== 0 });
   const {
     data: recommandData,
     isLoading: recommandLoading,
@@ -29,7 +29,7 @@ const Navbar = () => {
     data: followData,
     isLoading: followLoading,
     isFetching: followFetching,
-  } = useGetFollowPostsQuery({ page }, { skip: activeTab !== 2 });
+  } = useGetPostsQuery({ page }, { skip: activeTab !== 2 });
 
   const fetchMoreData = () => {
     if (!postsFetching && !recommandFetching && !followFetching && hasMore) {
