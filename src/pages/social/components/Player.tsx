@@ -35,7 +35,7 @@ const Player = ({ src, thumbnail }: { src: any; thumbnail: any }) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             if (artPlayerInstanceRef.current) {
-              //   artPlayerInstanceRef.current.play();
+                artPlayerInstanceRef.current.play();
             }
           } else {
             if (artPlayerInstanceRef.current) {
@@ -48,8 +48,8 @@ const Player = ({ src, thumbnail }: { src: any; thumbnail: any }) => {
       const intersectionObserver = new IntersectionObserver(
         handleIntersection,
         {
-          rootMargin: "200px 0px",
-          threshold: 0.1,
+          rootMargin: "50px 0px",
+          threshold: 1,
         }
       );
 
