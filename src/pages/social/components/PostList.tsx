@@ -230,6 +230,19 @@ const PostList = ({
   //     }
   //   };
 
+  const sendEventToNative = () => {
+    if (
+      (window as any).webkit &&
+      (window as any).webkit.messageHandlers &&
+      (window as any).webkit.messageHandlers.jsBridge
+    ) {
+      (window as any).webkit.messageHandlers.jsBridge.postMessage({
+        eventName: "socialMediaShare",
+        value: "https://d1svxjht0opoc5.cloudfront.net/kkoor4.pdf" 
+    });
+  }
+  }
+
   return (
     <div className="bg-black">
       {data.map((post: any, index: number) => (
@@ -449,7 +462,7 @@ const PostList = ({
                 {likeStatus[post.post_id]?.count}
               </button>
 
-              <button className="flex items-center gap-x-2">
+              <button className="flex items-center gap-x-2" onClick={sendEventToNative}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="21"
