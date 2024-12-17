@@ -9,7 +9,7 @@ const Player = ({ src, thumbnail }: { src: any; thumbnail: any }) => {
   useEffect(() => {
     if (playerContainerRef.current) {
       const observer = lozad(playerContainerRef.current, {
-        rootMargin: "200px 0px", // Adjust rootMargin as needed
+        rootMargin: "50px 0px", // Adjust rootMargin as needed
         threshold: 0.1, // Adjust threshold as needed
         loaded: function (el) {
           // This function is called when the element is loaded and observed
@@ -32,36 +32,36 @@ const Player = ({ src, thumbnail }: { src: any; thumbnail: any }) => {
 
       // Start observing
       observer.observe();
-      // const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      //   entries.forEach((entry) => {
-      //     if (entry.isIntersecting) {
-      //       if (artPlayerInstanceRef.current) {
-      //           artPlayerInstanceRef.current.play();
-      //       }
-      //     } else {
-      //       if (artPlayerInstanceRef.current) {
-      //         artPlayerInstanceRef.current.pause();
-      //       }
-      //     }
-      //   });
-      // };
+      const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // if (artPlayerInstanceRef.current) {
+            //     artPlayerInstanceRef.current.play();
+            // }
+          } else {
+            if (artPlayerInstanceRef.current) {
+              artPlayerInstanceRef.current.pause();
+            }
+          }
+        });
+      };
 
-      // const intersectionObserver = new IntersectionObserver(
-      //   handleIntersection,
-      //   {
-      //     rootMargin: "50px 0px",
-      //     threshold: 1,
-      //   }
-      // );
+      const intersectionObserver = new IntersectionObserver(
+        handleIntersection,
+        {
+          rootMargin: "50px 0px",
+          threshold: 1,
+        }
+      );
 
-      // intersectionObserver.observe(playerContainerRef.current);
+      intersectionObserver.observe(playerContainerRef.current);
 
       return () => {
         if (artPlayerInstanceRef.current) {
           artPlayerInstanceRef.current.destroy();
           artPlayerInstanceRef.current = null;
         }
-        // intersectionObserver.disconnect(); // Stop observing the element when component unmounts
+        intersectionObserver.disconnect(); // Stop observing the element when component unmounts
       };
     }
   }, [src, thumbnail]);
