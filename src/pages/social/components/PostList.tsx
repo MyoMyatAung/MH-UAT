@@ -243,7 +243,7 @@ const PostList = ({
                 <img
                   src={post.user.avatar}
                   alt={post.user.nickname}
-                  className="w-10 h-10 rounded-full mr-4"
+                  className="w-10 h-10 rounded-full mr-4 border border-[#4A4A4A]"
                 />
               ) : (
                 <div className="mr-2">
@@ -317,7 +317,7 @@ const PostList = ({
                     <img
                       src={post?.user?.level}
                       alt=""
-                      className="h-[30px] w-[80px]"
+                      className="h-6 w-auto"
                     />
                   )}
                 </div>
