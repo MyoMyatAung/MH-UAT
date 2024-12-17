@@ -22,6 +22,7 @@ const Player = ({ src, thumbnail }: { src: any; thumbnail: any }) => {
               muted: false,
               autoplay: false,
               aspectRatio: true,
+              miniProgressBar: true,
               fullscreen: true,
               theme: "#00a1d6",
             });
