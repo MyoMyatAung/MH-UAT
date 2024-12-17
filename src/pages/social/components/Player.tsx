@@ -20,7 +20,7 @@ const Player = ({ src, thumbnail }: { src: any; thumbnail: any }) => {
               poster: thumbnail,
               volume: 0.5,
               muted: false,
-              autoplay: false,
+              autoplay: true,
               aspectRatio: true,
               fullscreen: true,
               theme: "#00a1d6",
