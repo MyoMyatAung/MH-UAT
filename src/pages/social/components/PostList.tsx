@@ -177,11 +177,11 @@ const PostList = ({
 
   const renderDescription = (post: any) => {
     const isExpanded = expanded[post.post_id];
-    if (!isExpanded && post.description.length > 200) {
+    if (!isExpanded && post.description.length > 80) {
       // Assuming 300 characters as roughly four lines of text
       return (
         <>
-          {post.description.substring(0, 200)}
+          {post.description.substring(0, 80)}
           <button
             onClick={() => toggleDescription(post.post_id)}
             className="text-[#FFFFFF99]"
@@ -194,7 +194,7 @@ const PostList = ({
     return (
       <>
         {post.description}
-        {post.description.length > 200 && (
+        {post.description.length > 80 && (
           <button
             onClick={() => toggleDescription(post.post_id)}
             className="text-[#FFFFFF99]"
@@ -310,14 +310,14 @@ const PostList = ({
 
               <div>
                 <div className="flex gap-2 items-center">
-                  <h4 className="font-[500] text-[16px]">
+                  <h4 className="font-[500] text-[14px]">
                     {post.user.nickname}
                   </h4>
                   {post?.user?.level && (
                     <img
                       src={post?.user?.level}
                       alt=""
-                      className="h-[30px] w-[70px]"
+                      className="h-[30px] w-[80px]"
                     />
                   )}
                 </div>

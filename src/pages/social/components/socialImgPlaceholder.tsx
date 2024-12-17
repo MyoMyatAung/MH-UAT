@@ -58,7 +58,7 @@ const ImageWithPlaceholder = ({
   return (
     <div
       ref={containerRef}
-      className="image-container"
+      className="social-image-container"
       style={{ width: "100%", height: "100%" }}
     >
       <img

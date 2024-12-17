@@ -19,7 +19,7 @@
   letter-spacing: 0.14px;
 }
 
-.image-container {
+.social-image-container {
   position: relative;
   background-image: url("./socialPlaceholder.png");
   background-size: cover;
@@ -298,7 +298,7 @@
   font-variant-numeric: lining-nums proportional-nums;
   font-feature-settings: "dlig" on;
   font-family: "PingFang SC";
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px; /* 171.429% */
