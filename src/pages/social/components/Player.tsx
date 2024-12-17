@@ -9,7 +9,7 @@ const Player = ({ src, thumbnail }: { src: any; thumbnail: any }) => {
   useEffect(() => {
     if (playerContainerRef.current) {
       const observer = lozad(playerContainerRef.current, {
-        rootMargin: "200px 0px", // Adjust rootMargin as needed
+        rootMargin: "50px 0px", // Adjust rootMargin as needed
         threshold: 0.1, // Adjust threshold as needed
         loaded: function (el) {
           // This function is called when the element is loaded and observed
@@ -20,7 +20,7 @@ const Player = ({ src, thumbnail }: { src: any; thumbnail: any }) => {
               poster: thumbnail,
               volume: 0.5,
               muted: false,
-              autoplay: true,
+              autoplay: false,
               aspectRatio: true,
               fullscreen: true,
               theme: "#00a1d6",
