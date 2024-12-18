@@ -45,7 +45,8 @@
 }
 
 .short_main {
-  background-color: rgb(0 0 0 / 70%) !important;
-  backdrop-filter: blur(40px) !important;
-  -webkit-backdrop-filter: blur(40px) !important;
+  background-image: url("../../assets/short.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
