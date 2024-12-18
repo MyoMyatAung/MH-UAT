@@ -131,6 +131,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
 
     try {
       document.execCommand("copy"); // This works on most browsers, including iOS Safari
+      sendEventToNative(text)
       handleCopy(); // Show the "Link Copied" message
     } catch (err) {
       console.error("Failed to copy to clipboard", err);
@@ -140,6 +141,18 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     document.body.removeChild(textArea);
   };
 
+  const sendEventToNative = (text: string) => {
+    if (
+      (window as any).webkit &&
+      (window as any).webkit.messageHandlers &&
+      (window as any).webkit.messageHandlers.jsBridge
+    ) {
+      (window as any).webkit.messageHandlers.jsBridge.postMessage({
+        eventName: "movieDetailShare",
+        value: text
+    });
+  }
+  }
   const handleShare = async () => {
     setIsLoading(true);
     try {
