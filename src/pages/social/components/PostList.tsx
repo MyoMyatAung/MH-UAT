@@ -27,6 +27,13 @@ const PostList = ({
   hasMore: boolean;
   fetchMoreData: () => void;
 }) => {
+  const [showCreatedTime, setShowCreatedTime] = useState(false);
+  const showCreatedTimeHandler = () => {
+    setShowCreatedTime(true);
+    setTimeout(() => {
+      setShowCreatedTime(false);
+    }, 1500);
+  };
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
@@ -238,10 +245,10 @@ const PostList = ({
     ) {
       (window as any).webkit.messageHandlers.jsBridge.postMessage({
         eventName: "socialMediaShare",
-        value: "https://d1svxjht0opoc5.cloudfront.net/kkoor4.pdf" 
-    });
-  }
-  }
+        value: "https://d1svxjht0opoc5.cloudfront.net/kkoor4.pdf",
+      });
+    }
+  };
 
   return (
     <div className="bg-black">
@@ -421,7 +428,17 @@ const PostList = ({
             />
           )}
           <div className="flex justify-between items-center px-4 py-3 text-xs">
-            <div>
+            {showCreatedTime ? (
+              <div className="fixed top-0 left-0 flex h-screen items-center justify-center z-[1000] w-full">
+                <p className="text-[12px] text-white font-semibold bg-gradient-to-r from-background to-gray-800 px-3 py-1 rounded-md">
+                  该功能还在开发中，敬请期待！
+                </p>
+              </div>
+            ) : (
+              <></>
+            )}
+
+            <div onClick={() => showCreatedTimeHandler()}>
               <p className="text-gray-400 text-xs">{post?.create_time}</p>
             </div>
             <div className="flex gap-x-5  items-center justify-center">
@@ -462,7 +479,10 @@ const PostList = ({
                 {likeStatus[post.post_id]?.count}
               </button>
 
-              <button className="flex items-center gap-x-2" onClick={sendEventToNative}>
+              <button
+                className="flex items-center gap-x-2"
+                onClick={sendEventToNative}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="21"
