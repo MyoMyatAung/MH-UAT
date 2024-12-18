@@ -11,6 +11,7 @@ import {
   faTimes,
   faFire,
 } from "@fortawesome/free-solid-svg-icons";
+import Cookies from 'js-cookie';
 import CommentComponent from "./CommentSection";
 import { useDispatch } from "react-redux";
 import { setAuthModel } from "../../../features/login/ModelSlice";
@@ -153,35 +154,44 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     });
   }
   }
-  const handleShare = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(
-        convertToSecureUrl(`${process.env.REACT_APP_API_URL}/user/get_share`),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            // Authorization: authorization,
-          },
-        }
-      );
-      const data = await response.data;
-      const result : any = await decryptWithAes(data)
-      console.log(result)
-      if(data && result){
-        copyToClipboard(result?.data.content)
-      }
-      // if (data && data.data && data.data.content) {
-      //   copyToClipboard(data.data.content);
-      // } else {
-      //   alert("获取分享内容失败，请稍后重试");
-      // }
-    } catch (error) {
-      console.error("Error fetching share content:", error);
-    } finally {
-      setIsLoading(false);
+
+const handleShare = async () => {
+  setIsLoading(true);
+  const cookieKey = 'shareContent';
+  
+  try {
+    // Check if the cookie exists
+    const cachedContent = Cookies.get(cookieKey);
+    if (cachedContent) {
+      copyToClipboard(JSON.parse(cachedContent).data.content);
+      return;
     }
-  };
+
+    // Call the API if no cached content is found
+    const response = await axios.get(
+      convertToSecureUrl(`${process.env.REACT_APP_API_URL}/user/get_share`),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }
+    );
+
+    const data = await response.data;
+    const result: any = await decryptWithAes(data);
+
+    if (data && result) {
+      // Save to cookie with a 2-hour expiry
+      Cookies.set(cookieKey, JSON.stringify(result), { expires: 1 / 12 }); // 1/12 day = 2 hours
+      copyToClipboard(result?.data.content);
+    }
+  } catch (error) {
+    console.error("Error fetching share content:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const customHeight = () => {
     const upperDiv = document.getElementById("upper-div");
