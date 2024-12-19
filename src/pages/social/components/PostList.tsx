@@ -29,10 +29,12 @@ const PostList = ({
 }) => {
   const [showCreatedTime, setShowCreatedTime] = useState(false);
   const showCreatedTimeHandler = () => {
-    setShowCreatedTime(true);
-    setTimeout(() => {
-      setShowCreatedTime(false);
-    }, 1500);
+    dispatch(showToast({ message: "该功能还在开发中，敬请期待！", type: "error" }));
+    // setShowCreatedTime(true);
+    // setTimeout(() => {
+    //   setShowCreatedTime(false);
+    // }, 1500);
+
   };
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
