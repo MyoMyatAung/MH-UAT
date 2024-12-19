@@ -216,7 +216,7 @@ const handleShare = async () => {
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo(0, 0);
-    }, 500);
+    }, 200);
   }, []);
 
   useEffect(() => {
@@ -230,6 +230,14 @@ const handleShare = async () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [modalRef]);
+
+  useEffect(()=>{
+    if (activeTab === "tab-1") {
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 200);
+    }
+  },[activeTab]);
 
   return (
     <div className="flex flex-col w-full bg-background">
