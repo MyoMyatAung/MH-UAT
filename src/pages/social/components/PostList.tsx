@@ -77,6 +77,10 @@ const PostList = ({
 
   // Open lightbox specific to a post and image index
   const openLightbox = (postId: any, index: any) => {
+    const bodyElement = document.querySelector("body");
+    if (bodyElement) {
+      bodyElement.style.overflow = "hidden";
+    }
     setLightboxStates({
       ...lightboxStates,
       [postId]: { isOpen: true, currentIndex: index },
@@ -84,12 +88,17 @@ const PostList = ({
   };
 
   const closeLightbox = (postId: any) => {
+    const bodyElement = document.querySelector("body");
+    if (bodyElement) {
+      bodyElement.style.removeProperty("overflow"); // Remove the overflow style
+    }
     const newState = { ...lightboxStates };
     if (newState[postId]) {
       newState[postId].isOpen = false;
     }
     setLightboxStates(newState);
   };
+
   if (loading && !data.length) {
     return (
       <div className="text-center -mt-[100px] max-sm:h-[80vh]  h-[100vh] flex justify-center items-center">
