@@ -2,7 +2,7 @@ import Loader from "../../../pages/search/components/Loader";
 
 import ImageWithPlaceholder from "./socialImgPlaceholder";
 import InfiniteScroll from "react-infinite-scroll-component";
-import socialImg from "../socialPlaceholder.png";
+
 import {
   useFollowUserMutation,
   useLikePostMutation,
@@ -29,12 +29,13 @@ const PostList = ({
 }) => {
   const [showCreatedTime, setShowCreatedTime] = useState(false);
   const showCreatedTimeHandler = () => {
-    dispatch(showToast({ message: "该功能还在开发中，敬请期待！", type: "error" }));
+    dispatch(
+      showToast({ message: "该功能还在开发中，敬请期待！", type: "error" })
+    );
     // setShowCreatedTime(true);
     // setTimeout(() => {
     //   setShowCreatedTime(false);
     // }, 1500);
-
   };
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
@@ -126,6 +127,7 @@ const PostList = ({
       startTransition(() => {
         dispatch(setAuthModel(true));
       });
+      return;
     }
 
     try {
