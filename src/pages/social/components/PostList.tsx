@@ -285,6 +285,13 @@ const PostList = ({
       }
     } catch (error) {
       console.error("Clipboard copy failed", error);
+    } finally {
+      dispatch(
+        showToast({
+          message: "已复制分享链接",
+          type: "success",
+        })
+      );
     }
   }
   return (
