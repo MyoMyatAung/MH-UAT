@@ -75,7 +75,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         });
 
         // Use Hls.js for HLS streams
-        if (Hls.isSupported() && videoUrl.includes(".m3u8")) {
+        // if (Hls.isSupported() && videoUrl.includes(".m3u8")) {
         //   hls = new Hls();
         //   hls.loadSource(videoUrl);
         //   hls.attachMedia(art.video);
@@ -87,10 +87,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         //       // handleVideoError(videoUrl);
         //     }
         //   });
-          art.video.src = videoUrl; // For Safari and iOS
-        } else {
-          art.video.src = videoUrl; // For Safari and iOS
-        }
+        // } else {
+        //   art.video.src = videoUrl; // For Safari and iOS
+        // }
+
+        art.video.src = videoUrl; // For Safari and iOS
 
         // Adjust video ratio based on the video's actual dimensions
         art.once("video:loadedmetadata", () => {
