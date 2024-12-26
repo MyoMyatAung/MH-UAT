@@ -239,7 +239,6 @@ const DetailPage: React.FC = () => {
   };
 
   const handleChangeSource = async (nextSource: any) => {
-    console.log('handleChangeSource =>', currentEpisodeNumber);
     if (nextSource && nextSource.code && id) {
       setIsPlayerLoading(true);
       try {
