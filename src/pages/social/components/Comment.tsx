@@ -4,60 +4,68 @@ import "../social.css";
 import heartt from "../Frame.png";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "../../../pages/search/components/Loader";
-import nc from '../Vector.png'
-
-interface CommentProps {}
+import nc from "../Vector.png";
 
 const Comment: React.FC<any> = ({ post_id }) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [list, setList] = useState<any[]>([]);
-  const { data } = useGetCommentListQuery({ post_id, page });
+
+  const { data , isFetching } = useGetCommentListQuery({ post_id, page });
 
   useEffect(() => {
     if (data?.data) {
       // Append new data to the existing list
       setList((prevList) => [...prevList, ...data.data.list]);
-
-      setHasMore(data.data.list.length > 0);
+      // Check if there's more data to load
+    //   console.log(data?.data.list.length)
+      if (page === 1) {
+        const loadedItems = data?.data.page * data?.data.pageSize 
+        console.log( "text" ,loadedItems)
+        // console.log(data.data)
+        setHasMore(loadedItems < data?.data.total);
+        //   setHasMore(false);
+          console.log(hasMore)
+      }
     }
-  }, [data]);
-  console.log(list);
+  }, [data,hasMore]);
 
-  const fetchMoreData = () => {
-    console.log("enter");
-    setPage((prevPage) => prevPage + 1);
+  const fetchMoreDataCmt = () => {
+    console.log("Fetching more data...");
+    if (isFetching && hasMore) {
+      setPage(prevPage => prevPage + 1);
+    }
   };
 
   return (
     <div className="py-[12px] bg-[#161619]">
       <h1 className="text-white text-[16px] font-[400]">评论</h1>
       {list.length === 0 ? (
-        <div className=" w-full flex flex-col justify-center items-center py-[40px] gap-[10px]"> 
-        <img src={nc} alt="" />
-        <span>还没有评论</span>
+        <div className="w-full flex flex-col justify-center items-center py-[40px] gap-[10px]">
+          <img src={nc} alt="No Comments" />
+          <span>还没有评论</span>
         </div>
       ) : (
         <InfiniteScroll
-          dataLength={list.length}
-          next={fetchMoreData}
+          dataLength={data.data.list.length}
+          next={fetchMoreDataCmt}
           hasMore={hasMore}
           loader={
-            <div className="flex hidden bg-background justify-center items-center w-full py-5">
+            <div className="flex bg-background justify-center items-center w-full py-5">
               <Loader />
             </div>
           }
           endMessage={
             <div className="flex bg-background justify-center items-center w-full py-5">
               <p style={{ textAlign: "center" }}>
-                <b>..</b>
+                <b className=" text-white/60">没有更多评论</b>
               </p>
             </div>
           }
         >
           <div className="pt-[15px] flex flex-col gap-[30px]">
-            {list.map((cmt: any) => (
-              <div key={cmt.post_id} className="flex gap-[10px]">
+            {list.map((cmt: any ,index) => (
+              <div key={index} className="flex gap-[10px]">
                 {/* Avatar */}
                 {cmt.user.avatar ? (
                   <img
@@ -163,6 +171,8 @@ const Comment: React.FC<any> = ({ post_id }) => {
           </div>
         </InfiniteScroll>
       )}
+
+      
     </div>
   );
 };
