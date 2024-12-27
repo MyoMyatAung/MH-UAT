@@ -15,6 +15,7 @@ import CustomLightbox from "./CustomLightBox";
 
 import lozad from "lozad";
 import Player from "./Player";
+import Social_details from "./Social_details";
 
 const PostList = ({
   data,
@@ -28,14 +29,12 @@ const PostList = ({
   fetchMoreData: () => void;
 }) => {
   const [showCreatedTime, setShowCreatedTime] = useState(false);
-  const showCreatedTimeHandler = () => {
-    dispatch(
-      showToast({ message: "该功能还在开发中，敬请期待！", type: "error" })
-    );
-    // setShowCreatedTime(true);
-    // setTimeout(() => {
-    //   setShowCreatedTime(false);
-    // }, 1500);
+  const [showDetail, setShowDetail] = useState(false);
+  const [activePost, setActivePost] = useState(null);
+
+  const handleShowDetail = (post: any) => {
+    setActivePost(post); // Set the active post
+    setShowDetail(true); // Show the modal
   };
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
@@ -267,20 +266,20 @@ const PostList = ({
   const copyToClipboard = async (text: string) => {
     try {
       // Attempt to use the Clipboard API (works in most modern browsers)
-      if ('clipboard' in navigator) {
+      if ("clipboard" in navigator) {
         await navigator.clipboard.writeText(text);
       } else {
-        const input = document.createElement('input');
-        input.setAttribute('value', text); // Set the value to the text we want to copy
-        input.setAttribute('readonly', '');  // Make it readonly so user can't modify it
-        input.style.position = 'absolute';  // Ensure it doesn't affect layout
-        input.style.opacity = '0';          // Make it invisible
-        input.style.pointerEvents = 'none'; // Disable interaction
-        input.style.zIndex = '-9999';       // Position it off-screen
+        const input = document.createElement("input");
+        input.setAttribute("value", text); // Set the value to the text we want to copy
+        input.setAttribute("readonly", ""); // Make it readonly so user can't modify it
+        input.style.position = "absolute"; // Ensure it doesn't affect layout
+        input.style.opacity = "0"; // Make it invisible
+        input.style.pointerEvents = "none"; // Disable interaction
+        input.style.zIndex = "-9999"; // Position it off-screen
 
-        document.body.appendChild(input);  // Append it to the body
-        input.select();  // Select the text
-        document.execCommand('copy');  // Copy the selected text to clipboard
+        document.body.appendChild(input); // Append it to the body
+        input.select(); // Select the text
+        document.execCommand("copy"); // Copy the selected text to clipboard
         document.body.removeChild(input); // Remove the input from the DOM
       }
     } catch (error) {
@@ -293,9 +292,24 @@ const PostList = ({
         })
       );
     }
-  }
+  };
   return (
     <div className="bg-black">
+      {showDetail && (
+        <Social_details
+          followStatus={followStatus}
+          handleFollowChange={handleFollowChange}
+          post={activePost}
+          setShowDetail={setShowDetail}
+          openLightbox={openLightbox}
+          lightboxStates={lightboxStates}
+          closeLightbox={closeLightbox}
+          showCreatedTime={showCreatedTime}
+          likeStatus={likeStatus}
+          sendEventToNative={sendEventToNative}
+          handleLikeChange={handleLikeChange}
+        />
+      )}
       {data.map((post: any, index: number) => (
         <div
           key={index}
@@ -524,7 +538,7 @@ const PostList = ({
               </button>
 
               <button
-                onClick={() => showCreatedTimeHandler()}
+                onClick={() => handleShowDetail(post)}
                 className="flex -mt-[2px] items-center gap-x-2"
               >
                 <svg
