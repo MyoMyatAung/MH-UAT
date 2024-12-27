@@ -324,3 +324,8 @@
 .art-notice {
   display: none !important;
 }
+
+.heart_icon {
+  stroke-width: 1.3px;
+  stroke: rgba(255, 255, 255, 0.4);
+}
