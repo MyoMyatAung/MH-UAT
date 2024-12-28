@@ -26,9 +26,9 @@ const Social_details: React.FC<any> = ({
   }, []);
 
   return (
-    <div className="inset-0 px-[10px] fixed w-screen h-screen overflow-y-scroll top-0 bg-background z-[99999]">
+    <div className="inset-0 px-[10px] fixed overflow-scroll w-screen h-screen overflow-y-scroll top- bg-background z-[99999]">
       {/* header */}
-      <div className=" flex py-[10px] justify-between items-center">
+      <div className=" fixed bg-background z-[999991] w-screen top-0 flex py-[10px] justify-between items-center">
         <span onClick={() => setShowDetail(false)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@ const Social_details: React.FC<any> = ({
       </div>
       {/* <h1>{post.post_id}</h1> */}
 
-      <div className=" pt-[10px] px-[10px] flex flex-col">
+      <div className=" pt-[40px] px-[10px] flex flex-col">
         {/* user */}
         <div className="flex justify-between items-center mb-4 pt-4">
           <div className="flex items-center ">

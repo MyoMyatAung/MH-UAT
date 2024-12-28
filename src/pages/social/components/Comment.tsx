@@ -11,31 +11,26 @@ const Comment: React.FC<any> = ({ post_id }) => {
   const [hasMore, setHasMore] = useState(true);
   const [list, setList] = useState<any[]>([]);
 
-  const { data , isFetching } = useGetCommentListQuery({ post_id, page });
+  const { data, isFetching , refetch } = useGetCommentListQuery({ post_id, page });
 
   useEffect(() => {
     if (data?.data) {
-      // Append new data to the existing list
       setList((prevList) => [...prevList, ...data.data.list]);
-      // Check if there's more data to load
-    //   console.log(data?.data.list.length)
-      if (page === 1) {
-        const loadedItems = data?.data.page * data?.data.pageSize 
-        console.log( "text" ,loadedItems)
-        // console.log(data.data)
-        setHasMore(loadedItems < data?.data.total);
-        //   setHasMore(false);
-          console.log(hasMore)
-      }
+      const loadedItems = data?.data.page * data?.data.pageSize;
+    //   console.log("text", loadedItems);
+      setHasMore(loadedItems < data?.data.total);
+     
     }
-  }, [data,hasMore]);
+  }, [data]);
+
 
   const fetchMoreDataCmt = () => {
-    console.log("Fetching more data...");
-    if (isFetching && hasMore) {
-      setPage(prevPage => prevPage + 1);
+    if (hasMore) {
+      setPage((prevPage) => prevPage + 1);
     }
+    console.log("Fetching more data...", page);
   };
+//   console.log(list)
 
   return (
     <div className="py-[12px] bg-[#161619]">
@@ -46,25 +41,9 @@ const Comment: React.FC<any> = ({ post_id }) => {
           <span>还没有评论</span>
         </div>
       ) : (
-        <InfiniteScroll
-          dataLength={data.data.list.length}
-          next={fetchMoreDataCmt}
-          hasMore={hasMore}
-          loader={
-            <div className="flex bg-background justify-center items-center w-full py-5">
-              <Loader />
-            </div>
-          }
-          endMessage={
-            <div className="flex bg-background justify-center items-center w-full py-5">
-              <p style={{ textAlign: "center" }}>
-                <b className=" text-white/60">没有更多评论</b>
-              </p>
-            </div>
-          }
-        >
+        <>
           <div className="pt-[15px] flex flex-col gap-[30px]">
-            {list.map((cmt: any ,index) => (
+            {list.map((cmt: any, index) => (
               <div key={index} className="flex gap-[10px]">
                 {/* Avatar */}
                 {cmt.user.avatar ? (
@@ -168,11 +147,30 @@ const Comment: React.FC<any> = ({ post_id }) => {
                 </div>
               </div>
             ))}
-          </div>
-        </InfiniteScroll>
-      )}
 
-      
+            <InfiniteScroll
+              // className=" h-[100px]"
+              dataLength={list.length}
+              next={fetchMoreDataCmt}
+              hasMore={hasMore}
+              loader={
+                <div className="flex bg-background justify-center items-center w-full py-5">
+                  <Loader />
+                </div>
+              }
+              endMessage={
+                <div className="flex bg-background justify-center items-center w-full py-5">
+                  <p style={{ textAlign: "center" }}>
+                    <b className=" text-white/60">没有更多评论</b>
+                  </p>
+                </div>
+              }
+            >
+              <></>
+            </InfiniteScroll>
+          </div>
+        </>
+      )}
     </div>
   );
 };
