@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ImageWithPlaceholder from "./socialImgPlaceholder";
 import CustomLightbox from "./CustomLightBox";
 import Player from "./Player";
 import Comment from "./Comment";
+import { useGetCommentListQuery } from "../services/socialApi";
+import InfiniteScroll from "react-infinite-scroll-component/dist";
+import Loader from "../../../pages/search/components/Loader";
 
 const Social_details: React.FC<any> = ({
   setShowDetail,
@@ -17,6 +20,29 @@ const Social_details: React.FC<any> = ({
   sendEventToNative,
   handleLikeChange,
 }) => {
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [list, setList] = useState<any[]>([]);
+
+  const { data, isFetching , refetch } = useGetCommentListQuery({ post_id: post.post_id, page });
+
+  useEffect(() => {
+    if (data?.data) {
+      setList((prevList) => [...prevList, ...data.data.list]);
+      const loadedItems = data?.data.page * data?.data.pageSize;
+    //   console.log("text", loadedItems);
+      setHasMore(loadedItems < data?.data.total);
+     
+    }
+  }, [data]);
+
+
+  const fetchMoreDataCmt = () => {
+    if (hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+    console.log("Fetching more data...", page);
+  };
 //   console.log(post);
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -25,10 +51,18 @@ const Social_details: React.FC<any> = ({
     };
   }, []);
 
+  const handleScroll = (event: any) => {
+    const { scrollTop, scrollHeight, clientHeight } = event.target;
+    if(scrollTop + clientHeight === scrollHeight && hasMore) {
+      setPage(page+1);
+    }
+    console.log('next', scrollTop, scrollHeight, clientHeight);
+  }
+
   return (
-    <div className="inset-0 px-[10px] fixed overflow-scroll w-screen h-screen overflow-y-scroll top- bg-background z-[99999]">
+    <div className="inset-0 px-[10px] fixed w-screen top-0 h-screen bg-background overflow-y-scroll z-[99]" onScroll={(event)=>handleScroll(event)}>
       {/* header */}
-      <div className=" fixed bg-background z-[999991] w-screen top-0 flex py-[10px] justify-between items-center">
+      <div className="fixed bg-background z-[99] w-screen top-0 flex py-[10px] justify-between items-center">
         <span onClick={() => setShowDetail(false)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -216,9 +250,9 @@ const Social_details: React.FC<any> = ({
           )}
           {post.file_type === "video" && (
             <Player
+            isCenterPlay={false}
               src={post?.files[0].resourceURL}
-              thumbnail={post?.files[0].thumbnail}
-            />
+              thumbnail={post?.files[0].thumbnail} status={undefined}            />
           )}
         </div>
         {/* status */}
@@ -313,7 +347,28 @@ const Social_details: React.FC<any> = ({
           </div>
         </div>
         {/* comment */}
-       <Comment post_id={post.post_id} />
+       <Comment list={list} isFetching={hasMore}/>
+
+       <InfiniteScroll
+              // className=" h-[100px]"
+              dataLength={list.length}
+              next={fetchMoreDataCmt}
+              hasMore={hasMore}
+              loader={
+                <div className="flex bg-background justify-center items-center w-full py-5">
+                  <Loader />
+                </div>
+              }
+              endMessage={
+                <div className="flex bg-background justify-center items-center w-full py-5">
+                  <p style={{ textAlign: "center" }}>
+                    <b className=" text-white/60">没有更多评论</b>
+                  </p>
+                </div>
+              }
+            >
+              <></>
+            </InfiniteScroll>
       </div>
     </div>
   );

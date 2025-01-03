@@ -6,36 +6,14 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "../../../pages/search/components/Loader";
 import nc from "../Vector.png";
 
-const Comment: React.FC<any> = ({ post_id }) => {
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [list, setList] = useState<any[]>([]);
+const Comment: React.FC<any> = ({ list, isFetching }) => {
 
-  const { data, isFetching , refetch } = useGetCommentListQuery({ post_id, page });
-
-  useEffect(() => {
-    if (data?.data) {
-      setList((prevList) => [...prevList, ...data.data.list]);
-      const loadedItems = data?.data.page * data?.data.pageSize;
-    //   console.log("text", loadedItems);
-      setHasMore(loadedItems < data?.data.total);
-     
-    }
-  }, [data]);
-
-
-  const fetchMoreDataCmt = () => {
-    if (hasMore) {
-      setPage((prevPage) => prevPage + 1);
-    }
-    console.log("Fetching more data...", page);
-  };
 //   console.log(list)
 
   return (
-    <div className="py-[12px] bg-[#161619]">
+    <div className="py-[12px] bg-[#161619]" >
       <h1 className="text-white text-[16px] font-[400]">评论</h1>
-      {list.length === 0 ? (
+      {list?.length === 0 && !isFetching ? (
         <div className="w-full flex flex-col justify-center items-center py-[40px] gap-[10px]">
           <img src={nc} alt="No Comments" />
           <span>还没有评论</span>
@@ -43,7 +21,7 @@ const Comment: React.FC<any> = ({ post_id }) => {
       ) : (
         <>
           <div className="pt-[15px] flex flex-col gap-[30px]">
-            {list.map((cmt: any, index) => (
+            {list.map((cmt: any, index: any) => (
               <div key={index} className="flex gap-[10px]">
                 {/* Avatar */}
                 {cmt.user.avatar ? (
@@ -147,27 +125,6 @@ const Comment: React.FC<any> = ({ post_id }) => {
                 </div>
               </div>
             ))}
-
-            <InfiniteScroll
-              // className=" h-[100px]"
-              dataLength={list.length}
-              next={fetchMoreDataCmt}
-              hasMore={hasMore}
-              loader={
-                <div className="flex bg-background justify-center items-center w-full py-5">
-                  <Loader />
-                </div>
-              }
-              endMessage={
-                <div className="flex bg-background justify-center items-center w-full py-5">
-                  <p style={{ textAlign: "center" }}>
-                    <b className=" text-white/60">没有更多评论</b>
-                  </p>
-                </div>
-              }
-            >
-              <></>
-            </InfiniteScroll>
           </div>
         </>
       )}
