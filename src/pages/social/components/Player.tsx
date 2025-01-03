@@ -147,7 +147,15 @@ import React, { useEffect, useRef, useState } from "react";
 import Artplayer from "artplayer";
 import lozad from "lozad";
 
-const Player = ({ src, thumbnail }: { src: any; thumbnail: any }) => {
+const Player = ({
+  src,
+  thumbnail,
+  status,
+}: {
+  src: any;
+  thumbnail: any;
+  status: any;
+}) => {
   const playerContainerRef = useRef<HTMLDivElement>(null);
   const artPlayerInstanceRef = useRef<Artplayer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false); // Track if the current player is playing
@@ -242,7 +250,7 @@ const Player = ({ src, thumbnail }: { src: any; thumbnail: any }) => {
   }, [src, thumbnail]);
 
   return (
-    <div className="social-player">
+    <div className={`social-player ${status ? "hide-controls" : ""}`}>
       <div
         ref={playerContainerRef}
         className="relative artplayer-app w-full h-[250px] md:h-[350px] lg:h-[400px] xl:h-[400px]"
