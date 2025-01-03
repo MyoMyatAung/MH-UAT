@@ -481,7 +481,7 @@ const PostList = ({
               status={post?.type === "ads" ? true : false}
             />
           )}
-          {post?.type === "post" ? (
+          {post?.type === "post" || !post?.type ? (
             <div className="flex justify-between items-center px-4 py-3 text-xs">
               {showCreatedTime ? (
                 <div className="fixed top-0 left-0 flex h-screen items-center justify-center z-[1000] w-full">
@@ -574,37 +574,39 @@ const PostList = ({
               </div>
             </div>
           ) : (
-            <div className="flex justify-between items-center px-4 py-3 text-xs">
-              <div className="flex items-center gap-2">
-                <div>
-                  <img
-                    src={post?.ads_info?.icon}
-                    alt=""
-                    width={36}
-                    height={36}
-                  />
-                </div>
-                <div>
-                  <div className="flex flex-col">
-                    <span className="ads-title">{post?.ads_info?.title}</span>
-                    <span className="ads-description">
-                      {post?.ads_info?.description}
-                    </span>
+            post?.type === "ads" && (
+              <div className="flex justify-between items-center px-4 py-3 text-xs">
+                <div className="flex items-center gap-2">
+                  <div>
+                    <img
+                      src={post?.ads_info?.icon}
+                      alt=""
+                      width={36}
+                      height={36}
+                    />
+                  </div>
+                  <div>
+                    <div className="flex flex-col">
+                      <span className="ads-title">{post?.ads_info?.title}</span>
+                      <span className="ads-description">
+                        {post?.ads_info?.description}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <a
-                  target="_blank"
-                  href={post?.ads_info?.jump_url}
-                  className={`flex gap-2 px-2 py-1 items-center 
+                <div>
+                  <a
+                    target="_blank"
+                    href={post?.ads_info?.jump_url}
+                    className={`flex gap-2 px-2 py-1 items-center 
                     bg-[#F54100]
                 rounded-[6px]`}
-                >
-                  <span className="text-sm">{post?.ads_info?.btn_text}</span>
-                </a>
+                  >
+                    <span className="text-sm">{post?.ads_info?.btn_text}</span>
+                  </a>
+                </div>
               </div>
-            </div>
+            )
           )}
         </div>
       ))}
