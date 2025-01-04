@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useGetCommentListQuery, useLikeCommentMutation } from "../services/socialApi";
+import {
+  useGetCommentListQuery,
+  useLikeCommentMutation,
+  usePostCommentMutation,
+} from "../services/socialApi";
 import "../social.css";
 import heartt from "../Frame.png";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -9,11 +13,14 @@ import { useDispatch } from "react-redux";
 import { showToast } from "../../../pages/profile/error/ErrorSlice";
 import { setAuthModel } from "../../../features/login/ModelSlice";
 
-const Comment: React.FC<any> = ({ list, isFetching }) => {
-  const [likeCmt, { isLoading: isLikeloading }] = useLikeCommentMutation(); 
+const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
+  const [panding, setpanding] = useState(false);
+  const [likeCmt, { isLoading: isLikeloading }] = useLikeCommentMutation();
+  const [postCmt, { isLoading: cmtLoading }] = usePostCommentMutation();
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
+  const [content, setContent] = useState("");
 
   const [likeStatus, setLikeStatus] = useState<{
     [key: string]: { liked: boolean; count: number };
@@ -38,7 +45,6 @@ const Comment: React.FC<any> = ({ list, isFetching }) => {
       dispatch(setAuthModel(true));
       return;
     }
-    console.log(postId, currentStatus.liked);
 
     try {
       const response = await likeCmt({
@@ -55,7 +61,7 @@ const Comment: React.FC<any> = ({ list, isFetching }) => {
         },
       }));
     } catch (error) {
-      console.log(error)
+      // console.log(error);
       dispatch(
         showToast({
           message: (error as any)?.data?.msg || "修改昵称失败",
@@ -65,10 +71,44 @@ const Comment: React.FC<any> = ({ list, isFetching }) => {
     }
   };
 
-  console.log(list);
+  const handlePostCmt = async () => {
+    const comment_id = 0;
+    if (content.length !== 0) {
+      setpanding(true)
+      try {
+        const response: any = await postCmt({
+          comment_id: comment_id,
+          post_id: post_id,
+          content: content,
+        }).unwrap();
+        if (response.data) {
+          setList((prevList: any) => [...prevList, response.data.data]);
+          // console.log([...list, response.data.data]);
+        }
+      } catch (error) {
+        // console.log(error);
+        dispatch(
+          showToast({
+            message: (error as any)?.data?.msg || "修改昵称失败",
+            type: "error",
+          })
+        );
+      }
+    }
+    setpanding(false)
+    setContent("");
+  };
 
   return (
     <div className="py-[12px] bg-[#161619]">
+      {panding && (
+        <div className="absolute top-0 left-0 z-[9999909] w-screen h-screen bg-black/30 flex justify-center items-center">
+          <div className=" w-[100px] h-[100px] bg-black/70 rounded-lg flex justify-center items-center">
+            <div className="w-5 h-5 border-[3px] border-t-orange-600 border-r-orange-500 border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+          </div>
+        </div>
+      )}
+
       <h1 className="text-white text-[16px] font-[400]">评论</h1>
       {list?.length === 0 && !isFetching ? (
         <div className="w-full flex flex-col justify-center items-center py-[40px] gap-[10px]">
@@ -208,6 +248,35 @@ const Comment: React.FC<any> = ({ list, isFetching }) => {
             ))}
           </div>
         </>
+      )}
+      {/* ment mal :) */}
+      {token ? (
+        <div className=" fixed py-[12px] flex justify-center bottom-0 left-0 bg-[#1F1F21] w-screen z-[999992]">
+          <div className=" mr-[10px] grid grid-cols-4 w-full px-[20px]">
+            <input
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="请输入内容"
+              className=" focus:outline-none text-white py-[12px] px-[16px] col-span-3 bg-white/10 w-full rounded-[100px]"
+              type="text"
+            />
+            <button
+              onClick={handlePostCmt}
+              className=" text-[#F54100] text-[16px] font-[600] leading-[16px]"
+            >
+              发送
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className=" fixed py-[12px] flex justify-center bottom-0 left-0 w-full z-[999992]">
+          <button
+            onClick={() => dispatch(setAuthModel(true))}
+            className=" m-[20px] py-[16px] rounded-[10px] bg-[#F54100] w-full"
+          >
+            登录发表评论
+          </button>
+        </div>
       )}
     </div>
   );

@@ -128,7 +128,21 @@ export const socialApi = createApi({
         method: "POST",
         body: convertToSecurePayload({
           status: is_like ? 1 : 0,
-          comment_id	:id,
+          comment_id: id,
+        }),
+      }),
+    }),
+    postComment: builder.mutation<
+      void,
+      { comment_id: any; post_id: any; content: any }
+    >({
+      query: ({ comment_id, post_id, content }) => ({
+        url: `post/comment/create`,
+        method: "POST",
+        body: convertToSecurePayload({
+          comment_id: comment_id,
+          post_id: post_id,
+          content: content,
         }),
       }),
     }),
@@ -143,4 +157,5 @@ export const {
   useLikePostMutation,
   useGetCommentListQuery,
   useLikeCommentMutation,
+  usePostCommentMutation
 } = socialApi;

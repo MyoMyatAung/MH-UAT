@@ -35,6 +35,7 @@ const Social_details: React.FC<any> = ({
      
     }
   }, [data]);
+  // console.log(post)
 
 
   const fetchMoreDataCmt = () => {
@@ -347,7 +348,7 @@ const Social_details: React.FC<any> = ({
           </div>
         </div>
         {/* comment */}
-       <Comment list={list} isFetching={hasMore}/>
+       <Comment setList={setList} post_id={post.post_id} list={list} isFetching={hasMore}/>
 
        <InfiniteScroll
               // className=" h-[100px]"
