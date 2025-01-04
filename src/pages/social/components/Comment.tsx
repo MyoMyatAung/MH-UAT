@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   useGetCommentListQuery,
   useLikeCommentMutation,
@@ -21,6 +21,11 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
   const [content, setContent] = useState("");
+  const inputRef = useRef<any>();
+  const [isRp, setIsRp] = useState(false);
+  const [curId, setCurId] = useState();
+  const [rpList, setRplist] = useState<any>();
+  const [smList,setSmList] = useState<any>()
 
   const [likeStatus, setLikeStatus] = useState<{
     [key: string]: { liked: boolean; count: number };
@@ -28,6 +33,8 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let newRpList: any = '';
+
     const newFollowStatus: { [key: string]: boolean } = {};
     const newLikeStatus: { [key: string]: { liked: boolean; count: number } } =
       {};
@@ -36,9 +43,18 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
         liked: post.is_liked,
         count: post.comment_like_count,
       };
+      if (post.replies) {
+        newRpList = post.replies
+      }
     });
     setLikeStatus(newLikeStatus);
-  }, [list]);
+    setRplist(newRpList);
+    if(rpList?.list){
+      setSmList(rpList.list)
+    }
+  }, [list,rpList,smList]);
+
+  console.log("replo",smList)
 
   const handleLikeChange = async (postId: any, currentStatus: any) => {
     if (!token) {
@@ -71,10 +87,50 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
     }
   };
 
+  const replyhandler = async (id: any) => {
+    if (!token) {
+      dispatch(setAuthModel(true));
+    }
+    setIsRp(true);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+    setCurId(id);
+  };
+
+  const handleReplyCmt = async () => {
+    if (content.length !== 0 && curId) {
+      console.log(curId, content);
+      try {
+        setpanding(true);
+        const response: any = await postCmt({
+          comment_id: curId,
+          post_id: post_id,
+          content: content,
+        }).unwrap();
+        console.log(response);
+        if (response.data) {
+          setSmList((prevList: any) => [...prevList, response.data.data]);
+          // console.log([...list, response.data.data]);
+        }
+      } catch (error) {
+        console.log(error);
+        dispatch(
+          showToast({
+            message: (error as any)?.data?.msg || "修改昵称失败",
+            type: "error",
+          })
+        );
+      }
+    }
+    setpanding(false);
+    setContent("");
+  };
+
   const handlePostCmt = async () => {
     const comment_id = 0;
     if (content.length !== 0) {
-      setpanding(true)
+      setpanding(true);
       try {
         const response: any = await postCmt({
           comment_id: comment_id,
@@ -95,10 +151,10 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
         );
       }
     }
-    setpanding(false)
+    setpanding(false);
     setContent("");
   };
-
+  console.log(list);
   return (
     <div className="py-[12px] bg-[#161619]">
       {panding && (
@@ -211,7 +267,10 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
                     {cmt.content}
                   </h1>
                   <div className="flex justify-between items-center">
-                    <button className="px-[12px] py-[8px] bg-[#2B2B2B] rounded-[100px] text-white text-[12px] font-[400]">
+                    <button
+                      onClick={() => replyhandler(cmt.id)}
+                      className="px-[12px] py-[8px] bg-[#2B2B2B] rounded-[100px] text-white text-[12px] font-[400]"
+                    >
                       回复
                     </button>
                     <p
@@ -254,18 +313,28 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
         <div className=" fixed py-[12px] flex justify-center bottom-0 left-0 bg-[#1F1F21] w-screen z-[999992]">
           <div className=" mr-[10px] grid grid-cols-4 w-full px-[20px]">
             <input
+              ref={inputRef}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="请输入内容"
               className=" focus:outline-none text-white py-[12px] px-[16px] col-span-3 bg-white/10 w-full rounded-[100px]"
               type="text"
             />
-            <button
-              onClick={handlePostCmt}
-              className=" text-[#F54100] text-[16px] font-[600] leading-[16px]"
-            >
-              发送
-            </button>
+            {isRp ? (
+              <button
+                onClick={handleReplyCmt}
+                className=" text-[#F54100] text-[16px] font-[600] leading-[16px]"
+              >
+                发送
+              </button>
+            ) : (
+              <button
+                onClick={handlePostCmt}
+                className=" text-[#F54100] text-[16px] font-[600] leading-[16px]"
+              >
+                发送
+              </button>
+            )}
           </div>
         </div>
       ) : (
