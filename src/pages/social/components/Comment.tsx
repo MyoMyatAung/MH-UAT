@@ -1,17 +1,74 @@
 import React, { useEffect, useState } from "react";
-import { useGetCommentListQuery } from "../services/socialApi";
+import { useGetCommentListQuery, useLikeCommentMutation } from "../services/socialApi";
 import "../social.css";
 import heartt from "../Frame.png";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "../../../pages/search/components/Loader";
 import nc from "../Vector.png";
+import { useDispatch } from "react-redux";
+import { showToast } from "../../../pages/profile/error/ErrorSlice";
+import { setAuthModel } from "../../../features/login/ModelSlice";
 
 const Comment: React.FC<any> = ({ list, isFetching }) => {
+  const [likeCmt, { isLoading: isLikeloading }] = useLikeCommentMutation(); 
+  const isLoggedIn = localStorage.getItem("authToken");
+  const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
+  const token = parsedLoggedIn?.data?.access_token;
 
-//   console.log(list)
+  const [likeStatus, setLikeStatus] = useState<{
+    [key: string]: { liked: boolean; count: number };
+  }>({});
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const newFollowStatus: { [key: string]: boolean } = {};
+    const newLikeStatus: { [key: string]: { liked: boolean; count: number } } =
+      {};
+    list.forEach((post: any) => {
+      newLikeStatus[post.id] = {
+        liked: post.is_liked,
+        count: post.comment_like_count,
+      };
+    });
+    setLikeStatus(newLikeStatus);
+  }, [list]);
+
+  const handleLikeChange = async (postId: any, currentStatus: any) => {
+    if (!token) {
+      dispatch(setAuthModel(true));
+      return;
+    }
+    console.log(postId, currentStatus.liked);
+
+    try {
+      const response = await likeCmt({
+        id: postId,
+        is_like: !currentStatus.liked,
+      }).unwrap();
+      setLikeStatus((prev) => ({
+        ...prev,
+        [postId]: {
+          liked: !currentStatus.liked,
+          count: currentStatus.liked
+            ? +currentStatus.count - 1
+            : +currentStatus.count + 1,
+        },
+      }));
+    } catch (error) {
+      console.log(error)
+      dispatch(
+        showToast({
+          message: (error as any)?.data?.msg || "修改昵称失败",
+          type: "error",
+        })
+      );
+    }
+  };
+
+  console.log(list);
 
   return (
-    <div className="py-[12px] bg-[#161619]" >
+    <div className="py-[12px] bg-[#161619]">
       <h1 className="text-white text-[16px] font-[400]">评论</h1>
       {list?.length === 0 && !isFetching ? (
         <div className="w-full flex flex-col justify-center items-center py-[40px] gap-[10px]">
@@ -117,9 +174,33 @@ const Comment: React.FC<any> = ({ list, isFetching }) => {
                     <button className="px-[12px] py-[8px] bg-[#2B2B2B] rounded-[100px] text-white text-[12px] font-[400]">
                       回复
                     </button>
-                    <p className="text-white/40 text-[12px] font-[400] leading-[14px] flex justify-center items-center gap-[2px]">
-                      <img className="w-[20px] h-[20px]" src={heartt} alt="" />
-                      {cmt.comment_like_count}万
+                    <p
+                      onClick={() =>
+                        handleLikeChange(cmt.id, likeStatus[cmt.id])
+                      }
+                      className="text-white/40 text-[12px] font-[400] leading-[14px] flex justify-center items-center gap-[2px]"
+                    >
+                      {likeStatus[cmt.id]?.liked ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="17"
+                          viewBox="0 0 18 17"
+                          fill="none"
+                        >
+                          <path
+                            d="M12.044 0.697327C15.2682 0.697327 17.3346 3.28274 17.3346 6.76233C17.3346 9.46253 14.8913 12.4363 10.0773 15.7777C9.76122 15.9967 9.38583 16.114 9.0013 16.114C8.61677 16.114 8.24139 15.9967 7.92526 15.7777C3.1113 12.4363 0.667969 9.46253 0.667969 6.76233C0.667969 3.28274 2.73443 0.697327 5.95859 0.697327C7.12297 0.697327 7.91276 1.1042 9.0013 2.02733C10.0901 1.10441 10.8796 0.697327 12.044 0.697327Z"
+                            fill="#FF0051"
+                          />
+                        </svg>
+                      ) : (
+                        <img
+                          className="w-[20px]  h-[20px]"
+                          src={heartt}
+                          alt=""
+                        />
+                      )}
+                      {likeStatus[cmt.id]?.count}万
                     </p>
                   </div>
                 </div>

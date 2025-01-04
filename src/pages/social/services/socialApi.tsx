@@ -119,8 +119,18 @@ export const socialApi = createApi({
       }),
     }),
     getCommentList: builder.query({
-      query: ({post_id,page}) =>
+      query: ({ post_id, page }) =>
         convertToSecureUrl(`post/comment/list?page=${page}&post_id=${post_id}`),
+    }),
+    likeComment: builder.mutation<void, { id: any; is_like: any }>({
+      query: ({ is_like, id }) => ({
+        url: `post/comment/reaction`,
+        method: "POST",
+        body: convertToSecurePayload({
+          status: is_like ? 1 : 0,
+          comment_id	:id,
+        }),
+      }),
     }),
   }),
 });
@@ -131,5 +141,6 @@ export const {
   useGetFollowPostsQuery,
   useFollowUserMutation,
   useLikePostMutation,
-  useGetCommentListQuery
+  useGetCommentListQuery,
+  useLikeCommentMutation,
 } = socialApi;

@@ -41,7 +41,7 @@ const Social_details: React.FC<any> = ({
     if (hasMore) {
       setPage((prevPage) => prevPage + 1);
     }
-    console.log("Fetching more data...", page);
+    // console.log("Fetching more data...", page);
   };
 //   console.log(post);
   useEffect(() => {
@@ -56,13 +56,13 @@ const Social_details: React.FC<any> = ({
     if(scrollTop + clientHeight === scrollHeight && hasMore) {
       setPage(page+1);
     }
-    console.log('next', scrollTop, scrollHeight, clientHeight);
+    // console.log('next', scrollTop, scrollHeight, clientHeight);
   }
 
   return (
-    <div className="inset-0 px-[10px] fixed w-screen top-0 h-screen bg-background overflow-y-scroll z-[99]" onScroll={(event)=>handleScroll(event)}>
+    <div className="inset-0 px-[10px] fixed w-screen top-0 h-screen bg-background overflow-y-scroll z-[99999]" onScroll={(event)=>handleScroll(event)}>
       {/* header */}
-      <div className="fixed bg-background z-[99] w-screen top-0 flex py-[10px] justify-between items-center">
+      <div className="fixed bg-background z-[99] w-full top-0 grid grid-cols-3 py-[10px] justify-betwee items-cente">
         <span onClick={() => setShowDetail(false)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +77,7 @@ const Social_details: React.FC<any> = ({
             />
           </svg>
         </span>
-        <h1 className=" text-white text-[18px] font-[600] leading-[20px]">
+        <h1 className=" text-white text-[18px] text-center font-[600] leading-[20px]">
           详情
         </h1>
         <div className=""></div>
@@ -355,12 +355,12 @@ const Social_details: React.FC<any> = ({
               next={fetchMoreDataCmt}
               hasMore={hasMore}
               loader={
-                <div className="flex bg-background justify-center items-center w-full py-5">
+                <div className="flex bg-background justify-center items-center w-full pb-32">
                   <Loader />
                 </div>
               }
               endMessage={
-                <div className="flex bg-background justify-center items-center w-full py-5">
+                <div className="flex bg-background justify-center items-center w-full pb-32">
                   <p style={{ textAlign: "center" }}>
                     <b className=" text-white/60">没有更多评论</b>
                   </p>
