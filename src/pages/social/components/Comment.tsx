@@ -12,6 +12,7 @@ import nc from "../Vector.png";
 import { useDispatch } from "react-redux";
 import { showToast } from "../../../pages/profile/error/ErrorSlice";
 import { setAuthModel } from "../../../features/login/ModelSlice";
+import Reply from "./Reply";
 
 const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
   const [panding, setpanding] = useState(false);
@@ -24,16 +25,23 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
   const inputRef = useRef<any>();
   const [isRp, setIsRp] = useState(false);
   const [curId, setCurId] = useState();
-  const [rpList, setRplist] = useState<any>();
-  const [smList,setSmList] = useState<any>()
+  const [showReplies, setShowReplies] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
+  const toggleReplyVisibility = (commentId: string) => {
+    setShowReplies((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
+  };
   const [likeStatus, setLikeStatus] = useState<{
     [key: string]: { liked: boolean; count: number };
   }>({});
   const dispatch = useDispatch();
 
   useEffect(() => {
-    let newRpList: any = '';
+    let newRpList: any = "";
 
     const newFollowStatus: { [key: string]: boolean } = {};
     const newLikeStatus: { [key: string]: { liked: boolean; count: number } } =
@@ -43,18 +51,11 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
         liked: post.is_liked,
         count: post.comment_like_count,
       };
-      if (post.replies) {
-        newRpList = post.replies
-      }
     });
     setLikeStatus(newLikeStatus);
-    setRplist(newRpList);
-    if(rpList?.list){
-      setSmList(rpList.list)
-    }
-  }, [list,rpList,smList]);
+  }, [list]);
 
-  console.log("replo",smList)
+  // console.log("replo",smList)
 
   const handleLikeChange = async (postId: any, currentStatus: any) => {
     if (!token) {
@@ -110,7 +111,7 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
         }).unwrap();
         console.log(response);
         if (response.data) {
-          setSmList((prevList: any) => [...prevList, response.data.data]);
+          // setSmList((prevList: any) => [...prevList, response.data.data]);
           // console.log([...list, response.data.data]);
         }
       } catch (error) {
@@ -154,11 +155,10 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
     setpanding(false);
     setContent("");
   };
-  console.log(list);
   return (
     <div className="py-[12px] bg-[#161619]">
       {panding && (
-        <div className="absolute top-0 left-0 z-[9999909] w-screen h-screen bg-black/30 flex justify-center items-center">
+        <div className="absolute top-0 left-0 z-[9999909] w-screen h-screen bg-bla flex justify-center items-center">
           <div className=" w-[100px] h-[100px] bg-black/70 rounded-lg flex justify-center items-center">
             <div className="w-5 h-5 border-[3px] border-t-orange-600 border-r-orange-500 border-b-transparent border-l-transparent rounded-full animate-spin"></div>
           </div>
@@ -302,6 +302,24 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
                       {likeStatus[cmt.id]?.count}万
                     </p>
                   </div>
+                  {cmt.replies.replies_count !== 0 && (
+                    <div className="">
+                      <span
+                        onClick={() => toggleReplyVisibility(cmt.id)}
+                        className={`text-white/50 ${showReplies[cmt.id] ? "hidden" : "block"}`}
+                      >
+                        {" "}
+                        --- view {cmt.replies.replies_count} replies
+                      </span>
+                      {showReplies[cmt.id] && (
+                        <Reply
+                          cmt={cmt}
+                          handleLikeChange={handleLikeChange}
+                          likeStatus={likeStatus}
+                        />
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
