@@ -1,23 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import heartt from "../Frame.png";
 
 interface ReplyProps {
-  cmt: any;
+//   cmt: any;
   handleLikeChange: any;
   likeStatus: any;
+  rplist: any;
+  setrpList: any;
 }
 
-const Reply: React.FC<ReplyProps> = ({ cmt, handleLikeChange, likeStatus }) => {
-    console.log(cmt)
+const Reply: React.FC<ReplyProps> = ({
+  handleLikeChange,
+  likeStatus,
+  rplist,
+  setrpList,
+}) => {
+// console.log(rplist)
   return (
     <div className=" flex flex-col gap-[20px] w-full pt-[10px]">
-      {cmt.replies.list.map((tt: any) => (
+      {rplist.map((tt: any) => (
         <div key={tt.id} className="flex gap-[10px]">
-
-          {cmt.user.avatar ? (
+          {tt.user.avatar ? (
             <img
               className="w-[40px] h-[40px] rounded-full border border-[#4A4A4A]"
-              src={cmt.user?.avatar}
+              src={tt.user?.avatar}
               alt=""
             />
           ) : (
@@ -94,7 +100,7 @@ const Reply: React.FC<ReplyProps> = ({ cmt, handleLikeChange, likeStatus }) => {
               </div>
             </div>
             <h1 className="text-white text-[14px] font-[400] leading-[20px]">
-              {cmt.content}
+              {tt.content}
             </h1>
             <div className="flex justify-between items-center">
               {/* <button
@@ -106,9 +112,9 @@ const Reply: React.FC<ReplyProps> = ({ cmt, handleLikeChange, likeStatus }) => {
               <div className=""></div>
               <p
                 onClick={() => handleLikeChange(tt.id, likeStatus[tt.id])}
-                className="text-white/40 hidden text-[12px] font-[400] leading-[14px] flex justify-center items-center gap-[2px]"
+                className="text-white/40 hidden text-[12px] font-[400] leading-[14px] fle justify-center items-center gap-[2px]"
               >
-                {likeStatus[cmt.id]?.liked ? (
+                {likeStatus[tt.id]?.liked ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"

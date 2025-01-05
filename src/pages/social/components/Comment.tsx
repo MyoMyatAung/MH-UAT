@@ -28,6 +28,8 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
   const [showReplies, setShowReplies] = useState<{ [key: string]: boolean }>(
     {}
   );
+  const [rplist,setrpList] = useState<any[]>([]);
+
 
   const toggleReplyVisibility = (commentId: string) => {
     setShowReplies((prev) => ({
@@ -109,13 +111,12 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
           post_id: post_id,
           content: content,
         }).unwrap();
-        console.log(response);
+        // console.log(response);
         if (response.data) {
-          // setSmList((prevList: any) => [...prevList, response.data.data]);
-          // console.log([...list, response.data.data]);
+          setrpList((prevList: any) => [...prevList, response.data.data]);
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         dispatch(
           showToast({
             message: (error as any)?.data?.msg || "修改昵称失败",
@@ -313,7 +314,8 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
                       </span>
                       {showReplies[cmt.id] && (
                         <Reply
-                          cmt={cmt}
+                          rplist={cmt.replies.list}
+                          setrpList={setrpList}
                           handleLikeChange={handleLikeChange}
                           likeStatus={likeStatus}
                         />
