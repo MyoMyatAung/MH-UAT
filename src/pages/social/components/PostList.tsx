@@ -558,7 +558,7 @@ const PostList = ({
                 </button>
 
                 <button
-                                // onClick={() => handleShowDetail(post)}
+                                onClick={() => handleShowDetail(post)}
 
                   // onClick={() => showCreatedTimeHandler()}
                   className="flex -mt-[2px] items-center gap-x-2"
