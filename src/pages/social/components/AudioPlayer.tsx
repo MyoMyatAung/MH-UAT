@@ -108,7 +108,7 @@ const AudioPlayer = ({
           {/* Play/Pause Button */}
           <button
             onClick={togglePlay}
-            className="w-10 h-10 flex items-center justify-center bg-[#4c4c4e] rounded-full focus:outline-none"
+            className="w-10 h-10 flex items-center justify-center bg-[#4c4c4e] rounded-full focus:outline-none min-w-10"
           >
             {isPlaying ? (
               <svg
@@ -132,10 +132,10 @@ const AudioPlayer = ({
               </svg>
             )}
           </button>
-          <div className="flex flex-col flex-1">
-            <div className="text-sm font-medium truncate">{title}</div>
+          <div className="flex flex-col flex-1 w-full">
+            <div className="text-sm font-medium truncate w-full -mr-5">{title}</div>
             {/* Progress Bar */}
-            <div className="w-full">
+            <div>
               <input
                 type="range"
                 className="progress-bar1"
