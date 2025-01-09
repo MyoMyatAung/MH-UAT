@@ -268,7 +268,7 @@ const DetailPage: React.FC = () => {
   
         // Send the next episode details to the native bridge
         (window as any).webkit.messageHandlers.jsBridge.postMessage({
-          eventName: "playForNextEpisode",
+          eventName: "playUrlForNextEpisode",
           value: nextEpisode.play_url,
         });
       }
