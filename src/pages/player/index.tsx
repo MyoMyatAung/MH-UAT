@@ -296,6 +296,28 @@ const DetailPage: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Define the message handler when the component is mounted
+    const messageHandler = (event: any) => {
+      const data = event.data;
+  
+      if (data.eventName === "nativePlayingUrl") {
+        // Handle the URL received from the native side
+        console.log("Ready to play next Episode.");
+        autoPlayNextEpisode();
+        // Perform additional logic, like playing a media or updating the state
+      }
+    };
+  
+    // Listen to the 'message' event
+    window.addEventListener("message", messageHandler);
+  
+    return () => {
+      // Clean up the listener when the component is unmounted
+      window.removeEventListener("message", messageHandler);
+    };
+  }, []);
+  
   const handleChangeSource = async (nextSource: any) => {
     if (nextSource && nextSource.code && id) {
       setIsPlayerLoading(true);
