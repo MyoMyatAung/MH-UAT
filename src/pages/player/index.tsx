@@ -276,47 +276,6 @@ const DetailPage: React.FC = () => {
       console.warn("JS Bridge is not available in the current environment.");
     }
   };
-
-  const nativePlayingUrl = () => {
-    console.log("Received URL from native:");
-    // Now you can use the URL, for example, updating state or making API calls
-    autoPlayNextEpisode();
-  };
-
-  useEffect(() => {
-    // Adding the function to the global window object so it's accessible from the native code
-    (window as any).nativePlayingUrl = nativePlayingUrl;
-
-    // Optional: Log a message to confirm function setup
-    console.log("nativePlayingUrl function is ready for native to call.");
-
-    // Clean up when the component is unmounted
-    return () => {
-      delete (window as any).nativePlayingUrl;
-    };
-  }, []);
-
-  useEffect(() => {
-    // Define the message handler when the component is mounted
-    const messageHandler = (event: any) => {
-      const data = event.data;
-  
-      if (data.eventName === "nativePlayingUrl") {
-        // Handle the URL received from the native side
-        console.log("Ready to play next Episode.");
-        autoPlayNextEpisode();
-        // Perform additional logic, like playing a media or updating the state
-      }
-    };
-  
-    // Listen to the 'message' event
-    window.addEventListener("message", messageHandler);
-  
-    return () => {
-      // Clean up the listener when the component is unmounted
-      window.removeEventListener("message", messageHandler);
-    };
-  }, []);
   
   const handleChangeSource = async (nextSource: any) => {
     if (nextSource && nextSource.code && id) {
