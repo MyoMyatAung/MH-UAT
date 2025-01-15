@@ -762,7 +762,7 @@ const PostList = ({
                     {likeStatus[post.post_id]?.count}
                   </button>
 
-                  <button
+                  {/* <button
                     // onClick={() => handleShowDetail(post)}
 
                     // onClick={() => showCreatedTimeHandler()}
@@ -781,7 +781,7 @@ const PostList = ({
                       />
                     </svg>{" "}
                     {post.comment_count}
-                  </button>
+                  </button> */}
 
                   <button
                     className="flex items-center gap-x-2"
