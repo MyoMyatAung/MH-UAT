@@ -320,7 +320,7 @@ const PostList = ({
       {!showDetail && (
         <>
           {data.map((post: any, index: number) => (
-            <div
+            post.file_type !== "audio" && <div
               key={index}
               className="bg-background mt-2 rounded-lg p-0 text-white"
             >
