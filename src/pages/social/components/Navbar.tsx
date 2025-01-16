@@ -194,22 +194,8 @@ const Navbar = () => {
   const [activeTab, setActiveTab] = useState(2);
   const activeTabRef = useRef(activeTab); // Create a ref for activeTab
   activeTabRef.current = activeTab; // Update the ref whenever activeTab changes
-  // const { data } = useGetHeaderTopicsQuery();
-  const social_menu = [
-    {
-      text: "关注",
-      path: "/followed/post/list",
-    },
-    {
-      text: "推荐",
-      path: "/post/recommend/list",
-    },
-    {
-      text: "最新",
-      path: "/post/list",
-    },
-  ];
-  // const social_menu = data?.data?.social_menu?.length > 0 ? data?.data?.social_menu : [
+  const { data } = useGetHeaderTopicsQuery();
+  // const social_menu = [
   //   {
   //     text: "关注",
   //     path: "/followed/post/list",
@@ -223,6 +209,23 @@ const Navbar = () => {
   //     path: "/post/list",
   //   },
   // ];
+  const social_menu =
+    data?.data?.social_menu?.length > 0
+      ? data?.data?.social_menu
+      : [
+          {
+            text: "关注",
+            path: "/followed/post/list",
+          },
+          {
+            text: "推荐",
+            path: "/post/recommend/list",
+          },
+          {
+            text: "最新",
+            path: "/post/list",
+          },
+        ];
 
   const [page, setPage] = useState(1);
   const [dataList, setDataList] = useState<any[]>([]);
