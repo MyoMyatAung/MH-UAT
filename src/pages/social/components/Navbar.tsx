@@ -362,7 +362,7 @@ const Navbar = () => {
               {social_menu?.map((tab: any, index: any) => (
                 <button
                   key={index}
-                  className={`inline-flex whitespace-nowrap social_nav transition-all duration-200 ease-in-out relative hover:text-white ${
+                  className={`inline-flex whitespace-nowrap social_nav relative hover:text-white ${
                     activeTab === index
                       ? "text-white text-[24px]"
                       : "text-[#FFFFFFB3] text-[18px]"
