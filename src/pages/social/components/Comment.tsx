@@ -28,8 +28,7 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
   const [showReplies, setShowReplies] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const [rplist,setrpList] = useState<any[]>([]);
-
+  const [rplist, setrpList] = useState<any[]>([]);
 
   const toggleReplyVisibility = (commentId: string) => {
     setShowReplies((prev) => ({
@@ -300,17 +299,19 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
                           alt=""
                         />
                       )}
-                      {likeStatus[cmt.id]?.count}万
+                      {likeStatus[cmt.id]?.count}
                     </p>
                   </div>
                   {cmt.replies.replies_count !== 0 && (
                     <div className="">
                       <span
                         onClick={() => toggleReplyVisibility(cmt.id)}
-                        className={`text-white/50 ${showReplies[cmt.id] ? "hidden" : "block"}`}
+                        className={`text-white/50 ${
+                          showReplies[cmt.id] ? "hidden" : "block"
+                        }`}
                       >
                         {" "}
-                        --- view {cmt.replies.replies_count} replies
+                        --- 查看 {cmt.replies.replies_count} 条回复
                       </span>
                       {showReplies[cmt.id] && (
                         <Reply
