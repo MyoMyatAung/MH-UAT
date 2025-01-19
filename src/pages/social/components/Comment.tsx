@@ -311,7 +311,7 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
                         }`}
                       >
                         {" "}
-                        --- 查看 {cmt.replies.replies_count} 条回复
+                        --- 展开 {cmt.replies.replies_count} 条评论
                       </span>
                       {showReplies[cmt.id] && (
                         <Reply
