@@ -56,8 +56,6 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
     setLikeStatus(newLikeStatus);
   }, [list]);
 
-  // console.log("replo",smList)
-
   const handleLikeChange = async (postId: any, currentStatus: any) => {
     if (!token) {
       dispatch(setAuthModel(true));
@@ -110,12 +108,11 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
           post_id: post_id,
           content: content,
         }).unwrap();
-        // console.log(response);
+
         if (response.data) {
           setrpList((prevList: any) => [...prevList, response.data.data]);
         }
       } catch (error) {
-        // console.log(error);
         dispatch(
           showToast({
             message: (error as any)?.data?.msg || "修改昵称失败",
@@ -140,7 +137,6 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
         }).unwrap();
         if (response.data) {
           setList((prevList: any) => [...prevList, response.data.data]);
-          // console.log([...list, response.data.data]);
         }
       } catch (error) {
         // console.log(error);
