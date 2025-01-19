@@ -78,7 +78,7 @@ const Social_details: React.FC<any> = ({
   };
   return (
     <div
-      className="inset-0 px-[10px] fixed w-screen top-0 h-scree bg-background overflow-y-scroll z-[99999]"
+      className="inset-0 px-[10px] fixed w-screen top-0 h-screen bg-background overflow-y-scroll z-[99999]"
       onScroll={(event) => handleScroll(event)}
     >
       {/* header */}
