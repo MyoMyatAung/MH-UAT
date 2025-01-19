@@ -28,8 +28,7 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
   const [showReplies, setShowReplies] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const [rplist,setrpList] = useState<any[]>([]);
-
+  const [rplist, setrpList] = useState<any[]>([]);
 
   const toggleReplyVisibility = (commentId: string) => {
     setShowReplies((prev) => ({
@@ -56,8 +55,6 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
     });
     setLikeStatus(newLikeStatus);
   }, [list]);
-
-  // console.log("replo",smList)
 
   const handleLikeChange = async (postId: any, currentStatus: any) => {
     if (!token) {
@@ -111,12 +108,11 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
           post_id: post_id,
           content: content,
         }).unwrap();
-        // console.log(response);
+
         if (response.data) {
           setrpList((prevList: any) => [...prevList, response.data.data]);
         }
       } catch (error) {
-        // console.log(error);
         dispatch(
           showToast({
             message: (error as any)?.data?.msg || "修改昵称失败",
@@ -141,7 +137,6 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
         }).unwrap();
         if (response.data) {
           setList((prevList: any) => [...prevList, response.data.data]);
-          // console.log([...list, response.data.data]);
         }
       } catch (error) {
         // console.log(error);
@@ -307,7 +302,9 @@ const Comment: React.FC<any> = ({ list, isFetching, post_id, setList }) => {
                     <div className="">
                       <span
                         onClick={() => toggleReplyVisibility(cmt.id)}
-                        className={`text-white/50 ${showReplies[cmt.id] ? "hidden" : "block"}`}
+                        className={`text-white/50 ${
+                          showReplies[cmt.id] ? "hidden" : "block"
+                        }`}
                       >
                         {" "}
                         --- view {cmt.replies.replies_count} replies
