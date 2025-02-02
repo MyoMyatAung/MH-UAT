@@ -9,7 +9,7 @@ interface AdItem {
     image?: string;
   };
   remarks?: string;
-  sort: any;
+  sort?: number;
 }
 
 interface NewAdsProps {
