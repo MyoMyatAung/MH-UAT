@@ -28,7 +28,6 @@ const NewAds: React.FC<NewAdsProps> = ({ section, fromMovie = false }) => {
       setCur(sortedData as AdItem[]);
     }
   }, [data, section]);
-  // console.log(" sorted",cur);
 
   const AdItemComponent = ({ item }: { item: AdItem }) => {
     const imageUrl = item.data?.image || "";
