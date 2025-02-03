@@ -234,7 +234,7 @@ const Header: FC = () => {
         <div className="flex-1 relative">
           <input
             onFocus={() => navigate("/search_overlay")}
-            placeholder={randomWord || "null"}
+            placeholder={randomWord || ""}
             type="text"
             className="rounded-[18.138px] home-input py-[8.062px] px-[16.123px] w-full text-white outline-none"
           />
