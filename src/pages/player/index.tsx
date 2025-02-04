@@ -83,6 +83,7 @@ const DetailPage: React.FC = () => {
     }
   };
 
+
   useEffect(() => {
     if (id) {
       setWholePageError(false);
@@ -325,6 +326,8 @@ const DetailPage: React.FC = () => {
 
   useEffect(() => {
     const handleIosEvent = (event: CustomEvent) => {
+      const index = event.detail?.index || 0;
+      setSelectedSource(index);
       const nextSource = { code: event.detail.code };
       handleChangeSource(nextSource);
     };
@@ -341,7 +344,7 @@ const DetailPage: React.FC = () => {
   useEffect(() => {
     const handleIosEvent = (event: CustomEvent) => {
       if(event?.detail?.episode_id && episodes?.length > 0) {
-        const index = episodes.findIndex((x: Episode)=> x.episode_id === event.detail.episode_id);
+        const index = episodes.findIndex((x: Episode)=> x.episode_id == event.detail.episode_id);
         const episode = index >= 0 ? episodes[index] : episodes[0];
         handleEpisodeSelect(episode);
       }
@@ -354,8 +357,8 @@ const DetailPage: React.FC = () => {
     return () => {
       window.removeEventListener("getEpisodeId_iOS", handleIosEvent as EventListener);
     };
-  }, []);
-  
+  }, [episodes]);
+
   const refresh = () => {
     setIsPlayerLoading(true);
     setWholePageError(false);
