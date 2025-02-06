@@ -203,7 +203,7 @@ export const getCodeForgotPass = async ({ send_type, session_token }: any) => {
     );
     // console.log(data)
   } catch (error) {
-    throw error
+    throw error;
   }
 };
 
@@ -454,4 +454,20 @@ export const handleSocialSignUpCredentials = async (
   } catch (error) {
     console.error("Error during social sign up:", error);
   }
+};
+
+export const getCurrentVersion = async ({ type, current }: any) => {
+  const url = convertToSecureUrl(
+    `${process.env.REACT_APP_API_URL}/app/check_update?type=${type}&current=${current}`
+  );
+
+  const url2 = `https://cc3e497d.qdhgtch.com:2345/api/v1/app/check_update?type=${type}&current=${current}`
+
+  const { data } = await axios.get(url2);
+  return data;
+
+  // if(data){
+  //   const response = await decryptWithAes(data)
+  //   return response
+  // }
 };
