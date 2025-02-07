@@ -30,7 +30,6 @@ export const useGetHeaderTopicsQuery = () => {
 
       // **Step 3: Update Cache & UI**
       sessionStorage.setItem("headerTopics", JSON.stringify(newData));
-      console.log('useGetHeaderTopicsQuery is=>', newData);
       setData(newData);
     } catch (err) {
       console.error("Failed to fetch header topics:", err);
@@ -75,7 +74,6 @@ export const useGetAdsQuery = () => {
       // **Step 2: Fetch Fresh Data in the Background**
       const response = await getAdsData();
       const newData = response.data ? response : await decryptWithAes(response);
-      console.log('useGetAdsQuery is=>', newData)
       // **Step 3: Update Cache & UI**
       localStorage.setItem("AdsQuery", JSON.stringify(newData));
       setConfigData(newData);

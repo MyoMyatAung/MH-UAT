@@ -186,11 +186,9 @@ export const getTokenPass = async ({ email, graphicKey }: any) => {
         `${process.env.REACT_APP_API_URL}/user/forget/get_token?username=${email}&captcha=${graphicKey}`
       )
     );
-    console.log(data);
     return decryptWithAes(data);
   } catch (error) {
     throw error;
-    console.log(error);
   }
 };
 
@@ -231,7 +229,7 @@ export const check_captchaRegister = async (
     }
     return newCap.data.key;
   } catch (error) {
-    console.log("cap err", error);
+    // console.log("cap err", error);
     return error;
   }
 };

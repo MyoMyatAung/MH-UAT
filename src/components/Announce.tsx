@@ -11,7 +11,6 @@ interface AnnounceProps {
 
 const Announce: React.FC<AnnounceProps> = ({ setShowNotice }) => {
   const {activeNav} = useSelector((state: any) => state.explore);
-  console.log(activeNav);
   const { data, isLoading, isFetching } = useGetNotificationQuery(); // Fetch data from API
   const { data: config } = useGetHeaderTopicsQuery();
   const categories = data?.data || [];
@@ -48,7 +47,6 @@ const Announce: React.FC<AnnounceProps> = ({ setShowNotice }) => {
   }, [data]);
 
   const handleCategoryClick = (categoryId: number) => {
-    console.log(categoryId);
     setSelectedCategory(categoryId);
     const selectedCategoryData = categories.find(
       (cat: any) => cat.id === categoryId

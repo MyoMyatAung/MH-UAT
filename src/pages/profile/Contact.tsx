@@ -29,23 +29,19 @@ const Contact = () => {
 
   const about = data?.data?.about;
 
-  const getVV = async () => {
-    const { data } = await getCurrentVersion({
-      type: "ios",
-      current: 0,
-    });
-    console.log(data)
-    if (data) {
-      const name = data?.data?.code;
-      const str = name.toString(); 
-      const formatted = `${str[0]}.${str[1]}.${str[2]}.${str[3]}`;
-      setVname(formatted);
-    }
-  };
-
-  useEffect(() => {
-    getVV();
-  }, []);
+  // const getVV = async () => {
+  //   const { data } = await getCurrentVersion({
+  //     type: "ios",
+  //     current: 0,
+  //   });
+  //   console.log(data)
+  //   if (data) {
+  //     const name = data?.data?.code;
+  //     const str = name.toString(); 
+  //     const formatted = `${str[0]}.${str[1]}.${str[2]}.${str[3]}`;
+  //     setVname(formatted);
+  //   }
+  // };
 
   return (
     <div>
