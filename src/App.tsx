@@ -247,7 +247,7 @@ const App: React.FC = () => {
             {/* <BannerAds /> */}
             {/* Conditionally render Header */}
             {!hideHeaderFooter && !hideHeader && <Header />}
-            {showNotice && notiData && <Announce setShowNotice={setShowNotice} />}
+            {/* {showNotice && notiData && <Announce setShowNotice={setShowNotice} config={con}/>} */}
 
             <div className="flex-grow">
               <Suspense
