@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useGetNotificationQuery } from "../pages/profile/services/profileApi";
 // import { useGetHeaderTopicsQuery } from "../services/helperService";
 import Content from "./Content";
 import "../pages/profile/profile.css";
 import { useSelector } from "react-redux";
 import "../pages/login/login.css";
 import Loader from "./login/Loader";
+import { useGetNotificationQuery } from "../services/helperService";
 
 interface AnnounceProps {
   setShowNotice: any;
@@ -81,7 +81,7 @@ const Announce: React.FC<AnnounceProps> = ({
   const notices = selectedCategoryData?.notices || [];
 
   const handleAppClose = () => {
-    setShowNotice(false);
+    // setShowNotice(false);
   };
 
   if (isLoading || isFetching) {
