@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { showToast } from "../pages/profile/error/ErrorSlice";
 import { setActiveNav } from "../pages/home/slice/HomeSlice";
 
-const Content = ({ notice,handleAppClose }: any) => {
+const Content = ({ notice, handleAppClose }: any) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -30,12 +30,14 @@ const Content = ({ notice,handleAppClose }: any) => {
     const external = notice?.extend?.page_type;
     // console.log(external);
     if (external === "external") {
-      window.open(notice.extend.page_path, "_blank");
+      // window.open(notice.extend.page_path, "_blank");
     } else if (notice?.extend.page_path === "rankings") {
       dispatch(setActiveNav(3));
+      setTimeout(() => {
+        navigate("/explorer");
+      }, 300);
 
-      navigate("/explorer");
-      handleAppClose()
+      handleAppClose();
     } else {
       dispatch(
         showToast({
@@ -105,14 +107,20 @@ const Content = ({ notice,handleAppClose }: any) => {
             {notice.extend.page_name}
           </button>
         ) : (
-          <a
-          target="_blink"
-            href={notice?.extend?.page_path}
-            className="noti-btn mt-6"
-            // onClick={() => JumpAction(notice)}
-          >
-            {notice.extend.page_name}
-          </a>
+          <>
+            {notice?.extend.page_name ? (
+              <a
+                target="_blink"
+                href={notice?.extend?.page_path}
+                className="noti-btn mt-6"
+                // onClick={() => JumpAction(notice)}
+              >
+                {notice.extend.page_name ? notice.extend.page_name : ""}
+              </a>
+            ) : (
+              ""
+            )}
+          </>
         )}
       </div>
     </div>
