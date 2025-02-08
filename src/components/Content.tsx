@@ -27,11 +27,7 @@ const Content = ({ notice, handleAppClose }: any) => {
   }
 
   const JumpAction = (notice: any) => {
-    const external = notice?.extend?.page_type;
-    // console.log(external);
-    if (external === "external") {
-      // window.open(notice.extend.page_path, "_blank");
-    } else if (notice?.extend.page_path === "rankings") {
+    if (notice?.extend.page_path === "rankings") {
       dispatch(setActiveNav(3));
       setTimeout(() => {
         navigate("/explorer");
