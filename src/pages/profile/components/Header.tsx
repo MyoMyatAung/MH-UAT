@@ -5,6 +5,7 @@ import { useGetUserQuery } from "../services/profileApi"; // Import your query
 import { Link } from "react-router-dom";
 import { setUser } from "./slice/UserSlice";
 import ImageWithPlaceholder from "./info/ImageWithPlaceholder";
+import { showToast } from "../error/ErrorSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,9 @@ const Header = () => {
     }
   };
 
+  const goToPointMall = () => {
+    dispatch(showToast({ message: "该功能正在开发中", type: "success" }));
+  }
   const user = userData?.data;
   // console.log(user);
 
@@ -141,7 +145,7 @@ const Header = () => {
               </svg>
             </div>
           </Link>
-          <Link to={"/point_info"} className=" flex w-full justify-between items-center pt-[15px] px-[7px]">
+          <button onClick={goToPointMall} className=" flex w-full justify-between items-center pt-[15px] px-[7px]">
             {/* text */}
             <div className=" flex justify-center items-center gap-[8px]">
               <svg
@@ -162,7 +166,7 @@ const Header = () => {
             </div>
             {/* point */}
             <div className=" flex justify-center items-center gap-[">
-              <span className=" text-white/80 text-[14px] font-[600]">
+              <span className=" text-white text-[14px] font-[600]">
                 {user.integral}
               </span>
               <svg
@@ -172,7 +176,7 @@ const Header = () => {
                 viewBox="0 0 24 24"
                 fill="none"
               >
-                <g opacity="0.2">
+                <g opacity="1">
                   <path
                     d="M13.1722 12L8.22217 7.04999L9.63617 5.63599L16.0002 12L9.63617 18.364L8.22217 16.95L13.1722 12Z"
                     fill="white"
@@ -180,7 +184,7 @@ const Header = () => {
                 </g>
               </svg>
             </div>
-          </Link>
+          </button>
         </div>
       ) : (
         <div
