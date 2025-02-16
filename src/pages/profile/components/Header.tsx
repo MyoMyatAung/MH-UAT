@@ -141,7 +141,7 @@ const Header = () => {
               </svg>
             </div>
           </Link>
-          <div className=" flex w-full justify-between items-center pt-[12px]">
+          <Link to={"/point_info"} className=" flex w-full justify-between items-center pt-[12px]">
             {/* text */}
             <div className=" flex justify-center items-center gap-[8px]">
               <svg
@@ -180,7 +180,7 @@ const Header = () => {
                 </g>
               </svg>
             </div>
-          </div>
+          </Link>
         </div>
       ) : (
         <div
