@@ -30,7 +30,7 @@ const Header = () => {
   return (
     <div className="profile-header">
       {user ? (
-        <div className=" bg-green-400 w-full justify-between profile-card_point gap-[10px]">
+        <div className="profile-div-main w-full justify-between profile-card_point gap-[10px]">
           <Link
             to={"/info"}
             className=" flex justify-between items-center w-full"
@@ -141,7 +141,7 @@ const Header = () => {
               </svg>
             </div>
           </Link>
-          <Link to={"/point_info"} className=" flex w-full justify-between items-center pt-[12px]">
+          <Link to={"/point_info"} className=" flex w-full justify-between items-center pt-[15px] px-[7px]">
             {/* text */}
             <div className=" flex justify-center items-center gap-[8px]">
               <svg
