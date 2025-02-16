@@ -1,6 +1,6 @@
 import React from "react";
 import "./point.css";
-import { useGetUserQuery } from "../profile/services/profileApi";
+import { useGetDailyTesksQuery, useGetUserQuery } from "./service/PointApi";
 
 interface TopProps {
   //   user: any;
@@ -10,17 +10,20 @@ const Top: React.FC<TopProps> = ({}) => {
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
+  const { data: task } = useGetDailyTesksQuery("", {
+    skip: !token,
+  });
 
   const { data: userData, error } = useGetUserQuery(undefined, {
     skip: !token,
   });
   const user = userData?.data;
 
-//   console.log(user);
+    // console.log(user);
   return (
     <div className=" top_box m-[20px]">
       {/* points */}
-      <div className=" px-[16px] py-[20px]">
+      <div className=" px-[18px] py-[20px]">
         {/* header */}
         <span className=" text-[12px] font-[400] text-[#888]">积分余额</span>
         <div className=" pt-[10px] flex justify-between items-center">
@@ -72,6 +75,26 @@ const Top: React.FC<TopProps> = ({}) => {
                 fill="#00BF6F"
               />
             </svg>
+          </div>
+        </div>
+        <div className=" flex justify-between items-center pt-[40px]">
+          <div className=" flex flex-col justify-center items-center gap-[4px]">
+            <span className="integral_text text-[14px] font-[600]">+1280</span>
+            <span className=" text-[#888] text-[10px] font-[400]">
+              昨日积分
+            </span>
+          </div>
+          <div className=" flex flex-col justify-center items-center gap-[4px]">
+            <span className="integral_text text-[14px] font-[600]">+1280</span>
+            <span className=" text-[#888] text-[10px] font-[400]">
+              昨日积分
+            </span>
+          </div>
+          <div className=" flex flex-col justify-center items-center gap-[4px]">
+            <span className="integral_text text-[14px] font-[600]">+1280</span>
+            <span className=" text-[#888] text-[10px] font-[400]">
+              昨日积分
+            </span>
           </div>
         </div>
       </div>
