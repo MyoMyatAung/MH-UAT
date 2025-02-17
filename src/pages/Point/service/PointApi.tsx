@@ -67,7 +67,7 @@ export const pointApi = createApi({
     }),
     getDailyTesks: builder.query<any, any>({
       query: () => ({
-        url: convertToSecureUrl("/activities/rules/integral"),
+        url: convertToSecureUrl("/user/daily_tasks"),
       }),
     }),
   }),

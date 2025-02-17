@@ -19,7 +19,6 @@ const Top: React.FC<TopProps> = ({}) => {
   });
   const user = userData?.data;
 
-    // console.log(user);
   return (
     <div className=" top_box m-[20px]">
       {/* points */}
