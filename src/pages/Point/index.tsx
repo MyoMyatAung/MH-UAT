@@ -8,10 +8,12 @@ import Tab2 from "./Tabs/Tab2";
 import Tab3 from "./Tabs/Tab3";
 import Tab1 from "./Tabs/Tab1";
 import {
+  useGetActivityListQuery,
   useGetActivityQuery,
   useGetDailyTesksQuery,
   useGetInvitaionMemberQuery,
 } from "./service/PointApi";
+import Loader from "../../components/login/Loader";
 
 const Index = () => {
   const isLoggedIn = localStorage.getItem("authToken");
@@ -20,20 +22,27 @@ const Index = () => {
   const { data: task, isLoading } = useGetDailyTesksQuery("", {
     skip: !token,
   });
-  const { data: activity, isLoading: loading } = useGetActivityQuery("", {
+  const { data: activity } = useGetActivityQuery("", {
     skip: !token,
   });
   // console.log(data);
   const { data: invite } = useGetInvitaionMemberQuery("", {
     skip: !token,
   });
+  const { data: list, isLoading: ListLoading } = useGetActivityListQuery(
+    { act: "list" },
+    {
+      skip: !token,
+    }
+  );
+  const actavityList = list?.data;
   const taskList = task?.data;
   const inviteList = invite?.data?.list;
-  const inretralDetails = activity?.data
+  const inretralDetails = activity?.data;
   const [activeTab, setActiveTab] = useState(1);
 
   const tabs = [
-    { title: "积分明细", content: <Tab1 inretralDetails={inretralDetails} /> }, //point detail
+    { title: "积分明细", content: <Tab1 actavityList={actavityList} /> }, //point detail
     { title: "积分任务", content: <Tab2 taskList={taskList} /> }, // point task
     { title: "好友邀请", content: <Tab3 inviteList={inviteList} /> }, // invite
   ];
@@ -42,12 +51,16 @@ const Index = () => {
     <div className=" ">
       <img className=" fixed top-0 z-[-1] w-screen h-screen" src={BG} alt="" />
       {/* header */}
-      <Header  />
+      <Header />
       <Top inretralDetails={inretralDetails} />
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className=" px-[20px]">
-        {tabs[activeTab ? activeTab - 1 : activeTab - 1]?.content}
-      </div>
+      {ListLoading ? (
+        <Loader />
+      ) : (
+        <div className=" px-[20px]">
+          {tabs[activeTab ? activeTab - 1 : activeTab - 1]?.content}
+        </div>
+      )}
     </div>
   );
 };

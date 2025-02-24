@@ -7,7 +7,7 @@ interface TopProps {
 }
 
 const Top: React.FC<TopProps> = ({ inretralDetails }) => {
-  console.log(inretralDetails);
+  // console.log(inretralDetails);
   return (
     <div className=" top_box m-[20px]">
       {/* points */}
