@@ -3,22 +3,11 @@ import "./point.css";
 import { useGetDailyTesksQuery, useGetUserQuery } from "./service/PointApi";
 
 interface TopProps {
-  //   user: any;
+  inretralDetails: any;
 }
 
-const Top: React.FC<TopProps> = ({}) => {
-  const isLoggedIn = localStorage.getItem("authToken");
-  const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
-  const token = parsedLoggedIn?.data?.access_token;
-  const { data: task } = useGetDailyTesksQuery("", {
-    skip: !token,
-  });
-
-  const { data: userData, error } = useGetUserQuery(undefined, {
-    skip: !token,
-  });
-  const user = userData?.data;
-
+const Top: React.FC<TopProps> = ({ inretralDetails }) => {
+  console.log(inretralDetails);
   return (
     <div className=" top_box m-[20px]">
       {/* points */}
@@ -53,12 +42,13 @@ const Top: React.FC<TopProps> = ({}) => {
               </defs>
             </svg>
             <span className="integral_text text-[16px] font-[600]">
-              {user?.integral}
+              {inretralDetails?.total}
             </span>
           </div>
           <div className="progress_box py-[6px] px-[12px] flex justify-center items-center gap-[10px]">
             <span className=" text-white text-[10px] font-[400]">
-              比上周 + 3.87%
+              比上周 {inretralDetails?.compare_lastweek_percent.symbol}{" "}
+              {inretralDetails?.compare_lastweek_percent.percentage} %
             </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -78,21 +68,30 @@ const Top: React.FC<TopProps> = ({}) => {
         </div>
         <div className=" flex justify-between items-center pt-[40px]">
           <div className=" flex flex-col justify-center items-center gap-[4px]">
-            <span className="integral_text text-[14px] font-[600]">+1280</span>
+            <span className="integral_text text-[14px] font-[600]">
+              {inretralDetails?.today?.symbol}
+              {inretralDetails?.today?.difference}
+            </span>
+            <span className=" text-[#888] text-[10px] font-[400]">
+              今日积分
+            </span>
+          </div>
+          <div className=" flex flex-col justify-center items-center gap-[4px]">
+            <span className="integral_text text-[14px] font-[600]">
+              {inretralDetails?.yesterday?.symbol}
+              {inretralDetails?.yesterday?.difference}
+            </span>
             <span className=" text-[#888] text-[10px] font-[400]">
               昨日积分
             </span>
           </div>
           <div className=" flex flex-col justify-center items-center gap-[4px]">
-            <span className="integral_text text-[14px] font-[600]">+1280</span>
+            <span className="integral_text text-[14px] font-[600]">
+              {inretralDetails?.thisweek?.symbol}
+              {inretralDetails?.thisweek?.difference}
+            </span>{" "}
             <span className=" text-[#888] text-[10px] font-[400]">
-              昨日积分
-            </span>
-          </div>
-          <div className=" flex flex-col justify-center items-center gap-[4px]">
-            <span className="integral_text text-[14px] font-[600]">+1280</span>
-            <span className=" text-[#888] text-[10px] font-[400]">
-              昨日积分
+              本周积分
             </span>
           </div>
         </div>

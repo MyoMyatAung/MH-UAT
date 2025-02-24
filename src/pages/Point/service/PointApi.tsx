@@ -70,7 +70,22 @@ export const pointApi = createApi({
         url: convertToSecureUrl("/user/daily_tasks"),
       }),
     }),
+    getActivity: builder.query<any, any>({
+      query: () => ({
+        url: convertToSecureUrl("/user/integral_details?act=count"),
+      }),
+    }),
+    getInvitaionMember: builder.query<any, any>({
+      query: () => ({
+        url: convertToSecureUrl("/user/invite_details?act=list"),
+      }),
+    }),
   }),
 });
 
-export const { useGetUserQuery, useGetDailyTesksQuery } = pointApi;
+export const {
+  useGetUserQuery,
+  useGetDailyTesksQuery,
+  useGetActivityQuery,
+  useGetInvitaionMemberQuery,
+} = pointApi;
