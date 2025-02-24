@@ -6,7 +6,7 @@ interface Tab2Props {
 }
 
 const Tab2: React.FC<Tab2Props> = ({ taskList }) => {
-  console.log(taskList);
+  // console.log(taskList);
   return (
     <div className=" flex flex-col gap-[18px]">
       {taskList?.map((tt: any) => (
@@ -20,13 +20,18 @@ const Tab2: React.FC<Tab2Props> = ({ taskList }) => {
               {tt.description}
             </span>
           </div>
-          <div className=" col-span-2 flex flex-col justify-center items-center">
+          <div className=" col-span-2 flex flex-col gap-[4px] justify-center items-center">
             {tt?.reward !== 0 && (
               <span className=" flex justify-center items-center text-[14px] font-[500] text-[#FF6A33]">
-                + {tt.reward} <img className=" w-[18px] h-[18px]" src={coin} alt="" />
+                + {tt.reward}{" "}
+                <img className=" w-[18px] h-[18px]" src={coin} alt="" />
               </span>
             )}
-            <button></button>
+            <button
+              className={` text-white ${tt.is_success ? "bg-[#FF6A33]" : " bg-white/20"}  text-[14px] font-[500] rounded-[100px] px-[12px] py-[6px]`}
+            >
+              {tt.is_success ? "立即前往" : "去完成"}
+            </button>
           </div>
         </div>
       ))}
