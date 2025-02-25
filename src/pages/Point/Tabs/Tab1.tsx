@@ -5,7 +5,7 @@ interface Tab1Props {
 }
 
 const Tab1: React.FC<Tab1Props> = ({ actavityList }) => {
-  console.log(actavityList?.list);
+  // console.log(actavityList?.list);
   const formatTimestamp = (timestamp: number): string => {
     const date = new Date(timestamp * 1000);
 

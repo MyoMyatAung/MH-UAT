@@ -11,6 +11,7 @@ import {
   useGetActivityListQuery,
   useGetActivityQuery,
   useGetDailyTesksQuery,
+  useGetInvitaionMemberListQuery,
   useGetInvitaionMemberQuery,
 } from "./service/PointApi";
 import Loader from "../../components/login/Loader";
@@ -35,24 +36,34 @@ const Index = () => {
       skip: !token,
     }
   );
+  const { data: member } = useGetInvitaionMemberListQuery(
+    { act: "list" },
+    {
+      skip: !token,
+    }
+  );
   const actavityList = list?.data;
   const taskList = task?.data;
-  const inviteList = invite?.data?.list;
+  const inviteList = invite?.data;
   const inretralDetails = activity?.data;
   const [activeTab, setActiveTab] = useState(1);
 
   const tabs = [
     { title: "积分明细", content: <Tab1 actavityList={actavityList} /> }, //point detail
     { title: "积分任务", content: <Tab2 taskList={taskList} /> }, // point task
-    { title: "好友邀请", content: <Tab3 inviteList={inviteList} /> }, // invite
+    { title: "好友邀请", content: <Tab3 inviteList={member} /> }, // invite
   ];
-
+  console.log(activeTab);
   return (
     <div className=" ">
       <img className=" fixed top-0 z-[-1] w-screen h-screen" src={BG} alt="" />
       {/* header */}
       <Header />
-      <Top inretralDetails={inretralDetails} />
+      <Top
+        invite={inviteList}
+        activeTab={activeTab}
+        inretralDetails={inretralDetails}
+      />
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
       {ListLoading ? (
         <Loader />
