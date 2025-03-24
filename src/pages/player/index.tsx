@@ -419,11 +419,11 @@ const DetailPage: React.FC = () => {
     fetchMovieDetail(id);
   }
   return (
-    <div className="bg-[#fff] dark:bg-[#161619] min-h-screen">
+    <div className="bg-background min-h-screen">
       {!movieDetail ? (
         <>
           <PlayerLoading onBack={navigateBackFunction} />
-          <div className="flex justify-center items-center pt-52 bg-[#fff] dark:bg-[#161619]">
+          <div className="flex justify-center items-center pt-52 bg-background">
             <Loader />
           </div>
         </>
