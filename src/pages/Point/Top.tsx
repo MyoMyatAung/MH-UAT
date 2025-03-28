@@ -109,7 +109,7 @@ const Top: React.FC<TopProps> = ({ inretralDetails, activeTab, invite }) => {
                   </radialGradient>
                 </defs>
               </svg>
-              <span className="integral_text text-[16px] font-[600]">
+              <span className="integral_text text-[20px] font-[600]">
                 {inretralDetails?.total}
               </span>
             </div>

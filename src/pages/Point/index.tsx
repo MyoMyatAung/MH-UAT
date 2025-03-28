@@ -53,7 +53,7 @@ const Index = () => {
     { title: "积分任务", content: <Tab2 taskList={taskList} /> }, // point task
     { title: "好友邀请", content: <Tab3 inviteList={member} /> }, // invite
   ];
-  console.log(activeTab);
+  // console.log(activeTab);
   return (
     <div className=" ">
       <img className=" fixed top-0 z-[-1] w-screen h-screen" src={BG} alt="" />

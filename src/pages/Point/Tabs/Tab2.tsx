@@ -1,12 +1,23 @@
 import React from "react";
 import coin from "../../../assets/Point/Challenge/coin.png";
+import { useNavigate } from "react-router-dom";
 
 interface Tab2Props {
   taskList: any;
 }
 
 const Tab2: React.FC<Tab2Props> = ({ taskList }) => {
-  // console.log(taskList);
+  const navigate = useNavigate();
+  const junpAttempt = (tt: any) => {
+    if (tt.is_success) {
+      console.log(tt.extend);
+    } else {
+      if (tt.extend === "profile") navigate("/profile");
+      if (tt.extend === "invite-home") navigate("/share");
+      if (tt.extend === "home") navigate("/");
+      if (tt.logo === "lottery") navigate("/game");
+    }
+  };
   return (
     <div className=" flex flex-col gap-[18px]">
       {taskList?.map((tt: any) => (
@@ -28,7 +39,12 @@ const Tab2: React.FC<Tab2Props> = ({ taskList }) => {
               </span>
             )}
             <button
-              className={` text-white ${tt.is_success ? "bg-[#FF6A33]" : " bg-white/20"}  text-[14px] font-[500] rounded-[100px] px-[12px] py-[6px]`}
+              onClick={() => junpAttempt(tt)}
+              className={` text-white ${
+                !tt.is_success || tt.reward === 0
+                  ? "bg-[#FF6A33]"
+                  : " bg-white/20"
+              }  text-[14px] font-[500] rounded-[100px] w-[90px] px-[12px] py-[6px]`}
             >
               {tt.is_success ? "立即前往" : "去完成"}
             </button>

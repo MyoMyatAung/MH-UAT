@@ -18,7 +18,7 @@ const Tab3: React.FC<Tab3Props> = ({ inviteList }) => {
 
     return `${year}-${month}-${day} - ${hours}:${minutes}`;
   };
-  console.log(list);
+  // console.log(list);
   return (
     <div className=" flex flex-col">
       {list?.map((ll: any) => (
