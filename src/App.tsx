@@ -41,6 +41,7 @@ import Announce from "./components/Announce";
 // Lazy load the pages
 const Home = React.lazy(() => import("./pages/home"));
 const Game = React.lazy(() => import("./pages/Point/pages/Game"));
+const Mall = React.lazy(() => import("./pages/Point/pages/Mall"));
 const Search = React.lazy(() => import("./pages/search"));
 const Main = React.lazy(() => import("./pages/search/Main"));
 const Explorer = React.lazy(() => import("./pages/explorer"));
@@ -147,7 +148,8 @@ const App: React.FC = () => {
     location.pathname.startsWith("/invite") ||
     location.pathname.startsWith("/share/member") ||
     location.pathname.startsWith("/point_info") ||
-    location.pathname.startsWith("/game");
+    location.pathname.startsWith("/game") ||
+    location.pathname.startsWith("/point_mall") 
 
   const hideHeader = location.pathname.startsWith("/explorer");
   const { hideMode } = JSON.parse(
@@ -269,6 +271,7 @@ const App: React.FC = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/game" element={<Game />} />
+                    <Route path="/point_mall" element={<Mall />} />
                     <Route path="/search" element={<Main />} />
                     <Route path="/search_overlay" element={<Search />} />
 
