@@ -76,7 +76,7 @@ export const Alert: FC<AlertProps> = ({
                         <button className=" text-sm py-3 w-full text-black font-medium rounded border border-black/10" onClick={onClose} >
                           取消
                         </button>
-                        <button className="bg-orange-secondary text-sm py-3 w-full text-white font-medium rounded" onClick={handleNavTask} >
+                        <button className="bg-[#ff6a33] text-sm py-3 w-full text-white font-medium rounded" onClick={handleNavTask} >
                           {
                             btnText ? btnText : '获取积分'
                           }
@@ -84,7 +84,7 @@ export const Alert: FC<AlertProps> = ({
                         </button>
                       </>
                     ) : (
-                      <button className="bg-orange-secondary text-sm py-3 w-full text-white font-medium rounded" onClick={onClose} >
+                      <button className="bg-[#ff6a33] text-sm py-3 w-full text-white font-medium rounded" onClick={onClose} >
                         确定
                       </button>
                     )

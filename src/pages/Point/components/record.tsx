@@ -115,7 +115,7 @@ export const Record: FC<RecordProps> = ({
                       }
                     </InfiniteScroll>
                   </div>
-                  <button className="bg-orange-secondary text-sm py-3 w-full text-white font-medium rounded" onClick={onClose}>
+                  <button className="bg-[#ff6a33] text-sm py-3 w-full text-white font-medium rounded" onClick={onClose}>
                     确定
                   </button>
                 </Dialog.Description>
