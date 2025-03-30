@@ -42,6 +42,7 @@ import Announce from "./components/Announce";
 const Home = React.lazy(() => import("./pages/home"));
 const Game = React.lazy(() => import("./pages/Point/pages/Game"));
 const Mall = React.lazy(() => import("./pages/Point/pages/Mall"));
+const List = React.lazy(() => import("./pages/Point/pages/List"));
 const Search = React.lazy(() => import("./pages/search"));
 const Main = React.lazy(() => import("./pages/search/Main"));
 const Explorer = React.lazy(() => import("./pages/explorer"));
@@ -149,7 +150,8 @@ const App: React.FC = () => {
     location.pathname.startsWith("/share/member") ||
     location.pathname.startsWith("/point_info") ||
     location.pathname.startsWith("/game") ||
-    location.pathname.startsWith("/point_mall") 
+    location.pathname.startsWith("/point_mall") ||
+    location.pathname.startsWith("/list");
 
   const hideHeader = location.pathname.startsWith("/explorer");
   const { hideMode } = JSON.parse(
@@ -257,7 +259,13 @@ const App: React.FC = () => {
               {/* <BannerAds /> */}
               {/* Conditionally render Header */}
               {!hideHeaderFooter && !hideHeader && <Header />}
-              {showNotice && <Announce setShowNotice={setShowNotice} config={headerData} showNotice={showNotice}/>}
+              {showNotice && (
+                <Announce
+                  setShowNotice={setShowNotice}
+                  config={headerData}
+                  showNotice={showNotice}
+                />
+              )}
 
               <div className="flex-grow">
                 <Suspense
@@ -272,6 +280,7 @@ const App: React.FC = () => {
                     <Route path="/home" element={<Home />} />
                     <Route path="/game" element={<Game />} />
                     <Route path="/point_mall" element={<Mall />} />
+                    <Route path="/list" element={<List />} />
                     <Route path="/search" element={<Main />} />
                     <Route path="/search_overlay" element={<Search />} />
 

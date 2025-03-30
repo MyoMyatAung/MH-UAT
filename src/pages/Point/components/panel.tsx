@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 import InfiniteScroll from "react-infinite-scroll-component";
 import numeral from 'numeral'
+import '../pages/style.css'
 
 import { getOrderList } from '../api'
 
@@ -80,7 +81,7 @@ export const Panel: FC<PanelProps> = ({
 
 
   return (
-    <Tab.Panel className="jf-infinitescroll-panel" id={`scrollableDiv-${status}`}>
+    <Tab.Panel className="jf-infinitescroll-panel container  overflow-y-auto" id={`scrollableDiv-${status}`}>
       <InfiniteScroll
         className="flex flex-col gap-y-2"
         dataLength={dataList.length}
