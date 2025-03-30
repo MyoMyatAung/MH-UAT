@@ -9,6 +9,7 @@ import { STATUS_MAP } from "./List";
 import { useForm, useFieldArray } from "react-hook-form";
 import numeral from "numeral";
 import "./style.css"
+import FeedbackComponent from "../../../pages/player/video/Feedback";
 
 export const ItemInfo = () => {
   const params = useParams();
@@ -21,6 +22,9 @@ export const ItemInfo = () => {
   const [isCancelling, setIsCancelling] = useState<boolean>(false);
   const [isCancelLoader, setIsCancelLoader] = useState<boolean>(false);
   const [isRemove, setIsRemove] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false); // For triggering modal
+
 
   let [deleteMode, setDeleteMode] = useState<boolean>(false);
   let [isOpen, setIsOpen] = useState<boolean>(false);
@@ -81,6 +85,7 @@ export const ItemInfo = () => {
   };
 
   const handleFeedback = () => {
+    handleFeedbackModel()
     // try {
     //   //@ts-ignore
     //   JsBridge?.openNativePage?.(
@@ -142,6 +147,7 @@ export const ItemInfo = () => {
     }
   });
 
+
   const onRemoveOrder = useLockFn(async () => {
     setIsRemove(true);
     try {
@@ -155,6 +161,10 @@ export const ItemInfo = () => {
       setIsRemove(false);
     }
   });
+
+  const handleFeedbackModel = () => {
+    setShowFeedbackModal(!showFeedbackModal);
+  };
 
   const onSubmit = async (data: any) => {
     try {
@@ -594,6 +604,16 @@ export const ItemInfo = () => {
             </button>
           </div>
         </div>
+      )}
+       {showFeedbackModal && (
+        <FeedbackComponent
+          movieId={"1"}
+          onActionComplete={() => console.log('test')}
+          onClose={handleFeedbackModel}
+          setIsLoading={setIsLoading}
+          isLoading={isLoading}
+          height={`600px`}
+        />
       )}
     </div>
   );
