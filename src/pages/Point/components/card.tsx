@@ -14,7 +14,7 @@ export const Card: FC<CardProps> = ({
 }) => {
   const navigate = useNavigate()
   const link = useCallback(() => {
-    navigate(`/detail/${data.id}`)
+    navigate(`/itemDetail/${data.id}`)
   }, [data])
 
   return (

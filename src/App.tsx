@@ -43,6 +43,7 @@ const Home = React.lazy(() => import("./pages/home"));
 const Game = React.lazy(() => import("./pages/Point/pages/Game"));
 const Mall = React.lazy(() => import("./pages/Point/pages/Mall"));
 const List = React.lazy(() => import("./pages/Point/pages/List"));
+const ItemDetail = React.lazy(() => import("./pages/Point/pages/ItemDetail"));
 const Search = React.lazy(() => import("./pages/search"));
 const Main = React.lazy(() => import("./pages/search/Main"));
 const Explorer = React.lazy(() => import("./pages/explorer"));
@@ -151,7 +152,8 @@ const App: React.FC = () => {
     location.pathname.startsWith("/point_info") ||
     location.pathname.startsWith("/game") ||
     location.pathname.startsWith("/point_mall") ||
-    location.pathname.startsWith("/list");
+    location.pathname.startsWith("/list") ||
+    location.pathname.startsWith("/itemDetail"); 
 
   const hideHeader = location.pathname.startsWith("/explorer");
   const { hideMode } = JSON.parse(
@@ -281,7 +283,8 @@ const App: React.FC = () => {
                     <Route path="/game" element={<Game />} />
                     <Route path="/point_mall" element={<Mall />} />
                     <Route path="/list" element={<List />} />
-                    <Route path="/search" element={<Main />} />
+                    <Route path="/list" element={<List />} />
+                    <Route path="/itemDetail/:id" element={<ItemDetail />} />
                     <Route path="/search_overlay" element={<Search />} />
 
                     <Route path="/explorer" element={<Explorer />} />

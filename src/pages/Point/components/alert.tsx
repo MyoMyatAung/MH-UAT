@@ -1,6 +1,7 @@
 import { FC, useCallback, Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { Copy } from './copy'
+import { useNavigate } from 'react-router-dom';
 
 type AlertProps = {
   msg: string;
@@ -21,14 +22,16 @@ export const Alert: FC<AlertProps> = ({
   btnText,
   isCopy
 }) => {
+  const navigate = useNavigate()
   const handleNavTask = () => {
-    try {
-      //@ts-ignore
-      JsBridge?.openNativePage?.(JSON.stringify({ "pageName": "get-integral" }))
-    } catch (error) {
-      //@ts-ignore
-      dsBridge.call("openNativePage", JSON.stringify({ "pageName": "get-integral" }))
-    }
+    navigate("/point_info")
+    // try {
+    //   //@ts-ignore
+    //   JsBridge?.openNativePage?.(JSON.stringify({ "pageName": "get-integral" }))
+    // } catch (error) {
+    //   //@ts-ignore
+    //   dsBridge.call("openNativePage", JSON.stringify({ "pageName": "get-integral" }))
+    // }
   }
 
   return (
