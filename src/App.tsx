@@ -67,6 +67,7 @@ const Invite = React.lazy(() => import("./pages/profile/Invite"));
 const Share = React.lazy(() => import("./pages/share"));
 const Member = React.lazy(() => import("./pages/share/member"));
 const Point = React.lazy(() => import("./pages/Point"));
+const ItemInfo = React.lazy(() => import("./pages/Point/pages/ItemInfo"));
 
 // ProtectedRoute component to handle route guarding
 // const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -287,6 +288,7 @@ const App: React.FC = () => {
                     <Route path="/list" element={<List />} />
                     <Route path="/list" element={<List />} />
                     <Route path="/itemDetail/:id" element={<ItemDetail />} />
+                    <Route path="/info/:id" element={<ItemInfo />} />
                     <Route path="/shop/:id" element={<Shop />} />
                     <Route path="/search_overlay" element={<Search />} />
 

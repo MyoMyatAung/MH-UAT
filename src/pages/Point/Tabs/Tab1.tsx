@@ -31,7 +31,10 @@ const Tab1: React.FC<Tab1Props> = ({ actavityList }) => {
                 {aa.content}
               </span>
             </div>
-            <span className="acti_amount_text">+ {aa.amount}</span>
+            <span className="acti_amount_text w-full">
+              {" "}
+              {aa.action === 1 ? "+" : "-"} {aa.amount}
+            </span>
           </div>
           {/* line */}
           <div className=" w-full bg-white/10 my-[12px] h-[1px]"></div>

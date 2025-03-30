@@ -59,16 +59,26 @@ const Top: React.FC<TopProps> = ({ inretralDetails, activeTab, invite }) => {
           {/* shareInfo */}
           <div className=" p-[30px] flex w-full justify-between items-center">
             <div className=" flex flex-col gap-[4px] justify-center items-center">
-              <span className=" text-white text-[16px] font-[600]">{invite.today}</span>
+              <span className=" text-white text-[16px] font-[600]">
+                {invite.today}
+              </span>
               <span className=" text-[#888] font-[500] text-[10px]">today</span>
             </div>
             <div className=" flex flex-col gap-[4px] justify-center items-center">
-              <span className=" text-white text-[16px] font-[600]">{invite.yesterday }</span>
-              <span className=" text-[#888] font-[500] text-[10px]">Yesterday </span>
+              <span className=" text-white text-[16px] font-[600]">
+                {invite.yesterday}
+              </span>
+              <span className=" text-[#888] font-[500] text-[10px]">
+                Yesterday{" "}
+              </span>
             </div>
             <div className=" flex flex-col gap-[4px] justify-center items-center">
-              <span className=" text-white text-[16px] font-[600]">{invite.thisweek}</span>
-              <span className=" text-[#888] font-[500] text-[10px]">Weekly</span>
+              <span className=" text-white text-[16px] font-[600]">
+                {invite.thisweek}
+              </span>
+              <span className=" text-[#888] font-[500] text-[10px]">
+                Weekly
+              </span>
             </div>
           </div>
           {/* badge */}
@@ -145,7 +155,13 @@ const Top: React.FC<TopProps> = ({ inretralDetails, activeTab, invite }) => {
               </span>
             </div>
             <div className=" flex flex-col justify-center items-center gap-[4px]">
-              <span className="integral_text text-[14px] font-[600]">
+              <span
+                className={` ${
+                  inretralDetails?.yesterday?.symbol === "-"
+                    ? "text-[#EF5252]"
+                    : "integral_text"
+                }  text-[14px] font-[600]`}
+              >
                 {inretralDetails?.yesterday?.symbol}
                 {inretralDetails?.yesterday?.difference}
               </span>
@@ -154,7 +170,13 @@ const Top: React.FC<TopProps> = ({ inretralDetails, activeTab, invite }) => {
               </span>
             </div>
             <div className=" flex flex-col justify-center items-center gap-[4px]">
-              <span className="integral_text text-[14px] font-[600]">
+              <span
+                className={` ${
+                  inretralDetails?.yesterday?.symbol === "-"
+                    ? "text-[#EF5252]"
+                    : "integral_text"
+                }  text-[14px] font-[600]`}
+              >
                 {inretralDetails?.thisweek?.symbol}
                 {inretralDetails?.thisweek?.difference}
               </span>{" "}

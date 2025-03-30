@@ -20,6 +20,7 @@ const Index = () => {
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
+  
   const { data: task, isLoading } = useGetDailyTesksQuery("", {
     skip: !token,
   });
