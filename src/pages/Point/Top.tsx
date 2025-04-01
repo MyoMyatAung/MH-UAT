@@ -1,15 +1,21 @@
 import React from "react";
 import "./point.css";
 import { useGetDailyTesksQuery, useGetUserQuery } from "./service/PointApi";
+import light from "./light.png";
 
 interface TopProps {
   inretralDetails: any;
   activeTab: number;
   invite: any;
-  point : any
+  point: any;
 }
 
-const Top: React.FC<TopProps> = ({ inretralDetails, activeTab, invite , point }) => {
+const Top: React.FC<TopProps> = ({
+  inretralDetails,
+  activeTab,
+  invite,
+  point,
+}) => {
   // console.log(point)
   // console.log(inretralDetails);
   return (
@@ -175,7 +181,7 @@ const Top: React.FC<TopProps> = ({ inretralDetails, activeTab, invite , point })
             <div className=" flex flex-col justify-center items-center gap-[4px]">
               <span
                 className={` ${
-                  inretralDetails?.yesterday?.symbol === "-"
+                  inretralDetails?.yesterday?.symbol === "+"
                     ? "text-[#EF5252]"
                     : "integral_text"
                 }  text-[14px] font-[600]`}
