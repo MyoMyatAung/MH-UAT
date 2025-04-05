@@ -10,8 +10,7 @@ const Banner = ({ list }: { list: any }) => {
   const navigate = useNavigate();
 
   const handleBannerClick = (clickLink: string) => {
-    // console.log("clickLink is=>", clickLink);
-    if (clickLink && clickLink.startsWith("http")) {
+    if (clickLink && (clickLink.startsWith("http") || clickLink.startsWith("https"))) {
       window.open(clickLink, "_blank");
     } else {
       navigate(`/player/${clickLink}`);
