@@ -54,6 +54,7 @@ const Contact = () => {
             <img src={logo} alt="" className="w-[90px]" />
             <p className="contact-text mt-3">版本号 2.1.5</p>
 
+
           </div>
         </div>
 
