@@ -297,7 +297,7 @@ const ProfileFirst = () => {
           </div>
         )}
         {/* point */}
-        <a className="p-first cursor-pointer" onClick={handleMallClick}>
+        <a className="p-firs cursor-pointer hidden" onClick={handleMallClick}>
           <div className="flex gap-3 items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
