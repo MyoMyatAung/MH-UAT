@@ -27,8 +27,8 @@ const Header = () => {
   };
 
   const goToPointMall = () => {
-    dispatch(showToast({ message: "该功能正在开发中", type: "success" }));
-    // navigate("/point_info")
+    // dispatch(showToast({ message: "该功能正在开发中", type: "success" }));
+    navigate("/point_info")
   }
   const user = userData?.data;
   // console.log(user);
