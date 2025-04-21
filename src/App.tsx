@@ -34,6 +34,7 @@ import Social from "./pages/social";
 import Short from "./pages/short";
 import { useGetRecommendedMoviesQuery } from "./pages/home/services/homeApi";
 import Announce from "./components/Announce";
+import land from './assets/login/land.png'
 // import { Game } from "./pages/Point/pages/Game";
 // import Menber from "./pages/share/member";
 // import Share from "./pages/share";
@@ -243,9 +244,15 @@ const App: React.FC = () => {
 
   if (!data?.data) {
     return (
-      <div className="flex justify-center items-center h-screen bg-[#161619]">
-        <Loader />
-      </div>
+      // <div className="flex justify-center items-center h-screen bg-[#161619]">
+      //   <Loader />
+      // </div>
+      <img
+      className="h-screen w-screen object-cover"
+      // onLoad={() => setImgLoad(true)}
+      src={land}
+      alt=""
+    />
     );
   }
 
