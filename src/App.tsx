@@ -92,6 +92,43 @@ const App: React.FC = () => {
   // const { data: notiData, isLoading: notiLoading } = useGetNotificationQuery();
 
   const [showNotice, setShowNotice] = useState(false);
+  const [preloadedImage, setPreloadedImage] = useState<string | null>(null);
+
+  // Preload landing image
+  useEffect(() => {
+    if (data?.data) {
+      const startAds = data?.data["start"];
+      if (startAds && startAds.length > 0 && startAds[0]?.data?.image) {
+        // Immediately start fetching the image as a blob
+        fetch(startAds[0]?.data?.image)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.blob();
+          })
+          .then(blob => {
+            const url = URL.createObjectURL(blob);
+            setPreloadedImage(url);
+            
+            // Also preload the image in browser cache
+            const img = new Image();
+            img.src = url;
+          })
+          .catch(err => {
+            console.error("Failed to preload image:", err);
+            // Continue without preloaded image
+          });
+      }
+    }
+    
+    // Clean up any blob URLs when component unmounts
+    return () => {
+      if (preloadedImage) {
+        URL.revokeObjectURL(preloadedImage);
+      }
+    };
+  }, [data]);
 
   // Combined loading state
   // const isLoading = moviesLoading || topicsLoading || notiLoading;
@@ -244,15 +281,11 @@ const App: React.FC = () => {
 
   if (!data?.data) {
     return (
-      // <div className="flex justify-center items-center h-screen bg-[#161619]">
-      //   <Loader />
-      // </div>
       <img
-      className="h-screen w-screen object-cover"
-      // onLoad={() => setImgLoad(true)}
-      src={land}
-      alt=""
-    />
+        className="h-screen w-screen object-cover"
+        src={land}
+        alt=""
+      />
     );
   }
 
@@ -261,7 +294,7 @@ const App: React.FC = () => {
       {data?.data && (
         <>
           {panding ? (
-            <Landing data={data} />
+            <Landing data={data} preloadedImage={preloadedImage} />
           ) : (
             <div
               className={`flex flex-col min-h-screen ${
@@ -370,3 +403,4 @@ const AppWithRouter = () => (
 );
 
 export default AppWithRouter;
+
