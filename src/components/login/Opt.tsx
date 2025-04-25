@@ -42,27 +42,27 @@ const Opt: React.FC<OptProps> = ({ email, password, phone, setIsVisible }) => {
   const { captchaCode, captchaKey, openSignUpEmailModel, GraphicKey } =
     useSelector((state: any) => state.model);
 
-  useEffect(() => {
-    const fetchOtp = async () => {
-      try {
-        if (email) {
-          await getOtp(GraphicKey, email, "email");
-        } else if (phone) {
-          await getOtp(GraphicKey, phone, "phone");
-        }
-      } catch (error: any) {
-        // console.error("Error fetching OTP:", error);
-        const msg = error.response.data.msg;
-        dispatch(showToast({ message: msg, type: "error" }));
-        handleBack();
-        // Show error message to the user, e.g., using state or toast notification
-      }
-    };
+  // useEffect(() => {
+  //   const fetchOtp = async () => {
+  //     try {
+  //       if (email) {
+  //         await getOtp(GraphicKey, email, "email");
+  //       } else if (phone) {
+  //         await getOtp(GraphicKey, phone, "phone");
+  //       }
+  //     } catch (error: any) {
+  //       // console.error("Error fetching OTP:", error);
+  //       const msg = error.response.data.msg;
+  //       dispatch(showToast({ message: msg, type: "error" }));
+  //       handleBack();
+  //       // Show error message to the user, e.g., using state or toast notification
+  //     }
+  //   };
 
-    if (email || phone) {
-      fetchOtp();
-    }
-  }, [email, phone]);
+  //   if (email || phone) {
+  //     fetchOtp();
+  //   }
+  // }, [email, phone]);
 
   useEffect(() => {
     const countdown = setInterval(() => {
