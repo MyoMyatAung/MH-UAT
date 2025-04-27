@@ -137,6 +137,13 @@ const FilteredByType = () => {
                 dataLength={movieData.length}
                 next={fetchData}
                 hasMore={hasMore}
+                endMessage={
+                  <div className="flex bg-background justify-center items-center w-full py-5">
+                    <p style={{ textAlign: "center" }}>
+                      <b>快关注你喜欢的贴子吧！</b>
+                    </p>
+                  </div>
+                }
                 loader={
                   <div className="flex justify-center items-center w-full pb-0">
                     <Loader />
