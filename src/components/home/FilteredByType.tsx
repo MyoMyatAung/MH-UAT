@@ -92,16 +92,16 @@ const FilteredByType = () => {
 
   const prevTabRef = useRef(activeTab);
 
-  useEffect(() => {
-    if (prevTabRef.current !== activeTab) {
-      dispatch(setSort("by_default"));
-      dispatch(setSortName("综合"));
-      dispatch(setClass("类型"));
-      dispatch(setArea("地区"));
-      dispatch(setYear("年份"));
-      prevTabRef.current = activeTab;
-    }
-  }, [activeTab]);
+  // useEffect(() => {
+  //   if (prevTabRef.current !== activeTab) {
+  //     dispatch(setSort("by_default"));
+  //     dispatch(setSortName("综合"));
+  //     dispatch(setClass("类型"));
+  //     dispatch(setArea("地区"));
+  //     dispatch(setYear("年份"));
+  //     prevTabRef.current = activeTab;
+  //   }
+  // }, [activeTab]);
 
   return (
     <>
