@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { showToast } from "../../error/ErrorSlice";
 import { useDispatch } from "react-redux";
-import { setActiveNav, setActivePointTab } from "../../../../pages/home/slice/HomeSlice";
+// import { setActiveNav, setActivePointTab } from "../../../../pages/home/slice/HomeSlice";
 import Markdown from 'react-markdown'
 // import remarkGfm from 'remark-gfm'
 import {
