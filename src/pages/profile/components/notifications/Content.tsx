@@ -73,9 +73,6 @@ const Content = ({ notice }: any) => {
           navigate("/point_info_redeem");
         }, 300);
         break;
-      case "points_lottery":
-        navigate("/game");
-        break;
       case "invite_home":
         navigate("/share");
         break;
