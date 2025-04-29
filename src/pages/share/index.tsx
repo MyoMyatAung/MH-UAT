@@ -97,21 +97,77 @@ const Share: React.FC<ShareProps> = ({}) => {
     }
   };
 
-  const handleSaveAsImage = () => {
-    if (imageRef.current) {
-      toPng(imageRef.current, { cacheBust: true })
-        .then((dataUrl) => {
-          const link = document.createElement("a");
-          link.href = dataUrl;
-          link.download = "share-info.png";
-          link.click();
-          dispatch(showToast({ message: "保存成功", type: "success" }));
-        })
-        .catch((err) => {
-          console.error("Failed to generate image:", err);
-        });
+  const sendEventToNative = (name: string, text: string) => {
+    if (
+      (window as any).webkit &&
+      (window as any).webkit.messageHandlers &&
+      (window as any).webkit.messageHandlers.jsBridge
+    ) {
+      (window as any).webkit.messageHandlers.jsBridge.postMessage({
+        eventName: name,
+        value: text,
+      });
     }
   };
+
+  const isIOSApp = () => {
+    return (
+      (window as any).webkit &&
+      (window as any).webkit.messageHandlers &&
+      (window as any).webkit.messageHandlers.jsBridge
+    );
+  };
+
+  const handleSaveAsImage = () => {
+    if (isIOSApp()) {
+      sendEventToNative("saveImage", invite?.data?.qrcode.data); // shareUrl should be base64
+    } else {
+      console.log(invite?.data?.qrcode.data);
+      if (!invite?.data?.qrcode.data.startsWith("data:image")) {
+        console.error("Invalid image format.");
+        return;
+      }
+
+      try {
+        // Convert data URL to blob
+        const response = fetch(invite?.data?.qrcode.data)
+          .then((res) => res.blob())
+          .then((blob) => {
+            // Create a blob URL and initiate download
+            const blobUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = "QRCode.png";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Clean up the blob URL after download
+            setTimeout(() => {
+              URL.revokeObjectURL(blobUrl);
+            }, 100);
+          });
+      } catch (error) {
+        console.error("Error downloading QR code:", error);
+      }
+    }
+  };
+
+  // const handleSaveAsImage = () => {
+  //   if (imageRef.current) {
+  //     toPng(imageRef.current, { cacheBust: true })
+  //       .then((dataUrl) => {
+  //         const link = document.createElement("a");
+  //         link.href = dataUrl;
+  //         link.download = "share-info.png";
+  //         link.click();
+  //         dispatch(showToast({ message: "保存成功", type: "success" }));
+  //       })
+  //       .catch((err) => {
+  //         console.error("Failed to generate image:", err);
+  //       });
+  //   }
+  // };
   return (
     <div className="bg-background min-h-screen flex flex-col  gap-[10px]">
       {/* header */}
