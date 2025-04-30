@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useState } from "react";
+import { startTransition, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ImageWithPlaceholder from "../../search/components/ImgPlaceholder";
 import { setAuthModel } from "../../../features/login/ModelSlice";
@@ -27,7 +27,11 @@ const ProfileFirst = () => {
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
 
-  const { data: userData, error } = useGetUserQuery(undefined, {
+  const {
+    data: userData,
+    error,
+    refetch,
+  } = useGetUserQuery(undefined, {
     skip: !token,
   });
 
@@ -35,15 +39,31 @@ const ProfileFirst = () => {
 
   const {
     data: favoriteMovies,
-    // isLoading: isFavoritesLoading,
-    // isFetching: isFavoritesFetching,
+
+    refetch: refetchList,
+    isLoading: isFavoritesLoading,
+    isFetching: isFavoritesFetching,
   } = useGetListQuery({ page: 1, type_id: 0 }, { skip: !token });
-  const { data, isLoading, isFetching, refetch } = useGetRecordQuery(
-    undefined,
-    {
-      skip: !token,
+  const {
+    data,
+    isLoading,
+    isFetching,
+    refetch: refetchRecord,
+  } = useGetRecordQuery(undefined, {
+    skip: !token,
+  }); // Fetch favorite movies list from API
+
+  const prevTokenRef = useRef(token);
+
+  useEffect(() => {
+    // Only trigger refetch if the token has changed
+    if (prevTokenRef.current !== token) {
+      prevTokenRef.current = token;
+      refetch();
+      refetchRecord();
+      refetchList();
     }
-  ); // Fetch favorite movies list from API
+  }, [token, refetch]);
 
   // const [movies, setMovies] = useState<Movie[]>([]);
   const dispatch = useDispatch();
@@ -134,8 +154,6 @@ const ProfileFirst = () => {
     }
   };
 
-  // console.log(latestMovies);
-
   return (
     <div className="profile-div">
       <div className="profile-div-main w-full">
@@ -178,7 +196,7 @@ const ProfileFirst = () => {
         </a>
 
         {/* Horizontal Scrolling Movie List */}
-        {token && movies?.length !== 0 && (
+        {token && movies?.length !== 0 && !isFetching && (
           <div className="flex overflow-x-scroll whitespace-nowrap watch_ten scrollbar-hide gap-4 ">
             {latestMovies?.map((movie: any) => (
               <Link
@@ -262,7 +280,7 @@ const ProfileFirst = () => {
         </a>
 
         {/* Horizontal Scrolling Movie List */}
-        {token && favorites?.length !== 0 && (
+        {token && favorites?.length !== 0 && !isFavoritesFetching && (
           <div className="flex overflow-x-scroll whitespace-nowrap watch_ten scrollbar-hide gap-4 ">
             {favorites?.map((movie: any) => (
               <Link
