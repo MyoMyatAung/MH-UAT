@@ -112,7 +112,7 @@ const FilterTag = () => {
 
   useEffect(() => {
     setShow(false);
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   }, [classData, area, year, activeTab, sort, sortName]);
 
   useEffect(() => {
