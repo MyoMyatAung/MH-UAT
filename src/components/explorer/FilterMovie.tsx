@@ -331,15 +331,11 @@ const FilterMovie = () => {
   useEffect(() => {
     if (!data?.data?.list.length) return;
 
-    const filtersChanged =
-      sort !== prevFilters.current.sort ||
-      area !== prevFilters.current.area ||
-      year !== prevFilters.current.year ||
-      classData !== prevFilters.current.classData ||
-      activeTab !== prevFilters.current.activeTab;
-
     // If page is 1 (meaning fresh data), set the movieData
-    if (page2 === 2 && (movieData.length === 0 || isChanged.current)) {
+    if (
+      data?.data?.list.length &&
+      (movieData.length === 0 || isChanged.current)
+    ) {
       dispatch(setMovieData(data.data.list));
       setTotalData(data.data.total);
       isChanged.current = false;
@@ -347,7 +343,7 @@ const FilterMovie = () => {
 
     // If we have existing data and page > 1, this would be for infinite scroll
     // (though your infinite scroll seems to use a different endpoint)
-  }, [data, page, dispatch]);
+  }, [data, dispatch]);
 
   const fetchData = async () => {
     const nextPage = page2 + 1;
@@ -381,13 +377,14 @@ const FilterMovie = () => {
     }
   }, [totalData, movieData]);
 
-  useEffect(() => {
-    dispatch(setSort("by_default"));
-    dispatch(setSortName("综合"));
-    dispatch(setClass("类型"));
-    dispatch(setArea("地区"));
-    dispatch(setYear("年份"));
-  }, [activeTab, dispatch]);
+  // useEffect(() => {
+  //   console.log("winnnn");
+  //   dispatch(setSort("by_default"));
+  //   dispatch(setSortName("综合"));
+  //   dispatch(setClass("类型"));
+  //   dispatch(setArea("地区"));
+  //   dispatch(setYear("年份"));
+  // }, [activeTab, dispatch]);
 
   if (isloader || isFetching) {
     return null;
