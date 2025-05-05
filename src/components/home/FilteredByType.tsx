@@ -265,12 +265,17 @@ const FilteredByType = () => {
 
     if (savedPosition) {
       const position = parseInt(savedPosition);
-      window.scrollTo({
-        top: position,
-        behavior: "auto",
-      });
-      sessionStorage.removeItem("filterMovieScrollPosition1");
-      isInitialLoad.current = false; // Update the ref
+      const restore = () => {
+        window.scrollTo({
+          top: position,
+          behavior: "auto",
+        });
+        sessionStorage.removeItem("filterMovieScrollPosition1");
+        isInitialLoad.current = false; // Update the ref
+      };
+
+      const timer = setTimeout(restore, 10);
+      return () => clearTimeout(timer);
     } else {
       isInitialLoad.current = false;
     }
