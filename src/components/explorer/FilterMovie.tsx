@@ -272,7 +272,7 @@ const FilterMovie = () => {
         isInitialLoad.current = false; // Update the ref
       };
 
-      const timer = setTimeout(restore, 100);
+      const timer = setTimeout(restore, 10);
       return () => clearTimeout(timer);
     } else {
       isInitialLoad.current = false;
