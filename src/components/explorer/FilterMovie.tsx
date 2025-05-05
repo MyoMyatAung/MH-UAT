@@ -237,9 +237,6 @@ const FilterMovie = () => {
     const handleScroll = () => {
       if (window.scrollY !== 0) {
         scrollRef.current = window.scrollY; // Update ref on scroll
-        if (!isInitialLoad.current) {
-          dispatch(setScrollPosition(window.scrollY));
-        }
       }
     };
 
