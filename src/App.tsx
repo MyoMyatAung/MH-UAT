@@ -292,7 +292,7 @@ const App: React.FC = () => {
   };
 
   const handleUpdateClick = () => {
-    const link = headerData?.data?.about?.filter((item: any) => item.text === "官网下载")[0]?.link;
+    const link = headerData?.data?.app_store_link;
     // Handle update action here
     window.open(link, '_blank');
     // Or any other update logic
@@ -346,7 +346,7 @@ const App: React.FC = () => {
                 />
               )}
 
-              {showUpdateNotification && !showNotice && !isWebView() && (
+              {showUpdateNotification && !showNotice && !isWebView() && headerData?.data?.app_store_link && (
                 <div className="fixed bottom-24 left-0 right-0 z-[9999] flex justify-center">
                   <UpdateNotification 
                     onUpdate={handleUpdateClick} 
