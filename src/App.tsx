@@ -35,7 +35,7 @@ import Social from "./pages/social";
 import Short from "./pages/short";
 import { useGetRecommendedMoviesQuery } from "./pages/home/services/homeApi";
 import Announce from "./components/Announce";
-import land from './assets/login/land.png'
+import land from './assets/login/land.webp'
 // import { Game } from "./pages/Point/pages/Game";
 // import Menber from "./pages/share/member";
 // import Share from "./pages/share";
@@ -384,7 +384,7 @@ const App: React.FC = () => {
                       <Route path="/social" element={<div />} />
                     )}
                     {/* <Route path="/social" element={<Social />} /> */}
-                    <Route path="/short" element={<Short />} />
+                    {/* <Route path="/short" element={<Short />} /> */}
                     <Route path="/explorer/:id" element={<Detail />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/player/:id" element={<Player />} />
