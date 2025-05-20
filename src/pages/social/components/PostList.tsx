@@ -541,6 +541,13 @@ const PostList = ({
                 )}
               </div>
             )}
+            {post.file_type === "gif" && (
+              <img
+                src={post.files[0]?.resourceURL}
+                alt={`Picture of social_image`}
+                className="w-full h-full object-cover"
+              />
+            )}
             {post.file_type === "video" && (
               <Player
                 videoData={videoData}
