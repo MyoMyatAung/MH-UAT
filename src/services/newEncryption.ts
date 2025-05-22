@@ -69,8 +69,10 @@ export class RSAEncryptor {
   public publicKey: any;
   public k: number;
 
-  constructor(publicKeyPem: any, keySize: any) {
-    this.publicKey = forge.pki.publicKeyFromPem(publicKeyPem); // Load the public key
+  constructor(keySize: any) {
+    this.publicKey = forge.pki.publicKeyFromPem(
+      process.env.REACT_APP_PUBLIC_KEY || ""
+    ); // Load the public key
     this.k = keySize / 8; // Key size in bytes
   }
 
