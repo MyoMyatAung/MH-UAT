@@ -19,7 +19,7 @@ export const generateData = (data: any) => {
   const jsonString = JSON.stringify(newData);
 
   const keySize = 1024; // Key size in bits (e.g., 1024, 2048)
-  const encryptor = new RSAEncryptor(process.env.REACT_APP_PUBLIC_KEY, keySize);
+  const encryptor = new RSAEncryptor(keySize);
 
   const encryptedData = encryptor.encryptPKCS1(jsonString);
 
