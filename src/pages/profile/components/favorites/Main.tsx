@@ -84,7 +84,7 @@ const Main: React.FC<MainProps> = ({
       setShowConfirmation(false);
       setIsLoadingDelete(false);
     } catch (error) {
-      dispatch(showToast({ message: "发生了错误", type: "error" }));
+      dispatch(showToast({ message: "服务器开小差了", type: "error" }));
       setIsLoadingDelete(false);
       setShowConfirmation(false);
       setSelectedMovies([]);
