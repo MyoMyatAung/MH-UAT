@@ -41,7 +41,7 @@ const NewAds: React.FC<NewAdsProps> = ({ section, fromMovie = false }) => {
       >
         {imageLoading && (
           <div className=" object-cover rounded-[8px] mx-auto bg-white/15 animate-pulse flex justify-center items-center">
-            <p className="text-[12px] font-[500] text-[#888]">
+            <p className="text-[13px] font-[500] text-[#888]">
               {item?.remarks}
             </p>
           </div>
@@ -54,7 +54,7 @@ const NewAds: React.FC<NewAdsProps> = ({ section, fromMovie = false }) => {
             loading="lazy"
           />
         )}
-        <p className="text-[12px] font-[500] text-[#888]">
+        <p className="text-[13px] font-[500] text-[#888]">
           {item?.remarks || "No description"}
         </p>
       </Link>

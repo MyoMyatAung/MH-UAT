@@ -23,7 +23,7 @@ const HomeAds = ({ data, isLoading }: any) => {
       >
         {imageLoading && (
           <div className=" object-cover rounded-[4px] mx-auto bg-white/15 animate-pulse flex justify-center items-center">
-            <p className="text-[12px] font-[500] text-[#888]">{item.remarks}</p>
+            <p className="text-[13px] font-[500] text-[#888]">{item.remarks}</p>
           </div>
         )}
         {imgSrc && (
@@ -34,7 +34,7 @@ const HomeAds = ({ data, isLoading }: any) => {
             loading="lazy"
           />
         )}
-        <p className="text-[12px] font-[500] text-[#888]">
+        <p className="text-[13px] font-[500] text-[#888]">
           {item.remarks || "No description"}
         </p>
       </Link>
