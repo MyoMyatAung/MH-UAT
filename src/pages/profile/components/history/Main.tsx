@@ -4,8 +4,6 @@ import ImageWithPlaceholder from "../../../search/components/ImgPlaceholder";
 import { useDeleteRecordMutation } from "../../services/profileApi";
 //import { useGetAdsQuery } from "../../../search/services/searchApi";
 import Loader from "../../../search/components/Loader";
-import NewAds from "../../../../components/NewAds";
-import { useGetAdsQuery } from "../../../../services/helperService";
 import { showToast } from "../../error/ErrorSlice";
 import { useDispatch } from "react-redux";
 
@@ -15,7 +13,6 @@ const Main: React.FC<any> = ({
   movies,
   refetch,
 }) => {
-  const { data: adsData, isLoading, isFetching } = useGetAdsQuery(); // Fetch ads data from API
   const [selectedMovies, setSelectedMovies] = useState<any[]>([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [deleteRecord] = useDeleteRecordMutation(); // Use the delete mutation
@@ -61,8 +58,6 @@ const Main: React.FC<any> = ({
     setShowConfirmation(false);
   };
 
-  const advert = adsData?.data?.play_record_up?.data;
-
   // Calculate view percentage
   const calculateViewPercentage = (progress_time: number, duration: number) => {
     if (duration && progress_time) {
@@ -91,16 +86,17 @@ const Main: React.FC<any> = ({
   };
 
   return (
-    <div className="bg-[#161619] mt-[60px] pb-[50px]">
-      {isLoading || isFetching ? (
+    <div className="bg-[#161619] mt-[20px] pb-[50px]">
+      {/* <div className="py-2">
+        <MemoizedAds />
+      </div> */}
+      {/* {isLoading || isFetching ? (
         <div className="flex justify-center items-center h-[126px]">
           <Loader />
         </div>
       ) : (
-        <div className="py-2">
-          <NewAds section="play_record_up" />
-        </div>
-      )}
+     
+      )} */}
       {movies?.map((movie: any, index: number) => {
         // Filter the movies based on the filterToggle state
         const filteredList = filterToggle
