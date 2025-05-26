@@ -86,7 +86,7 @@ const Main: React.FC<any> = ({
   };
 
   return (
-    <div className="bg-[#161619] mt-[20px] pb-[50px]">
+    <div className="bg-[#161619] mt-[20px] pb-[50px] overflow-x-hidden">
       {/* <div className="py-2">
         <MemoizedAds />
       </div> */}
@@ -215,7 +215,7 @@ const Main: React.FC<any> = ({
             </div>
 
             <div
-              className={`fixed z-10 bottom-0 gap-3 w-full bg-[#1B1B1F] p-6 flex justify-between items-center transition-transform duration-300 ease-in-out ${
+              className={`fixed z-10 bottom-0 left-0 right-0 gap-3 bg-[#1B1B1F] px-4 py-6 flex justify-between items-center transition-transform duration-300 ease-in-out max-w-[100vw] ${
                 isEditMode ? "translate-y-0" : "transform translate-y-full"
               }`}
             >
