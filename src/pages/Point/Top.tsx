@@ -2,6 +2,7 @@ import React from "react";
 import "./point.css";
 import { useGetDailyTesksQuery, useGetUserQuery } from "./service/PointApi";
 import light from "./lignt.png";
+import coupon from "./coupon.png";
 import { useSelector } from "react-redux";
 
 interface TopProps {
@@ -10,11 +11,7 @@ interface TopProps {
   point: any;
 }
 
-const Top: React.FC<TopProps> = ({
-  inretralDetails,
-  invite,
-  point,
-}) => {
+const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
   const activeTab = useSelector((state: any) => state?.home?.activePointTab);
 
   // console.log(point)
@@ -99,16 +96,24 @@ const Top: React.FC<TopProps> = ({
         </div>
       ) : (
         <div className=" relative overflow-hidd">
-            <img
-              className=" absolute top-[-25px] h-[50px] w-[168px] right-0"
-              src={light}
-              alt=""
-            />
+          <img
+            className=" absolute top-[-25px] h-[50px] w-[168px] right-0"
+            src={light}
+            alt=""
+          />
           <div className=" px-[18px] py-[20px] relative">
             {/* header */}
-            <span className=" text-[12px] font-[400] text-[#888]">
-              积分余额
-            </span>
+            <div className=" flex justify-between items-center">
+              <span className=" text-[12px] font-[400] text-[#888]">
+                积分余额
+              </span>
+              {/* coupons */}
+              <div className=" pr-3">
+                <span className=" text-[#BBB] text-[12px] font-[400] flex justify-center items-center gap-[2px]">
+                  兑换劵 : 8 <img className=" w-[12px] h-[12px]" src={coupon} alt="" />
+                </span>
+              </div>
+            </div>
             <div className=" pt-[10px] flex justify-between items-center">
               <div className=" flex justify-center items-center gap-[8px]">
                 <svg

@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import { STATUS_MAP } from "./List";
 import { useForm, useFieldArray } from "react-hook-form";
 import numeral from "numeral";
-import "./style.css"
+import "./style.css";
 import FeedbackComponent from "../../../pages/player/video/Feedback";
 
 export const ItemInfo = () => {
@@ -24,7 +24,6 @@ export const ItemInfo = () => {
   const [isRemove, setIsRemove] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false); // For triggering modal
-
 
   let [deleteMode, setDeleteMode] = useState<boolean>(false);
   let [isOpen, setIsOpen] = useState<boolean>(false);
@@ -85,7 +84,7 @@ export const ItemInfo = () => {
   };
 
   const handleFeedback = () => {
-    handleFeedbackModel()
+    handleFeedbackModel();
     // try {
     //   //@ts-ignore
     //   JsBridge?.openNativePage?.(
@@ -116,27 +115,27 @@ export const ItemInfo = () => {
       const orderid = params?.id ?? "";
       const res = await cancelOrder(orderid);
       // @ts-ignore
-    //   if (typeof JsBridge === "undefined") {
-    //     // @ts-ignore
-    //     dsBridge.call(
-    //       "updateUserInfo",
-    //       {
-    //         name: "integral",
-    //         value: res?.data?.surplus_integral,
-    //       },
-    //       (value: any) => {
-    //         refresh();
-    //       }
-    //     );
-    //   } else {
-    //     // @ts-ignore
-    //     JsBridge?.updateUserInfo?.(
-    //       JSON.stringify({
-    //         name: "integral",
-    //         value: res?.data?.surplus_integral,
-    //       })
-    //     );
-    //   }
+      //   if (typeof JsBridge === "undefined") {
+      //     // @ts-ignore
+      //     dsBridge.call(
+      //       "updateUserInfo",
+      //       {
+      //         name: "integral",
+      //         value: res?.data?.surplus_integral,
+      //       },
+      //       (value: any) => {
+      //         refresh();
+      //       }
+      //     );
+      //   } else {
+      //     // @ts-ignore
+      //     JsBridge?.updateUserInfo?.(
+      //       JSON.stringify({
+      //         name: "integral",
+      //         value: res?.data?.surplus_integral,
+      //       })
+      //     );
+      //   }
       refresh();
     } catch (err) {
     } finally {
@@ -146,7 +145,6 @@ export const ItemInfo = () => {
       setIsCancelling(false);
     }
   });
-
 
   const onRemoveOrder = useLockFn(async () => {
     setIsRemove(true);
@@ -210,7 +208,7 @@ export const ItemInfo = () => {
       />
       <Transition show={isOpen} as={Fragment}>
         <Dialog open={true} onClose={() => setIsOpen(false)}>
-          <TransitionChild  
+          <TransitionChild
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0"
@@ -314,7 +312,7 @@ export const ItemInfo = () => {
           </TransitionChild>
         </Dialog>
       </Transition>
-        {/* badge */}
+      {/* badge */}
       <div
         className="w-full bg-[#FFDB5B] flex gap-2 truncate items-center p-2"
         onClick={handleCopy}
@@ -333,14 +331,10 @@ export const ItemInfo = () => {
         <div className="flex flex-col py-3.5 px-4 gap-1 w-fit">
           <ol className="flex w-fit gap-6">
             {(res?.status ?? "") === "cancelled" ? (
-              <li className={`text-base text-[#ff6a33] font-medium`}>
-                已取消
-              </li>
+              <li className={`text-base text-[#ff6a33] font-medium`}>已取消</li>
             ) : null}
             {(res?.status ?? "") === "failed" ? (
-              <li className={`text-base text-[#ff6a33] font-medium`}>
-                已驳回
-              </li>
+              <li className={`text-base text-[#ff6a33] font-medium`}>已驳回</li>
             ) : null}
 
             <li
@@ -373,14 +367,10 @@ export const ItemInfo = () => {
           </ol>
           <ol className="flex w-full divide divide-black/05 items-center gap-1 justify-center">
             {(res?.status ?? "") === "cancelled" ? (
-              <li className={`text-base text-[#ff6a33] font-medium`}>
-                已取消
-              </li>
+              <li className={`text-base text-[#ff6a33] font-medium`}>已取消</li>
             ) : null}
             {(res?.status ?? "") === "failed" ? (
-              <li className={`text-base text-[#ff6a33] font-medium`}>
-                已驳回
-              </li>
+              <li className={`text-base text-[#ff6a33] font-medium`}>已驳回</li>
             ) : null}
 
             <li
@@ -432,6 +422,7 @@ export const ItemInfo = () => {
               </div>
               <div className="flex flex-col">
                 <span className="text-lg text-[#ff6a33] font-semibold">
+                  {/* new line */}1 兑换劵 +{" "}
                   {numeral(res?.goods?.current_price ?? 0).format("0,0")}
                   &nbsp;积分
                 </span>
@@ -576,6 +567,8 @@ export const ItemInfo = () => {
           <div className="w-full flex justify-between py-2.5">
             <p className="text-base">商品总价</p>
             <p className="text-base text-black/60">
+              {/* new line */}
+              1 兑换劵 +{" "}
               {numeral(res?.goods?.original_price ?? 0).format("0,0")}&nbsp;积分
             </p>
           </div>
@@ -605,10 +598,10 @@ export const ItemInfo = () => {
           </div>
         </div>
       )}
-       {showFeedbackModal && (
+      {showFeedbackModal && (
         <FeedbackComponent
           movieId={"1"}
-          onActionComplete={() => console.log('test')}
+          onActionComplete={() => console.log("test")}
           onClose={handleFeedbackModel}
           setIsLoading={setIsLoading}
           isLoading={isLoading}
@@ -619,4 +612,4 @@ export const ItemInfo = () => {
   );
 };
 
-export default ItemInfo
+export default ItemInfo;

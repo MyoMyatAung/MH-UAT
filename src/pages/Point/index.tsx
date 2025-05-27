@@ -17,7 +17,7 @@ import {
 import Loader from "../../components/login/Loader";
 import { useSelector } from "react-redux";
 
-const Index = ({showTab = true}) => {
+const Index = ({ showTab = true }) => {
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
@@ -48,6 +48,8 @@ const Index = ({showTab = true}) => {
   const { data: userData, error } = useGetUserQuery(undefined, {
     skip: !token,
   });
+
+  console.log(task, "daily tasl");
   const actavityList = list?.data;
   const taskList = task?.data;
   const inviteList = invite?.data;

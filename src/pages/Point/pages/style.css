@@ -76,3 +76,26 @@
   font-weight: 400;
   line-height: 22px; /* 122.222% */
 }
+
+.new_redeem {
+  color: #444;
+  font-family: "Helvetica Neue";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px; /* 131.25% */
+}
+
+.new_redeem_num {
+  color: var(--Nav-Linear, #fa652e);
+  font-family: "Helvetica Neue";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 21px;
+}
+
+.get_point_btn {
+  border-radius: 20px;
+  border: 1px solid var(--Nav-Linear, #fa652e);
+}
