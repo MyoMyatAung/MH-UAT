@@ -14,7 +14,6 @@ interface TopProps {
 const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
   const activeTab = useSelector((state: any) => state?.home?.activePointTab);
 
-  // console.log(point)
   // console.log(inretralDetails);
   return (
     <div className=" top_box m-[20px]">
@@ -68,14 +67,16 @@ const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
               <span className=" text-white text-[16px] font-[600]">
                 {invite?.today}
               </span>
-              <span className=" text-[#888] font-[500] text-[10px]">今日邀请</span>
+              <span className=" text-[#888] font-[500] text-[10px]">
+                今日邀请
+              </span>
             </div>
             <div className=" flex flex-col gap-[4px] justify-center items-center">
               <span className=" text-white text-[16px] font-[600]">
                 {invite?.yesterday}
               </span>
               <span className=" text-[#888] font-[500] text-[10px]">
-              昨日邀请{" "}
+                昨日邀请{" "}
               </span>
             </div>
             <div className=" flex flex-col gap-[4px] justify-center items-center">
@@ -83,7 +84,7 @@ const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
                 {invite?.thisweek}
               </span>
               <span className=" text-[#888] font-[500] text-[10px]">
-              本周邀请
+                本周邀请
               </span>
             </div>
           </div>
@@ -110,7 +111,8 @@ const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
               {/* coupons */}
               <div className=" pr-3">
                 <span className=" text-[#BBB] text-[12px] font-[400] flex justify-center items-center gap-[2px]">
-                  兑换劵 : 8 <img className=" w-[12px] h-[12px]" src={coupon} alt="" />
+                  兑换劵 : {point?.data?.coupon ? point?.data?.coupon : 0}{" "}
+                  <img className=" w-[12px] h-[12px]" src={coupon} alt="" />
                 </span>
               </div>
             </div>

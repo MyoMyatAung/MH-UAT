@@ -49,7 +49,6 @@ const Index = ({ showTab = true }) => {
     skip: !token,
   });
 
-  console.log(task, "daily tasl");
   const actavityList = list?.data;
   const taskList = task?.data;
   const inviteList = invite?.data;

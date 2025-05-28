@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import noListImg from "../test.png";
+import { useGetUserQuery } from "../../../pages/profile/services/profileApi";
 
 export const Mall = () => {
   const [t, st] = useState<any>(0);
@@ -22,10 +23,13 @@ export const Mall = () => {
   const token = parsedLoggedIn?.data?.access_token;
   const navigate = useNavigate();
 
-  const { data: activity } = useGetActivityQuery("", {
+  const { data: userData } = useGetUserQuery(undefined, {
     skip: !token,
   });
-  const integralDetails = activity?.data.total;
+
+  const integralDetails = userData?.data?.integral;
+  const coupon = userData?.data?.coupon;
+  console.log(coupon);
   const [pageConfig, setPageConfig] = useState({
     page: 1,
     pageSize: 6,
@@ -256,7 +260,8 @@ export const Mall = () => {
                 <span className="text-black/60 text-sm">积分</span>
               </div>
               <span className="new_redeem">
-                兑换劵 : <span className="new_redeem_num">12</span> 张
+                兑换劵 :{" "}
+                <span className="new_redeem_num">{coupon ? coupon : 0}</span> 张
               </span>
             </div>
             <button
