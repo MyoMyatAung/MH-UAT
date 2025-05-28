@@ -22,14 +22,14 @@ const HomeAds = ({ data, isLoading }: any) => {
         to={item.data?.url || "#"}
       >
         {imageLoading && (
-          <div className=" min-w-[60px] min-h-[60px] object-cover rounded-[4px] mx-auto bg-white/15 animate-pulse flex justify-center items-center">
+          <div className="w-[60px] h-[60px] object-cover rounded-[4px] mx-auto bg-white/15 animate-pulse flex justify-center items-center">
             <p className="text-[13px] font-[500] text-[#888]">{item.remarks}</p>
           </div>
         )}
         {imgSrc && (
           <img
             src={imgSrc}
-            className=" min-w-[60px] min-h-[60px] object-cover rounded-[4px] mx-auto"
+            className="w-[60px] h-[60px] object-cover rounded-[4px] mx-auto"
             alt="ad"
             loading="lazy"
           />

@@ -89,7 +89,7 @@ const Footer: FC = () => {
           <span
             className={`${
               selectedMenu === "home" ? "text-white" : "text-white/80"
-            } text-[10px]`}
+            } text-[12px]`}
           >
             {t("footer.home")}
           </span>
@@ -115,7 +115,7 @@ const Footer: FC = () => {
           <span
             className={`${
               selectedMenu === "explorer" ? "text-white" : "text-white/80"
-            } text-[10px]`}
+            } text-[12px]`}
           >
             {t("footer.explorer")}
           </span>
@@ -138,7 +138,7 @@ const Footer: FC = () => {
             <span
               className={`${
                 selectedMenu === "social" ? "text-white" : "text-white/80"
-              } text-[10px]`}
+              } text-[12px]`}
             >
               广场
             </span>
@@ -161,7 +161,7 @@ const Footer: FC = () => {
           <span
             className={`${
               selectedMenu === "short" ? "text-white" : "text-white/80"
-            } text-[10px] mt-[6px]`}
+            } text-[12px] mt-[6px]`}
           >
             短剧
           </span>
@@ -185,7 +185,7 @@ const Footer: FC = () => {
           <span
             className={`${
               selectedMenu === "profile" ? "text-white" : "text-white/80"
-            } text-[10px]`}
+            } text-[12px]`}
           >
             {t("footer.profile")}
           </span>

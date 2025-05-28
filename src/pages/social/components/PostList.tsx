@@ -568,7 +568,7 @@ const PostList = ({
               />
             )}
             {post?.type === "post" || !post?.type ? (
-              <div className="flex justify-between items-center px-4 py-3 text-xs">
+              <div className="flex justify-between items-center px-4 py-3 text-[12px]">
                 {showCreatedTime ? (
                   <div className="fixed top-0 left-0 flex h-screen items-center justify-center z-[1000] w-full">
                     <p className="text-[12px] text-white font-semibold bg-gradient-to-r from-background to-gray-800 px-3 py-1 rounded-md">
@@ -580,7 +580,7 @@ const PostList = ({
                 )}
 
                 <div>
-                  <p className="text-gray-400 text-xs">{post?.create_time}</p>
+                  <p className="text-gray-400 text-[12px]">{post?.create_time}</p>
                 </div>
 
                 <div className="flex gap-x-5  items-center justify-center">
@@ -662,7 +662,7 @@ const PostList = ({
               </div>
             ) : (
               post?.type === "ads" && (
-                <div className="flex justify-between items-center px-4 py-3 text-xs">
+                <div className="flex justify-between items-center px-4 py-3 text-[12px]">
                   <div className="flex items-center gap-2">
                     <div>
                       <img

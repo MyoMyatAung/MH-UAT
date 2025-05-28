@@ -181,7 +181,7 @@ console.log(data)
           <div
             className={`h-[20px] w-[128px] absolute z-[3] ${
               smallWidthRatio ? "bottom-[148px]" : "bottom-[80px]"
-            } left-[50%] ml-[-58px] text-xs text-white truncate`}
+            } left-[50%] ml-[-58px] text-[12px] text-white truncate`}
           >
           
             {data?.data?.open_now ? (

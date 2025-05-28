@@ -28,7 +28,7 @@ const Rank = ({ data, index }: { data: any; index: number }) => {
 
   return (
     <div className="rank" style={{ background: getBackgroundByIndex(index) }}>
-      <h1 className="mb-3">{data?.title}</h1>
+      <h1 className="mb-3 text-[16px]">{data?.title}</h1>
       {data?.list?.map((res: any, idx: any) => (
         <button
           key={idx}

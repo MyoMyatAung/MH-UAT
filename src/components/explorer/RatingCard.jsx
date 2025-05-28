@@ -21,7 +21,7 @@ const RatingCard = ({ movie, index }) => {
           {index + 1}
         </div>
         <div className="absolute rounded-bl-md rounded-br-md  h-full w-full inset-0 bg-gradient-to-b from-transparent via-black/5 to-black"></div>
-        <div className="flex absolute justify-between items-center px-3 bottom-2 w-full text-[10px]">
+        <div className="flex absolute justify-between items-center px-3 bottom-2 w-full text-[12px]">
           <p>{movie?.dynamic}</p>
         </div>
       </Link>

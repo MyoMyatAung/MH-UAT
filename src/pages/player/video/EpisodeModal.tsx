@@ -174,10 +174,10 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                       {/* Display total videos if available */}
                       <div className="flex justify-between items-center">
                       {source.total && (
-                        <p className="bg-source text-white text-xs px-3 py-1.5 my-2 mr-3 rounded-md">{source.total} 个视频</p>
+                        <p className="bg-source text-white text-[12px] px-3 py-1.5 my-2 mr-3 rounded-md">{source.total} 个视频</p>
                       )}
                       {/* Display tips if available */}
-                      <p className="bg-source text-white text-xs px-3 py-1.5 my-2 rounded-md">
+                      <p className="bg-source text-white text-[12px] px-3 py-1.5 my-2 rounded-md">
                         {source.tips || "No description available"}
                       </p>
                       </div>

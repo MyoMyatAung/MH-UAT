@@ -168,7 +168,7 @@ const Main: React.FC<MainProps> = ({
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black to-transparent rounded-sm"></div>
 
-                  <div className="absolute bottom-[3px] right-[3px] text-[10px]">
+                  <div className="absolute bottom-[3px] right-[3px] text-[12px]">
                     {movie?.dynamic}
                   </div>
                 </div>

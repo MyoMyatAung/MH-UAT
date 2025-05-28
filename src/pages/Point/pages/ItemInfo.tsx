@@ -421,7 +421,7 @@ export const ItemInfo = () => {
             <div className="flex flex-col gap-2">
               <div className="flex gap-1 items-center">
                 {res?.goods?.label ?? false ? (
-                  <span className="text-xs  bg-[#ff6a33] font-semibold text-white px-2.5 rounded flex items-center h-5">
+                  <span className="text-[12px]  bg-[#ff6a33] font-semibold text-white px-2.5 rounded flex items-center h-5">
                     {res?.goods?.label}
                   </span>
                 ) : null}
@@ -437,7 +437,7 @@ export const ItemInfo = () => {
                 </span>
                 {(res?.goods?.original_price ?? 0) &&
                 res?.goods?.original_price != res?.goods?.current_price ? (
-                  <span className="text-xs text-black/40 font-semibold line-through decoration-black/40">
+                  <span className="text-[12px] text-black/40 font-semibold line-through decoration-black/40">
                     {numeral(res?.goods?.original_price ?? 0).format("0,0")}
                     &nbsp;积分
                   </span>
@@ -582,7 +582,7 @@ export const ItemInfo = () => {
           {(res?.goods?.original_price ?? 0) &&
           res?.goods?.original_price != res?.goods?.current_price ? (
             <div className="flex justify-end mb-2 items-baseline gap-2">
-              <span className="text-xs text-black/60">实际花费:</span>
+              <span className="text-[12px] text-black/60">实际花费:</span>
               <span className="text-base text-[#ff6a33]">
                 {numeral(res?.order_price ?? 0).format("0,0")}&nbsp;积分
               </span>
