@@ -21,7 +21,7 @@ export const Card: FC<CardProps> = ({
     <div className="w-full flex flex-col bg-white rounded-lg overflow-hidden relative" key={key ?? ''}>
       {
         data?.discount === 0 ? null : (
-          <div className="absolute bg-[#ff6a33] text-white text-xs right-0 rounded-bl-lg px-3 h-[21px] flex items-center font-semibold">
+          <div className="absolute bg-[#ff6a33] text-white text-[12px] right-0 rounded-bl-lg px-3 h-[21px] flex items-center font-semibold">
             {data?.label}
           </div>
         )
@@ -52,7 +52,7 @@ export const Card: FC<CardProps> = ({
           {
             data?.original_price ?
               (
-                <span className="text-xs text-black/40 font-semibold line-through decoration-black/40">
+                <span className="text-[12px] text-black/40 font-semibold line-through decoration-black/40">
                   {numeral(data.original_price ?? 0).format('0,0')}&nbsp;积分
                 </span>
               ) : null
@@ -61,11 +61,11 @@ export const Card: FC<CardProps> = ({
         </div>
         {
           data?.stock !== 0 ? (
-            <button className="py px-4 bg-[#ff6a33] text-xs h-[26px] leading-[26px] text-white font-medium rounded-full " onClick={link}>
+            <button className="py px-4 bg-[#ff6a33] text-[12px] h-[26px] leading-[26px] text-white font-medium rounded-full " onClick={link}>
               兑换
             </button>
           ) : (
-            <button className="py px-4 bg-graybtn text-xs h-[26px] leading-[26px] text-white font-medium rounded-full" >
+            <button className="py px-4 bg-graybtn text-[12px] h-[26px] leading-[26px] text-white font-medium rounded-full" >
               已售罄
             </button>
           )

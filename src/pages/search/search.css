@@ -94,7 +94,7 @@
 .history-title1 {
   color: var(--White-100, #fff);
   font-family: "PingFang SC";
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -312,7 +312,7 @@
 .rank h1 {
   color: var(--Secondary-Orange, #ff6a33);
   font-family: "PingFang SC";
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;

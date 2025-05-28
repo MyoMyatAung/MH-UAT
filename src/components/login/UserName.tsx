@@ -56,7 +56,7 @@ const UserName: React.FC<UserNameProps> = ({}) => {
                 htmlFor="name"
                 className={`absolute text-[14px] left-4 text-gray-500 transition-all duration-300 pointer-events-none ${
                   isFocusedName || name
-                    ? "top-[-8px] text-xs text-blue-500"
+                    ? "top-[-8px] text-[12px] text-blue-500"
                     : "top-1/2 transform -translate-y-1/2"
                 }`}
               >

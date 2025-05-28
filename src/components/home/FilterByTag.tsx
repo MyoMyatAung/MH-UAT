@@ -109,7 +109,7 @@ const FilterByTag = ({
                   }}
                   className={`${
                     sortData === item?.value
-                      ? "bg-gray-500/35 px-4 py-1 text-xs"
+                      ? "bg-gray-500/35 px-4 py-1 text-[12px]"
                       : "text-[14px]"
                   } whitespace-nowrap py-1 rounded-full hover:text-white transition-colors`}
                 >
@@ -132,7 +132,7 @@ const FilterByTag = ({
                   onClick={() => dispatch(setClass(item))}
                   className={`${
                     classData === item
-                      ? "bg-gray-500/35 px-4 py-1 text-xs"
+                      ? "bg-gray-500/35 px-4 py-1 text-[12px]"
                       : "text-[14px]"
                   } whitespace-nowrap py-1 rounded-full hover:text-white transition-colors`}
                 >
@@ -154,7 +154,7 @@ const FilterByTag = ({
                   onClick={() => dispatch(setArea(item))}
                   className={`${
                     area === item
-                      ? "bg-gray-500/35 px-4 py-1 text-xs"
+                      ? "bg-gray-500/35 px-4 py-1 text-[12px]"
                       : "text-[14px]"
                   } whitespace-nowrap py-1 rounded-full hover:text-white transition-colors`}
                 >
@@ -176,7 +176,7 @@ const FilterByTag = ({
                   onClick={() => dispatch(setYear(item))}
                   className={`${
                     year === item
-                      ? "bg-gray-500/35 px-4 py-1 text-xs"
+                      ? "bg-gray-500/35 px-4 py-1 text-[12px]"
                       : "text-[14px]"
                   } whitespace-nowrap py-1 rounded-full hover:text-white transition-colors`}
                 >

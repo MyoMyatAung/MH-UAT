@@ -182,7 +182,7 @@ const Verify: React.FC<OptProps> = ({
           ))}
         </div>
 
-        <p className="text-[#888] text-[10px] font-light leading-[15px] p-3 text-center">
+        <p className="text-[#888] text-[12px] font-light leading-[15px] p-3 text-center">
           验证码已发送 {email}
           。请检查您的邮件，如果没收到，请务必再次检查您的垃圾邮件
         </p>

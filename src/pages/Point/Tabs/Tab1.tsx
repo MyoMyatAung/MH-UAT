@@ -42,7 +42,7 @@ const Tab1: React.FC<Tab1Props> = ({ actavityList }) => {
             <span className=" text-[#888] text-[12px] font-[400]">
               {formatTimestamp(aa.create_time)}
             </span>
-            <span className=" text-[#888] text-[10px] font-[400]">
+            <span className=" text-[#888] text-[12px] font-[400]">
               剩余: <span className=" text-[12px]">{aa.surplus}</span>
             </span>
           </div>

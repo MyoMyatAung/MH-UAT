@@ -164,7 +164,7 @@ const AudioPlayer = ({
               />
             </div>
             {/* Bottom Section */}
-            <div className="flex items-center mt-1 justify-between text-xs text-gray-400">
+            <div className="flex items-center mt-1 justify-between text-[12px] text-gray-400">
               {/* Time */}
               <div>
                 {formatTime(
