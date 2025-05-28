@@ -248,9 +248,13 @@ export const ItemDetail = () => {
       <div className="jf-foot bg-white fixed w-full z-10 bottom-0 left-0 min-h-min px-4 py-2 py-4">
         <div className="flex pb-2 justify-between items-center">
           <div className="flex flex-col">
-            <span className="text-lg text-[#ff6a33] font-semibold">
-              {numeral(res?.current_price ?? 0).format("0,0")}&nbsp;积分
-            </span>
+            {typeof res?.current_price === "number" && (
+              <span className="text-lg text-orange-secondary font-semibold">
+                {res?.require_coupon > 0 && `${res.require_coupon} 兑换劵 + `}
+                {numeral(res.current_price).format("0,0")}&nbsp;积分
+              </span>
+            )}
+
             {res?.original_price ?? 0 ? (
               <span className="text-xs text-black/40 font-semibold line-through decoration-black/40">
                 {numeral(res?.original_price ?? 0).format("0,0")}&nbsp;积分
