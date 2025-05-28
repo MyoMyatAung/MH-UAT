@@ -267,7 +267,7 @@ export const ItemDetail = () => {
               立即兑换
             </button>
           ) : (
-            <p className="bg-graybtn text-sm py-[14px] px-[72px] text-white font-medium rounded ">
+            <p className="bg-[#bfbfbf] text-sm py-[14px] px-[72px] text-white font-medium rounded ">
               已售罄
             </p>
           )}

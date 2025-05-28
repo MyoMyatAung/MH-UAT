@@ -61,7 +61,7 @@ export const Card: FC<CardProps> = ({ data, key = "" }) => {
             兑换
           </button>
         ) : (
-          <button className="py px-4 bg-graybtn text-xs h-[26px] leading-[26px] text-white font-medium rounded-full">
+          <button className="py px-4 bg-[#bfbfbf] text-xs h-[26px] leading-[26px] text-white font-medium rounded-full">
             已售罄
           </button>
         )}

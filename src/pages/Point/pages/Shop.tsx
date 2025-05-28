@@ -274,7 +274,7 @@ export const Shop = () => {
                       </button>
                     ) : (
                       <button
-                        className="bg-graybtn text-sm py-[14px] px-[72px] text-white font-medium rounded "
+                        className="bg-[#bfbfbf] text-sm py-[14px] px-[72px] text-white font-medium rounded "
                       >
                         已售罄
                       </button>
