@@ -5,8 +5,8 @@ console.log(process.env.REACT_APP_API_URL);
 
 // 创建 axios 请求实例
 const serviceAxios = axios.create({
-  // baseURL: `${process.env.REACT_APP_API_URL}`,
-  baseURL: `https://cc3e497d.qdhgtch.com:2345/api/v1`,
+  baseURL: `${process.env.REACT_APP_API_URL}`,
+  // baseURL: `https://cc3e497d.qdhgtch.com:2345/api/v1`,
   timeout: 10000, // 请求超时设置
   withCredentials: false, // 跨域请求是否需要携带 cookie
 });
@@ -29,10 +29,10 @@ serviceAxios.interceptors.request.use(
       token = accessToken;
     }
 
-    // config.headers["Authorization"] = `Bearer ${token}`;
-    config.headers[
-      "Authorization"
-    ] = `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NTVkeS5hcHAuY29tIiwiYXVkIjoiNTU1ZHkuYXBwLmNvbSIsImlhdCI6MTc0ODQwMTAwMywibmJmIjoxNzQ4NDAxMDAzLCJleHAiOjE3NTA5OTMwMDMsImV4dGVuZCI6eyJpZCI6ODQ4OTQwNn19.6dfncu_nrVsxjfqxZK0qfdl3rHEOBuFPKJxTznTyx1g`;
+    config.headers["Authorization"] = `Bearer ${token}`;
+    // config.headers[
+    //   "Authorization"
+    // ] = `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NTVkeS5hcHAuY29tIiwiYXVkIjoiNTU1ZHkuYXBwLmNvbSIsImlhdCI6MTc0ODQwMTAwMywibmJmIjoxNzQ4NDAxMDAzLCJleHAiOjE3NTA5OTMwMDMsImV4dGVuZCI6eyJpZCI6ODQ4OTQwNn19.6dfncu_nrVsxjfqxZK0qfdl3rHEOBuFPKJxTznTyx1g`;
 
     config.headers["X-Client-Setting"] = { "pure-mode": 1 };
     config.headers["X-Client-UUID"] = "d556da5a-03d8-acb0-c2da-fbed114ad74a";
