@@ -68,14 +68,14 @@ const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
               <span className=" text-white text-[16px] font-[600]">
                 {invite?.today}
               </span>
-              <span className=" text-[#888] font-[500] text-[10px]">today</span>
+              <span className=" text-[#888] font-[500] text-[10px]">今日邀请</span>
             </div>
             <div className=" flex flex-col gap-[4px] justify-center items-center">
               <span className=" text-white text-[16px] font-[600]">
                 {invite?.yesterday}
               </span>
               <span className=" text-[#888] font-[500] text-[10px]">
-                Yesterday{" "}
+              昨日邀请{" "}
               </span>
             </div>
             <div className=" flex flex-col gap-[4px] justify-center items-center">
@@ -83,14 +83,14 @@ const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
                 {invite?.thisweek}
               </span>
               <span className=" text-[#888] font-[500] text-[10px]">
-                Weekly
+              本周邀请
               </span>
             </div>
           </div>
           {/* badge */}
           <div className=" flex justify-center items-center">
             <div className="share_badge_box flex justify-center items-center w-fit">
-              {invite?.total} invited users
+              {invite?.total} 邀请人数
             </div>
           </div>
         </div>

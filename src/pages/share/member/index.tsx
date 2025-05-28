@@ -13,6 +13,7 @@ import { useGetInvitedDetailsQuery } from "../../../features/share/ShareApi";
 import axios from "axios";
 import { convertToSecureUrl } from "../../../services/newEncryption";
 import Loader from "../../../components/login/Loader";
+import { useGetInvitaionMemberQuery } from "../../../pages/Point/service/PointApi";
 
 interface MemberProps {}
 
@@ -36,7 +37,7 @@ const Member: React.FC<MemberProps> = ({}) => {
     refetch();
   }, [refetch]);
 
-  console.log(isFetching);
+  const { data: invite } = useGetInvitaionMemberQuery("");
 
   return (
     <div className=" relative">
@@ -74,9 +75,88 @@ const Member: React.FC<MemberProps> = ({}) => {
         </a>
       </div>
 
+      {/* box */}
+      <div className=" top_box m-[20px]">
+        <div className=" relative pb-[20px]">
+          {/* header */}
+          <div className="  top-0 flex justify-center items-center w-full">
+            <span className="absolute text-[#CCC] text-[10px] font-[500]">
+              Invited Users
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="174"
+              height="20"
+              viewBox="0 0 174 20"
+              fill="none"
+            >
+              <path
+                d="M0 0H174L156.627 13.364C151.033 17.6669 144.174 20 137.116 20H34.3714C26.4109 20 18.7362 17.0329 12.8459 11.6781L0 0Z"
+                fill="url(#paint0_linear_4207_3430)"
+                fill-opacity="0.5"
+              />
+              <defs>
+                <linearGradient
+                  id="paint0_linear_4207_3430"
+                  x1="75.1598"
+                  y1="20"
+                  x2="86.5607"
+                  y2="-22.3144"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#CDBFA6" stop-opacity="0.12" />
+                  <stop
+                    offset="0.640707"
+                    stop-color="#CDBFA6"
+                    stop-opacity="0.24"
+                  />
+                  <stop
+                    offset="0.901452"
+                    stop-color="#E9D8BB"
+                    stop-opacity="0.32"
+                  />
+                  <stop offset="1" stop-color="#FFECCC" stop-opacity="0.52" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          {/* shareInfo */}
+          <div className=" p-[30px] flex w-full justify-between items-center">
+            <div className=" flex flex-col gap-[4px] justify-center items-center">
+              <span className=" text-white text-[16px] font-[600]">
+                {invite?.data?.today}
+              </span>
+              <span className=" text-[#888] font-[500] text-[10px]">今日邀请</span>
+            </div>
+            <div className=" flex flex-col gap-[4px] justify-center items-center">
+              <span className=" text-white text-[16px] font-[600]">
+                {invite?.data?.yesterday}
+              </span>
+              <span className=" text-[#888] font-[500] text-[10px]">
+              昨日邀请{" "}
+              </span>
+            </div>
+            <div className=" flex flex-col gap-[4px] justify-center items-center">
+              <span className=" text-white text-[16px] font-[600]">
+                {invite?.data?.thisweek}
+              </span>
+              <span className=" text-[#888] font-[500] text-[10px]">
+              本周邀请
+              </span>
+            </div>
+          </div>
+          {/* badge */}
+          <div className=" flex justify-center items-center">
+            <div className="share_badge_box flex justify-center items-center w-fit">
+              {invite?.data?.total} 邀请人数
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* member list */}
       {isFetching ? (
-       <Loader />
+        <Loader />
       ) : (
         <div className="text-white text-2xl px-4 mt-[0px] h-fit ">
           {isFetching ? (

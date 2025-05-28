@@ -20,9 +20,11 @@ const Tab3: React.FC<Tab3Props> = ({ inviteList }) => {
 
     return `${year}-${month}-${day} - ${hours}:${minutes}`;
   };
+
+  // console.log(inviteList,'invite')
   return (
     <div className=" flex flex-col">
-      {list.lenght !== 0 ? (
+      {list.lenght === 0 ? (
         <div className=" h-[600px] member_pag">
           <div className="flex flex-col h-full justify-center items-center w-full gap-2">
             <img src={user} alt="" />
