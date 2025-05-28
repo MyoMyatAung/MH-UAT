@@ -209,7 +209,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                       htmlFor="email"
                       className={`absolute text-[14px] left-4 text-gray-500 transition-all duration-300 pointer-events-none ${
                         isFocusedEmail || email
-                          ? "top-[-8px] text-xs text-blue-500"
+                          ? "top-[-8px] text-[12px] text-blue-500"
                           : "top-1/2 transform -translate-y-1/2"
                       }`}
                     >
@@ -234,7 +234,7 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                       htmlFor="password"
                       className={`absolute text-[14px] left-4 transition-all text-[#5B5B5B] pointer-events-none ${
                         isFocusedPassword || password
-                          ? "top-0 text-xs text-blue-500 -translate-y-full"
+                          ? "top-0 text-[12px] text-blue-500 -translate-y-full"
                           : "top-1/2 -translate-y-1/2"
                       }`}
                     >

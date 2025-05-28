@@ -50,7 +50,7 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
             className="flex items-center"
           >
             <span className=" text-[16px]">展开全部</span>
-            <FontAwesomeIcon icon={faChevronRight} className="ml-1 text-xs" />
+            <FontAwesomeIcon icon={faChevronRight} className="ml-1 text-[12px]" />
           </button>
         </div>
       </div>

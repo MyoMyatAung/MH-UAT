@@ -21,7 +21,7 @@ const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
         <div className=" relative pb-[20px]">
           {/* header */}
           <div className="  top-0 flex justify-center items-center w-full">
-            <span className="absolute text-[#CCC] text-[10px] font-[500]">
+            <span className="absolute text-[#CCC] text-[12px] font-[500]">
               Invited Users
             </span>
             <svg
@@ -149,7 +149,7 @@ const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
                 </span>
               </div>
               <div className="progress_box py-[6px] px-[12px] flex justify-center items-center gap-[10px]">
-                <span className=" text-white text-[10px] font-[400]">
+                <span className=" text-white text-[12px] font-[400]">
                   比上周 {inretralDetails?.compare_lastweek_percent.symbol}{" "}
                   {inretralDetails?.compare_lastweek_percent.percentage} %
                 </span>
@@ -175,7 +175,7 @@ const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
                   {inretralDetails?.today?.symbol}
                   {inretralDetails?.today?.difference}
                 </span>
-                <span className=" text-[#888] text-[10px] font-[400]">
+                <span className=" text-[#888] text-[12px] font-[400]">
                   今日积分
                 </span>
               </div>
@@ -190,7 +190,7 @@ const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
                   {inretralDetails?.yesterday?.symbol}
                   {inretralDetails?.yesterday?.difference}
                 </span>
-                <span className=" text-[#888] text-[10px] font-[400]">
+                <span className=" text-[#888] text-[12px] font-[400]">
                   昨日积分
                 </span>
               </div>
@@ -205,7 +205,7 @@ const Top: React.FC<TopProps> = ({ inretralDetails, invite, point }) => {
                   {inretralDetails?.thisweek?.symbol}
                   {inretralDetails?.thisweek?.difference}
                 </span>{" "}
-                <span className=" text-[#888] text-[10px] font-[400]">
+                <span className=" text-[#888] text-[12px] font-[400]">
                   本周积分
                 </span>
               </div>

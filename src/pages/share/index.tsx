@@ -285,7 +285,7 @@ const Share: React.FC<ShareProps> = ({}) => {
               <h1 className=" text-center text-[12px] font-[500] text-[#CCC3B2]">
                 积分兑换
               </h1>
-              <h1 className=" text-center text-[8px] font-[400] text-[#CCC3B2]">
+              <h1 className=" text-center text-[12px] font-[400] text-[#CCC3B2]">
                 兑换价值百元大礼包
               </h1>
             </div>

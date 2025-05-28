@@ -357,7 +357,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
         {visible && (
           <div className="flex justify-center items-center ">
             <div
-              className={`text-[8px] fixed w-fit  top-1/2 mx-auto left-0 right-0  py-3 px-5  flex items-center justify-center gap-1 rounded-full toast  text-white text-center z-[9999999999999999999]`}
+              className={`text-[12px] fixed w-fit  top-1/2 mx-auto left-0 right-0  py-3 px-5  flex items-center justify-center gap-1 rounded-full toast  text-white text-center z-[9999999999999999999]`}
             >
               <img src={icon} className="w-6 h-6" alt="" />
               <p className=" text-[13px]">链接已复制 </p>

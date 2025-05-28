@@ -152,7 +152,7 @@ const Landing: React.FC<LandingProps> = ({ data, preloadedImage }) => {
               }}
               className="absolute top-[2vh] right-[2vh]"
             >
-              <h1 className="text-white text-xs md:text-sm font-[400] py-[4px] px-[12px]">
+              <h1 className="text-white text-[12px] md:text-sm font-[400] py-[4px] px-[12px]">
                 跳过广告 <span>{skip}</span>
               </h1>
             </div>

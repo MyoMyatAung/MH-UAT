@@ -186,7 +186,7 @@ const Main: React.FC<any> = ({
 
                       <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black to-transparent rounded-sm"></div>
 
-                      <div className="absolute bottom-1 text-[10px] left-1 z-10">
+                      <div className="absolute bottom-1 text-[12px] left-1 z-10">
                         {mov?.episode_name}
                       </div>
                     </div>

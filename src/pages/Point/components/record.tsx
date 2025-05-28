@@ -105,10 +105,10 @@ export const Record: FC<RecordProps> = ({
                           <div className="w-full py-3 border-b border-black border-opacity-5 justify-between items-center inline-flex" key={key}>
                             <div className="text-center text-red-700 text-base font-medium leading-tight">{item.content}</div>
                             <div className="self-stretch flex-col justify-center items-end gap-1 inline-flex">
-                              <div className="text-center text-black text-opacity-80 text-xs font-normal leading-[14.40px]">
+                              <div className="text-center text-black text-opacity-80 text-[12px] font-normal leading-[14.40px]">
                                 {dayjs.unix(item.create_time).fromNow()}
                               </div>
-                              <div className="text-center text-black text-opacity-40 text-xs font-normal leading-[14.40px]">消耗积分：{item.points_used}</div>
+                              <div className="text-center text-black text-opacity-40 text-[12px] font-normal leading-[14.40px]">消耗积分：{item.points_used}</div>
                             </div>
                           </div>
                         ))

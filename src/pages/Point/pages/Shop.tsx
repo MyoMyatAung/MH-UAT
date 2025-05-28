@@ -180,7 +180,7 @@ export const Shop = () => {
             <div className="flex gap-1 items-center">
               {
                 (res?.label ?? '') ? (
-                  <span className="text-xs bg-[#ff6a33] font-semibold text-white px-2.5 rounded flex items-center h-5 min-w-fit">
+                  <span className="text-[12px] bg-[#ff6a33] font-semibold text-white px-2.5 rounded flex items-center h-5 min-w-fit">
                     {res.label}
                   </span>
                 ) : null
@@ -195,7 +195,7 @@ export const Shop = () => {
               </span>
               {
                 (res?.original_price ?? 0) && (res?.current_price != res?.original_price) ? (
-                  <span className="text-xs text-black/40 font-semibold line-through decoration-black/40">
+                  <span className="text-[12px] text-black/40 font-semibold line-through decoration-black/40">
                     {numeral(res?.original_price ?? 0).format('0,0')}&nbsp;积分
                   </span>
                 ) : null
@@ -258,7 +258,7 @@ export const Shop = () => {
                     </span>
                     {
                       (res?.original_price ?? 0) && (res?.current_price != res?.original_price) ? (
-                        <span className="text-xs text-black/40 font-semibold line-through decoration-black/40">
+                        <span className="text-[12px] text-black/40 font-semibold line-through decoration-black/40">
                           {numeral(res?.original_price ?? 0).format('0,0')}&nbsp;积分
                         </span>
                       ) : null

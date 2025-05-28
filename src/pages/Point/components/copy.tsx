@@ -37,7 +37,7 @@ export const Copy: FC<CopyProps> = ({
       }} />
       {
         btntype === 'btn' ? (
-          <button className="border border-black/20 rounded text-black text-xs py-0.5 px-1.5" onClick={handleCopy}>
+          <button className="border border-black/20 rounded text-black text-[12px] py-0.5 px-1.5" onClick={handleCopy}>
             复制
           </button>
         ) : (
