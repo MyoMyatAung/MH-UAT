@@ -559,10 +559,10 @@ const DetailPage: React.FC = () => {
                   selectedEpisode={currentEpisode}
                 />
 
-                <div className="mt-8 px-4">
+                {/* <div className="mt-8 px-4"> */}
                   {/* {adsData && <AdsSection adsDataList={adsData?.player_recommend_up} />} */}
-                  <NewAds section={"player_recommend_up"} fromMovie={true} />
-                </div>
+                  {/* <NewAds section={"player_recommend_up"} fromMovie={true} /> */}
+                {/* </div> */}
                 <RecommendedList
                   data={movieDetail}
                   showRecommandMovie={showRecommandMovie}
