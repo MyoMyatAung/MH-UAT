@@ -28,7 +28,6 @@ export const ItemInfo = () => {
 
   const { data: userData, refetch } = useGetUserQuery(undefined);
 
-
   let [deleteMode, setDeleteMode] = useState<boolean>(false);
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [removeAlert, setRemoveAlert] = useState<boolean>(false);
@@ -141,7 +140,7 @@ export const ItemInfo = () => {
       //     );
       //   }
       refresh();
-      refetch()
+      refetch();
     } catch (err) {
     } finally {
       // setIsOpen(false);
@@ -573,7 +572,8 @@ export const ItemInfo = () => {
           <div className="w-full flex justify-between py-2.5">
             <p className="text-base">商品总价</p>
             <p className="text-base text-black/60">
-              {/* new line */}1 兑换劵 +{" "}
+              {(res?.goods?.require_coupon ?? 0) !== 0 &&
+                `${res.goods.require_coupon} 兑换劵 + `}
               {numeral(res?.goods?.original_price ?? 0).format("0,0")}&nbsp;积分
             </p>
           </div>
