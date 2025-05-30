@@ -24,6 +24,11 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   const [filteredEpisodes, setFilteredEpisodes] = useState<Episode[]>([]);
   const [lowerDivHeight, setLowerDivHeight] = useState(0);
 
+  const sourceScrollRef = useRef<HTMLDivElement>(null);
+  const episodeGridRef = useRef<HTMLDivElement>(null);
+  const selectedSourceRef = useRef<HTMLDivElement>(null);
+  const selectedEpisodeRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     // Combine all episodes from the playFrom list
     // const allEpisodes = playFrom.flatMap((source) => source.list);
@@ -45,6 +50,55 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   useEffect(() => {
     setSelectedEpisodeId(defaultEpisodeId);
   }, [defaultEpisodeId]);
+
+  // Auto-scroll to selected source
+  useEffect(() => {
+    if (selectedSourceRef.current && sourceScrollRef.current) {
+      const sourceElement = selectedSourceRef.current;
+      const containerElement = sourceScrollRef.current;
+      
+      const sourceLeft = sourceElement.offsetLeft;
+      const sourceWidth = sourceElement.offsetWidth;
+      const containerScrollLeft = containerElement.scrollLeft;
+      const containerWidth = containerElement.offsetWidth;
+
+      if (sourceLeft < containerScrollLeft) {
+        containerElement.scrollTo({
+          left: sourceLeft - 20,
+          behavior: 'auto'
+        });
+      } else if (sourceLeft + sourceWidth > containerScrollLeft + containerWidth) {
+        containerElement.scrollTo({
+          left: sourceLeft + sourceWidth - containerWidth + 20,
+          behavior: 'auto'
+        });
+      }
+    }
+  }, [selectedSource]);
+
+  // Auto-scroll to selected episode (with delay to avoid conflict)
+  useEffect(() => {
+    const scrollToEpisode = () => {
+      if (selectedEpisodeRef.current && episodeGridRef.current) {
+        const episodeElement = selectedEpisodeRef.current;
+        const containerElement = episodeGridRef.current;
+        
+        // Check if element is actually rendered and visible
+        if (episodeElement.offsetParent !== null) {
+          episodeElement.scrollIntoView({
+            behavior: 'auto',
+            block: 'nearest',
+            inline: 'nearest'
+          });
+        }
+      }
+    };
+
+    // Add a small delay to prevent conflict with source scroll
+    const timeoutId = setTimeout(scrollToEpisode, 100);
+    
+    return () => clearTimeout(timeoutId);
+  }, [selectedEpisodeId, episodeRange]);
 
   const customHeight = () => {
     const upperDiv = document.getElementById('upper-div');
@@ -83,7 +137,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
       <div className="bg-sourceBack backdrop-blur-md w-full max-w-md rounded-t-xl p-4 text-white" ref={modalRef}
         style={{ height: `${lowerDivHeight}px` }}>
         <div className="flex justify-between items-center mb-4">
-          <div className="flex space-x-6 overflow-x-auto m-auto">
+          <div className="flex space-x-6 overflow-x-auto scrollbar-hide m-auto">
             {/* <button
               className={`pb-2 text-gray-400`}
               onClick={() => setActiveTab("episodes")}
@@ -104,14 +158,15 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
           </button>
         </div>
 
-        <div className="h-[calc(100%-60px)] overflow-y-auto">
+        <div className="h-[calc(100%-60px)] overflow-y-auto scrollbar-hide">
           {activeTab === "episodes" && (
             <div>
-              <div className="flex overflow-x-auto space-x-3 pb-2">
+              <div className="flex space-x-3 pb-2 overflow-x-auto scrollbar-hide" ref={sourceScrollRef}>
               {playFrom &&
                 playFrom.map((source, index) => (
                   <div
                     key={index}
+                    ref={index === selectedSource ? selectedSourceRef : null}
                     className={`relative flex flex-col justify-between p-3 rounded-lg cursor-pointer min-w-[200px] flex-shrink-0
                       ${index === selectedSource ? 'bg-episodeSelected' : 'bg-source'}`}
                     onClick={() => {
@@ -146,7 +201,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                   </div>
                 ))}
               </div>
-              <div className="flex space-x-4 overflow-x-auto mb-4">
+              <div className="flex space-x-4 overflow-x-auto scrollbar-hide mb-4">
                 {/* Episode Range Tabs */}
                 {Array.from({ length: Math.ceil(filteredEpisodes.length / 50) }, (_, index) => {
                   const start = index * 50;
@@ -165,19 +220,20 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                   );
                 })}
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2" ref={episodeGridRef}>
                 {filteredEpisodes
                   .slice(episodeRange[0], episodeRange[1])
                   .map((episode) => (
                     <button
                       key={episode.episode_id}
+                      ref={episode.episode_id === selectedEpisodeId ? selectedEpisodeRef : null}
                       onClick={() => {handleEpisodeClick(episode); onClose();}}
                       className={`py-2 text-center rounded-lg ${
                         episode.episode_id !== selectedEpisodeId
                           ? "bg-source text-white"
                           : "bg-episodeSelected  text-white"
                       }`}
-                    > 
+                    >
                       {episode.episode_name.length > 7 ? `${episode.episode_name.substring(0, 100)}...` : episode.episode_name}
                       {episode?.episode_id === selectedEpisodeId && (
                         <span className="transform -translate-x-1/2 loader ml-5 -mt-1.5">
