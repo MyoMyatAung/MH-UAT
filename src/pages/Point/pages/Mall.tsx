@@ -26,9 +26,11 @@ export const Mall = () => {
   const { data: userData } = useGetUserQuery(undefined, {
     skip: !token,
   });
-
   // staging
   // const parsedUserData = JSON.parse(userData || "{}");
+
+  //prod
+  const parsedUserData = userData;
 
   const integralDetails = userData?.data?.integral;
   const coupon = userData?.data?.coupon;
