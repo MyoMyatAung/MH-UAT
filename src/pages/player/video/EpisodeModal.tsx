@@ -107,12 +107,12 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
         <div className="h-[calc(100%-60px)] overflow-y-auto">
           {activeTab === "episodes" && (
             <div>
-              <div>
+              <div className="flex overflow-x-auto space-x-3 pb-2">
               {playFrom &&
                 playFrom.map((source, index) => (
                   <div
                     key={index}
-                    className={`flex justify-between items-center p-3 rounded-lg mb-2 cursor-pointer 
+                    className={`relative flex flex-col justify-between p-3 rounded-lg cursor-pointer min-w-[200px] flex-shrink-0
                       ${index === selectedSource ? 'bg-episodeSelected' : 'bg-source'}`}
                     onClick={() => {
                       setSelectedSource(index);
@@ -120,28 +120,32 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                       onClose();
                     }}
                   >
+                    {index === selectedSource && (
+                      <div className="absolute top-3 right-3">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="9" fill="#F54100"/>
+                        <path d="M10.5 13.6032L16.0152 8.0874L16.8642 8.9358L10.5 15.3L6.68158 11.4816L7.52998 10.6332L10.5 13.6032Z" fill="white"/>
+                        </svg>
+                      </div>
+                    )}
                     <div>
-                      <h4 className="text-white">{source.name}</h4>
+                      <div className="flex flex-col">
+                        <h4 className="text-white mb-2 pr-6">{source.name}</h4>
+                      </div>
                       {/* Display total videos if available */}
-                      <div className="flex justify-between items-center">
+                      <div className="flex flex-row">
                       {source.total && (
-                        <p className="bg-source text-white text-[12px] px-3 py-1.5 my-2 mr-3 rounded-md">{source.total} 个视频</p>
+                        <p className="bg-source text-white text-[12px] px-3 py-1.5 rounded-md mr-2">{source.total} 个视频</p>
                       )}
                       {/* Display tips if available */}
-                      <p className="bg-source text-white text-[12px] px-3 py-1.5 my-2 rounded-md">
+                      <p className="bg-source text-white text-[12px] px-3 py-1.5 rounded-md">
                         {source.tips || "No description available"}
                       </p>
                       </div>
                     </div>
-                    {index === selectedSource && (
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="9" fill="#F54100"/>
-                      <path d="M10.5 13.6032L16.0152 8.0874L16.8642 8.9358L10.5 15.3L6.68158 11.4816L7.52998 10.6332L10.5 13.6032Z" fill="white"/>
-                      </svg>
-                    )}
                   </div>
                 ))}
-            </div>
+              </div>
               <div className="flex space-x-4 overflow-x-auto mb-4">
                 {/* Episode Range Tabs */}
                 {Array.from({ length: Math.ceil(filteredEpisodes.length / 50) }, (_, index) => {
@@ -151,7 +155,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                     <>
                     <button
                       key={index}
-                      className={`px-4 whitespace-nowrap py-2 text-sm`}
+                      className={`px-1 whitespace-nowrap py-2 text-sm`}
                       onClick={() => handleTabClick(start, end)}
                     >
                       <div className="mb-2">{start + 1}-{end}集</div>
