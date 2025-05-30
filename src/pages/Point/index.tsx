@@ -48,7 +48,9 @@ const Index = ({ showTab = true }) => {
   const { data: userData, error } = useGetUserQuery(undefined, {
     skip: !token,
   });
-  const parsedUserData = JSON.parse(userData || "{}");
+
+  //staging
+  // const parsedUserData = JSON.parse(userData || "{}");
 
 
   const actavityList = list?.data;
@@ -68,7 +70,7 @@ const Index = ({ showTab = true }) => {
       {/* header */}
       <Header />
       <Top
-        point={parsedUserData}
+        point={userData}
         invite={inviteList}
         inretralDetails={inretralDetails}
       />
