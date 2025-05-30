@@ -3,7 +3,7 @@ import { useRequest, useSafeState } from "ahooks";
 import Loader from "../../../pages/search/components/Loader";
 import { useInfiniteScroll } from "ahooks";
 import { Head, Card } from "../components";
-import { getItems } from "../api";
+import { getItems } from "../api"; 
 import { GoodsData, List, ApiData } from "../types/goods";
 import InfiniteScroll from "react-infinite-scroll-component";
 import numeral from "numeral";
@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import noListImg from "../test.png";
+import { useGetUserQuery } from "../../../pages/profile/services/profileApi";
 
 export const Mall = () => {
   const [t, st] = useState<any>(0);
@@ -22,10 +23,17 @@ export const Mall = () => {
   const token = parsedLoggedIn?.data?.access_token;
   const navigate = useNavigate();
 
-  const { data: activity } = useGetActivityQuery("", {
+  const { data: userData } = useGetUserQuery(undefined, {
     skip: !token,
   });
-  const integralDetails = activity?.data.total;
+  // staging
+  // const parsedUserData = JSON.parse(userData || "{}");
+
+  //prod
+  const parsedUserData = userData;
+
+  const integralDetails = userData?.data?.integral;
+  const coupon = userData?.data?.coupon;
   const [pageConfig, setPageConfig] = useState({
     page: 1,
     pageSize: 6,
@@ -245,19 +253,26 @@ export const Mall = () => {
       </div>
       <div className="w-full relative mt-[-54px]">
         <img alt="" src="head_bg.png" />
-        <div className="container px-4 absolute bottom-[-29px]">
-          <div className="w-full jf-card flex rounded-xl h-[84px] pl-[26px] pr-[19px] items-center justify-between text-[#ff6a33]">
-            <div className="flex items-end leading-[32px] gap-2">
-              <span className="text-[32px]">
-                {integralDetails ? integralDetails : 0}
+        <div className="container px-4 absolute bottom-[-26px]">
+          <div className="w-full jf-card flex rounded-xl h-[94px] pl-[26px] pr-[19px] items-center justify-between text-[#ff6a33]">
+            {/* add line */}
+            <div className=" fles flex-col gap-[10px]">
+              <div className="flex items-end leading-[32px] gap-2">
+                <span className="text-[32px]">
+                  {integralDetails ? integralDetails : 0}
+                </span>
+                <span className="text-black/60 text-sm">积分</span>
+              </div>
+              <span className="new_redeem">
+                兑换劵 :{" "}
+                <span className="new_redeem_num">{coupon ? coupon : 0}</span> 张
               </span>
-              <span className="text-black/60 text-sm">积分</span>
             </div>
             <button
               onClick={handleOpenTask}
-              className="border border-orange-secondary px-4 py-1.5 rounded-full font-medium text-[12px];"
+              className="border get_point_btn px-4 py-1.5 rounded-full font-medium text-xs;"
             >
-              获取积分
+              获取金币和劵
             </button>
           </div>
         </div>
