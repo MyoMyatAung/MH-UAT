@@ -274,7 +274,6 @@ const SignEmail: React.FC<SignEmailProps> = ({ handleBack2 }) => {
                       value={inviteCode}
                       onChange={(e) => setInviteCode(e.target.value)}
                       className="w-[150px] bg-transparent focus:outline-none text-white placeholder-[#5B5B5B]"
-                      required
                       placeholder="输入促销代码（可选）"
                     />
                   </div>

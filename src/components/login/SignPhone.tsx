@@ -41,7 +41,6 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
   const [box, setBox] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
 
-
   const show = () => {
     setShowPassword(!showPassword);
   };
@@ -268,15 +267,14 @@ const SignPhone: React.FC<SignPhoneProps> = ({ handleBack2 }) => {
                 </div>
 
                 <div className="invite_code w-full flex justify-center items-center py-[14px]">
-                    <input
-                      type="text"
-                      value={inviteCode}
-                      onChange={(e) => setInviteCode(e.target.value)}
-                      className="w-[150px] bg-transparent focus:outline-none text-white placeholder-[#5B5B5B]"
-                      required
-                      placeholder="输入促销代码（可选）"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={inviteCode}
+                    onChange={(e) => setInviteCode(e.target.value)}
+                    className="w-[150px] bg-transparent focus:outline-none text-white placeholder-[#5B5B5B]"
+                    placeholder="输入促销代码（可选）"
+                  />
+                </div>
 
                 <button
                   disabled={!validatePassword(password)}
