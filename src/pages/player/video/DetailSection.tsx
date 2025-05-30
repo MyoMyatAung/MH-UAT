@@ -22,7 +22,7 @@ import { DetailSectionProps } from "../../../model/videoModel";
 import { useGetListQuery } from "../../../pages/profile/services/profileApi";
 import NewAds from "../../../components/NewAds";
 import Fire from "../../../assets/Fire.png";
-import copy from 'copy-to-clipboard';
+import copy from "copy-to-clipboard";
 import {
   convertToSecurePayload,
   convertToSecureUrl,
@@ -121,8 +121,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
 
   const copyToClipboard = async (text: string) => {
     try {
-      if(isWebView()) {
-        sendEventToNative(text  );
+      if (isWebView()) {
+        sendEventToNative(text);
       }
       handleCopy();
       copy(text);
@@ -151,7 +151,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
       (window as any).webkit.messageHandlers.jsBridge
     );
   }
-  
+
   const handleShare = async () => {
     setIsLoading(true);
     const cookieKey = "shareContent";
@@ -225,11 +225,12 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     };
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 200);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     console.log("scroll to top");
+  //     window.scrollTo(0, 0);
+  //   }, 200);
+  // }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -243,13 +244,13 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     };
   }, [modalRef]);
 
-  useEffect(() => {
-    if (activeTab === "tab-1") {
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-      }, 200);
-    }
-  }, [activeTab]);
+  // useEffect(() => {
+  //   if (activeTab === "tab-1") {
+  //     setTimeout(() => {
+  //       window.scrollTo(0, 0);
+  //     }, 200);
+  //   }
+  // }, [activeTab]);
 
   return (
     <div className="flex flex-col w-full bg-background">
