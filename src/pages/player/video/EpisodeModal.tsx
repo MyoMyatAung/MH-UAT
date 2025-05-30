@@ -51,29 +51,71 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     setSelectedEpisodeId(defaultEpisodeId);
   }, [defaultEpisodeId]);
 
-  // Auto-scroll to selected source
+  // Auto-scroll to selected source (with delay to ensure proper rendering)
   useEffect(() => {
-    if (selectedSourceRef.current && sourceScrollRef.current) {
-      const sourceElement = selectedSourceRef.current;
-      const containerElement = sourceScrollRef.current;
+    const scrollToSource = () => {
+      console.log('scrollToSource called, selectedSource:', selectedSource);
+      console.log('selectedSourceRef.current:', selectedSourceRef.current);
+      console.log('sourceScrollRef.current:', sourceScrollRef.current);
       
-      const sourceLeft = sourceElement.offsetLeft;
-      const sourceWidth = sourceElement.offsetWidth;
-      const containerScrollLeft = containerElement.scrollLeft;
-      const containerWidth = containerElement.offsetWidth;
+      if (selectedSourceRef.current && sourceScrollRef.current) {
+        const sourceElement = selectedSourceRef.current;
+        const containerElement = sourceScrollRef.current;
+        
+        console.log('Elements found, checking visibility...');
+        console.log('sourceElement.offsetParent:', sourceElement.offsetParent);
+        
+        // Check if element is actually rendered and visible
+        if (sourceElement.offsetParent !== null) {
+          console.log('Element is visible, calculating scroll...');
+          
+          // Try scrollIntoView as an alternative
+          sourceElement.scrollIntoView({
+            behavior: 'auto',
+            block: 'nearest',
+            inline: 'center'
+          });
+          
+          // Original scroll calculation for comparison
+          const sourceLeft = sourceElement.offsetLeft;
+          const sourceWidth = sourceElement.offsetWidth;
+          const containerScrollLeft = containerElement.scrollLeft;
+          const containerWidth = containerElement.offsetWidth;
 
-      if (sourceLeft < containerScrollLeft) {
-        containerElement.scrollTo({
-          left: sourceLeft - 20,
-          behavior: 'auto'
-        });
-      } else if (sourceLeft + sourceWidth > containerScrollLeft + containerWidth) {
-        containerElement.scrollTo({
-          left: sourceLeft + sourceWidth - containerWidth + 20,
-          behavior: 'auto'
-        });
+          console.log('Scroll calculation:', {
+            sourceLeft,
+            sourceWidth,
+            containerScrollLeft,
+            containerWidth
+          });
+
+          if (sourceLeft < containerScrollLeft) {
+            console.log('Scrolling left to:', sourceLeft - 20);
+            containerElement.scrollTo({
+              left: sourceLeft - 20,
+              behavior: 'auto'
+            });
+          } else if (sourceLeft + sourceWidth > containerScrollLeft + containerWidth) {
+            console.log('Scrolling right to:', sourceLeft + sourceWidth - containerWidth + 20);
+            containerElement.scrollTo({
+              left: sourceLeft + sourceWidth - containerWidth + 20,
+              behavior: 'auto'
+            });
+          } else {
+            console.log('Element is already in view, no scroll needed');
+          }
+        } else {
+          console.log('Element is not visible yet');
+        }
+      } else {
+        console.log('Refs not available yet');
       }
-    }
+    };
+
+    // Add a small delay to ensure elements are properly rendered
+    const timeoutId = setTimeout(scrollToSource, 50);
+    
+    return () => clearTimeout(timeoutId);
   }, [selectedSource]);
 
   // Auto-scroll to selected episode (with delay to avoid conflict)
@@ -160,7 +202,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
 
         <div className="h-[calc(100%-60px)] overflow-y-auto scrollbar-hide">
           {activeTab === "episodes" && (
-            <div>
+            <div className="h-full flex flex-col">
               <div className="flex space-x-3 pb-2 overflow-x-auto scrollbar-hide" ref={sourceScrollRef}>
               {playFrom &&
                 playFrom.map((source, index) => (
@@ -220,40 +262,43 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                   );
                 })}
               </div>
-              <div className="grid grid-cols-2 gap-2" ref={episodeGridRef}>
-                {filteredEpisodes
-                  .slice(episodeRange[0], episodeRange[1])
-                  .map((episode) => (
-                    <button
-                      key={episode.episode_id}
-                      ref={episode.episode_id === selectedEpisodeId ? selectedEpisodeRef : null}
-                      onClick={() => {handleEpisodeClick(episode); onClose();}}
-                      className={`py-2 text-center rounded-lg ${
-                        episode.episode_id !== selectedEpisodeId
-                          ? "bg-source text-white"
-                          : "bg-episodeSelected  text-white"
-                      }`}
-                    >
-                      {episode.episode_name.length > 7 ? `${episode.episode_name.substring(0, 100)}...` : episode.episode_name}
-                      {episode?.episode_id === selectedEpisodeId && (
-                        <span className="transform -translate-x-1/2 loader ml-5 -mt-1.5">
-                          <div></div>
-                          <div></div>
-                          <div></div>
-                        </span>
-                      )}
-                    </button>
-                  ))}
+              <div className="flex-1 overflow-y-auto scrollbar-hide">
+                <div className="grid grid-cols-2 gap-2" ref={episodeGridRef}>
+                  {filteredEpisodes
+                    .slice(episodeRange[0], episodeRange[1])
+                    .map((episode) => (
+                      <button
+                        key={episode.episode_id}
+                        ref={episode.episode_id === selectedEpisodeId ? selectedEpisodeRef : null}
+                        onClick={() => {handleEpisodeClick(episode); onClose();}}
+                        className={`py-2 text-center rounded-lg ${
+                          episode.episode_id !== selectedEpisodeId
+                            ? "bg-source text-white"
+                            : "bg-episodeSelected  text-white"
+                        }`}
+                      >
+                        {episode.episode_name.length > 7 ? `${episode.episode_name.substring(0, 100)}...` : episode.episode_name}
+                        {episode?.episode_id === selectedEpisodeId && (
+                          <span className="transform -translate-x-1/2 loader ml-5 -mt-1.5">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                </div>
               </div>
             </div>
           )}
 
           {activeTab === "sources" && (
-            <div>
+            <div ref={sourceScrollRef}>
               {playFrom &&
                 playFrom.map((source, index) => (
                   <div
                     key={index}
+                    ref={index === selectedSource ? selectedSourceRef : null}
                     className={`flex justify-between items-center p-3 rounded-lg mb-2 cursor-pointer 
                       ${index === selectedSource ? 'bg-episodeSelected' : 'bg-source'}`}
                     onClick={() => {
