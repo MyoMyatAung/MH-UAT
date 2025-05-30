@@ -503,7 +503,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
       )}
 
       {/* Sticky Bottom Action Bar */}
-      <div
+      {activeTab === "tab-1" && <div
         className="fixed bottom-0 left-0 w-full z-50 bg-[#1F1F21] flex justify-between items-center px-2 py-2"
         style={{ boxShadow: "0 -2px 8px rgba(0,0,0,0.2)" }}
       >
@@ -559,7 +559,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
             分享好友得积分
           </span>
         </button>
-      </div>
+      </div>}
     </div>
   );
 };
