@@ -170,6 +170,7 @@ export const ItemInfo = () => {
   };
 
   const onSubmit = async (data: any) => {
+    if(reloading) return
     setReLoading(true);
     try {
       const order = await reOrder(params.id, {
