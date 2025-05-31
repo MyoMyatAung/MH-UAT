@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import share from "../../../assets/share.png";
 import star from "../../../assets/star.png";
 import info from "../../../assets/info.png";
@@ -22,7 +22,7 @@ import { DetailSectionProps } from "../../../model/videoModel";
 import { useGetListQuery } from "../../../pages/profile/services/profileApi";
 import NewAds from "../../../components/NewAds";
 import Fire from "../../../assets/Fire.png";
-import copy from 'copy-to-clipboard';
+import copy from "copy-to-clipboard";
 import {
   convertToSecurePayload,
   convertToSecureUrl,
@@ -50,7 +50,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
   const { refetch } = useGetListQuery({ page: 1, type_id: 0 });
   const [showFeedbackModal, setShowFeedbackModal] = useState(false); // For triggering modal
   const [visible, setVisible] = useState(false);
-  const [lowerDivHeight, setLowerDivHeight] = useState(0);
+
   const modalRef = useRef<any>(null);
 
   const handleCopy = () => {
@@ -58,9 +58,9 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     setTimeout(() => setVisible(false), 2000); // Hide after 2 seconds
   };
 
-  const handleDetailClick = () => {
-    setShowModal(true);
-  };
+  // const handleDetailClick = () => {
+  //   setShowModal(true);
+  // };
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -121,8 +121,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
 
   const copyToClipboard = async (text: string) => {
     try {
-      if(isWebView()) {
-        sendEventToNative(text  );
+      if (isWebView()) {
+        sendEventToNative(text);
       }
       handleCopy();
       copy(text);
@@ -151,7 +151,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
       (window as any).webkit.messageHandlers.jsBridge
     );
   }
-  
+
   const handleShare = async () => {
     setIsLoading(true);
     const cookieKey = "shareContent";
@@ -212,24 +212,66 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     return remainingHeight;
   };
 
+  const lowerDivHeightRef = useRef(customHeight());
+
+  // This won't trigger re-renders
+  const updateHeight = useCallback(() => {
+    const newHeight = customHeight();
+    lowerDivHeightRef.current = newHeight;
+
+    // Directly apply to modal if it's open
+    if (modalRef.current && showModal) {
+      modalRef.current.style.height = `${newHeight}px`;
+    }
+  }, [showModal]);
+
   useEffect(() => {
-    const updateHeight = () => {
-      setLowerDivHeight(customHeight());
+    // Initial height calculation
+    updateHeight();
+
+    // Throttled resize handler
+    let ticking = false;
+    const handleResize = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateHeight();
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    updateHeight(); // Set initial height
-    window.addEventListener("resize", updateHeight); // Update height on window resize
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateHeight]);
 
-    return () => {
-      window.removeEventListener("resize", updateHeight); // Cleanup event listener
-    };
-  }, []);
+  const handleDetailClick = () => {
+    setShowModal(true);
+    // Apply current height directly
+    if (modalRef.current) {
+      modalRef.current.style.height = `${lowerDivHeightRef.current}px`;
+    }
+  };
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 200);
-  }, []);
+  // useEffect(() => {
+  //   const updateHeight = () => {
+  //     setLowerDivHeight(customHeight());
+  //   };
+
+  //   updateHeight(); // Set initial height
+  //   window.addEventListener("resize", updateHeight); // Update height on window resize
+
+  //   return () => {
+  //     window.removeEventListener("resize", updateHeight); // Cleanup event listener
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     console.log("scroll to top");
+  //     window.scrollTo(0, 0);
+  //   }, 200);
+  // }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -243,13 +285,13 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     };
   }, [modalRef]);
 
-  useEffect(() => {
-    if (activeTab === "tab-1") {
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-      }, 200);
-    }
-  }, [activeTab]);
+  // useEffect(() => {
+  //   if (activeTab === "tab-1") {
+  //     setTimeout(() => {
+  //       window.scrollTo(0, 0);
+  //     }, 200);
+  //   }
+  // }, [activeTab]);
 
   return (
     <div className="flex flex-col w-full bg-background">
@@ -371,7 +413,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
             {/* Comment section or other content */}
             <CommentComponent
               movieId={id}
-              lowerDivHeight={lowerDivHeight}
+              lowerDivHeight={lowerDivHeightRef.current}
               setCommentCount={setCommentCount}
               commentCount={commentCount}
               comments={comments}
@@ -394,7 +436,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
           <div
             ref={modalRef}
             className="bg-background backdrop-blur-md w-full max-w-md bottom-0 rounded-lg p-6 text-white overflow-y-auto"
-            style={{ height: `${lowerDivHeight}px` }}
+            style={{ height: `${lowerDivHeightRef.current}px` }}
           >
             {/* Modal Header */}
             <div className="flex justify-between items-center mb-4">
@@ -483,7 +525,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
           onClose={handleFeedbackModel}
           setIsLoading={setIsLoading}
           isLoading={isLoading}
-          height={`${lowerDivHeight}px`}
+          height={`${lowerDivHeightRef?.current}px`}
         />
       )}
     </div>
