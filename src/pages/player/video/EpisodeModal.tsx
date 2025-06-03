@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Episode, ModalComponentProps } from '../../../model/videoModel';
+import Loader from '../../search/components/Loader';
 
 const ModalComponent: React.FC<ModalComponentProps> = ({
   onClose,
@@ -23,6 +24,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   const [episodeRange, setEpisodeRange] = useState<[number, number]>([0, 50]);
   const [filteredEpisodes, setFilteredEpisodes] = useState<Episode[]>([]);
   const [lowerDivHeight, setLowerDivHeight] = useState(0);
+  const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
 
   const sourceScrollRef = useRef<HTMLDivElement>(null);
   const episodeGridRef = useRef<HTMLDivElement>(null);
@@ -34,6 +36,11 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     // Combine all episodes from the playFrom list
     // const allEpisodes = playFrom.flatMap((source) => source.list);
     setFilteredEpisodes(episodes);
+    
+    // Set loading to false when episodes are loaded
+    if (episodes && episodes.length > 0) {
+      setIsLoadingEpisodes(false);
+    }
     
     // Initialize the episode range based on the default episode if available
     if (defaultEpisodeId && episodes.length > 0) {
@@ -234,6 +241,18 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [modalRef]);
+
+  // Handle source selection with loading state
+  const handleSourceChange = (source: any, index: number) => {
+    setIsLoadingEpisodes(true);
+    setSelectedSource(index);
+    changeSource(source);
+    const timeoutId = setTimeout(() => {
+      setIsLoadingEpisodes(false);
+    }, 1500);
+    return () => clearTimeout(timeoutId);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <div className="h-[calc(100%-211px)]
@@ -257,11 +276,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                     ref={index === selectedSource ? selectedSourceRef : null}
                     className={`relative flex flex-col justify-between p-3 rounded-lg cursor-pointer min-w-[200px] flex-shrink-0
                       ${index === selectedSource ? 'bg-episodeSelected' : 'bg-source'}`}
-                    onClick={() => {
-                      setSelectedSource(index);
-                      changeSource(source);
-                      // onClose();
-                    }}
+                    onClick={() => handleSourceChange(source, index)}
                   >
                     {index === selectedSource && (
                       <div className="absolute top-3 right-3">
@@ -291,7 +306,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
               </div>
               <div className="flex space-x-4 overflow-x-auto scrollbar-hide mb-4">
                 {/* Episode Range Tabs */}
-                {Array.from({ length: Math.ceil(filteredEpisodes.length / 50) }, (_, index) => {
+                {!isLoadingEpisodes && Array.from({ length: Math.ceil(filteredEpisodes.length / 50) }, (_, index) => {
                   const start = index * 50;
                   const end = Math.min(start + 50, filteredEpisodes.length);
                   const isActive = episodeRange[0] === start;
@@ -309,31 +324,37 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                 })}
               </div>
               <div className="flex-1 overflow-y-auto scrollbar-hide">
-                <div className="grid grid-cols-2 gap-2" ref={episodeGridRef}>
-                  {filteredEpisodes
-                    .slice(episodeRange[0], episodeRange[1])
-                    .map((episode) => (
-                      <button
-                        key={episode.episode_id}
-                        ref={episode.episode_id === selectedEpisodeId ? selectedEpisodeRef : null}
-                        onClick={() => {handleEpisodeClick(episode);}}
-                        className={`py-2 text-center rounded-lg ${
-                          episode.episode_id !== selectedEpisodeId
-                            ? "bg-source text-white"
-                            : "bg-episodeSelected  text-white"
-                        }`}
-                      >
-                        <span className="px-6">{episode.episode_name.length > 5 ? `${episode.episode_name.substring(0, 8)}...` : episode.episode_name}</span>
-                        {episode?.episode_id === selectedEpisodeId && (
-                          <span className="transform -translate-x-1/2 loader ml-5 -mt-1.5">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                          </span>
-                        )}
-                      </button>
-                    ))}
-                </div>
+                {isLoadingEpisodes ? (
+                  <div className="flex flex-col items-center justify-center h-full min-h-[200px] space-y-4">
+                    <Loader />
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2" ref={episodeGridRef}>
+                    {filteredEpisodes
+                      .slice(episodeRange[0], episodeRange[1])
+                      .map((episode) => (
+                        <button
+                          key={episode.episode_id}
+                          ref={episode.episode_id === selectedEpisodeId ? selectedEpisodeRef : null}
+                          onClick={() => {handleEpisodeClick(episode);}}
+                          className={`py-2 text-center rounded-lg ${
+                            episode.episode_id !== selectedEpisodeId
+                              ? "bg-source text-white"
+                              : "bg-episodeSelected  text-white"
+                          }`}
+                        >
+                          <span className="px-6">{episode.episode_name.length > 5 ? `${episode.episode_name.substring(0, 8)}...` : episode.episode_name}</span>
+                          {episode?.episode_id === selectedEpisodeId && (
+                            <span className="transform -translate-x-1/2 loader ml-5 -mt-1.5">
+                              <div></div>
+                              <div></div>
+                              <div></div>
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                  </div>
+                )}
               </div>
             </div>
         </div>
