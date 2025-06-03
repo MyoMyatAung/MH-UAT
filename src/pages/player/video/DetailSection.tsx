@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import share from "../../../assets/share.png";
 import star from "../../../assets/star.png";
 import info from "../../../assets/info.png";
