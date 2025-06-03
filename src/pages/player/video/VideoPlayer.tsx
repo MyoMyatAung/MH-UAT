@@ -355,7 +355,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   return (
     <div
       id="my-player"
-      className={`relative w-full bg-black ${reHeight ? "h-[40vh]" : ""}`}
+      className={`relative w-full bg-black ${reHeight ? "h-[220px]" : ""}`}
     >
       {/* Back button */}
       {isControlsVisible && (

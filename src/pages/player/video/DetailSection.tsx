@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import share from "../../../assets/share.png";
 import star from "../../../assets/star.png";
 import info from "../../../assets/info.png";
@@ -61,6 +62,9 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     setTimeout(() => setVisible(false), 2000); // Hide after 2 seconds
   };
 
+  // const handleDetailClick = () => {
+  //   setShowModal(true);
+  // };
   // const handleDetailClick = () => {
   //   setShowModal(true);
   // };
@@ -264,7 +268,45 @@ const DetailSection: React.FC<DetailSectionProps> = ({
 
   //   updateHeight(); // Set initial height
   //   window.addEventListener("resize", updateHeight); // Update height on window resize
+    // Initial height calculation
+    updateHeight();
 
+    // Throttled resize handler
+    let ticking = false;
+    const handleResize = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateHeight();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateHeight]);
+
+  const handleDetailClick = () => {
+    setShowModal(true);
+    // Apply current height directly
+    if (modalRef.current) {
+      modalRef.current.style.height = `${lowerDivHeightRef.current}px`;
+    }
+  };
+
+  // useEffect(() => {
+  //   const updateHeight = () => {
+  //     setLowerDivHeight(customHeight());
+  //   };
+
+  //   updateHeight(); // Set initial height
+  //   window.addEventListener("resize", updateHeight); // Update height on window resize
+
+  //   return () => {
+  //     window.removeEventListener("resize", updateHeight); // Cleanup event listener
+  //   };
+  // }, []);
   //   return () => {
   //     window.removeEventListener("resize", updateHeight); // Cleanup event listener
   //   };
@@ -390,6 +432,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
             <CommentComponent
               movieId={id}
               lowerDivHeight={lowerDivHeightRef.current}
+              lowerDivHeight={lowerDivHeightRef.current}
               setCommentCount={setCommentCount}
               commentCount={commentCount}
               comments={comments}
@@ -412,6 +455,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
           <div
             ref={modalRef}
             className="bg-background backdrop-blur-md w-full max-w-md bottom-0 rounded-lg p-6 text-white overflow-y-auto"
+            style={{ height: `${lowerDivHeightRef.current}px` }}
             style={{ height: `${lowerDivHeightRef.current}px` }}
           >
             {/* Modal Header */}
@@ -501,6 +545,7 @@ const DetailSection: React.FC<DetailSectionProps> = ({
           onClose={handleFeedbackModel}
           setIsLoading={setIsLoading}
           isLoading={isLoading}
+          height={`${lowerDivHeightRef?.current}px`}
           height={`${lowerDivHeightRef?.current}px`}
         />
       )}
