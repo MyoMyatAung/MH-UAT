@@ -373,16 +373,13 @@ const DetailSection: React.FC<DetailSectionProps> = ({
         )}
 
         {visible && (
-          <div className="flex justify-center items-center ">
-            <div
-              className={`text-[12px] fixed w-fit  top-1/2 mx-auto left-0 right-0  py-3 px-5  flex items-center justify-center gap-1 rounded-full toast  text-white text-center z-[9999999999999999999]`}
-            >
-              <img src={icon} className="w-6 h-6" alt="" />
-              <p className=" text-[13px]">链接已复制 </p>
-            </div>
-          </div>
-          // <img src={shareLink} alt="" className="w-32 h-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"/>
-        )}
+          <div
+          className={`text-[12px] fixed w-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 py-3 px-5 flex items-center justify-center gap-1 rounded-full toast text-white text-center z-[9999999999999999999]`}
+        >
+          <img src={icon} className="w-6 h-6" alt="" />
+          <span className=" text-[13px]">链接已复制 </span>
+        </div>
+      )}
 
         {activeTab === "tab-2" ? (
           <div id="tab-2" className="block">
@@ -543,7 +540,10 @@ const DetailSection: React.FC<DetailSectionProps> = ({
         {/* 分享好友得积分按钮 */}
         <button
           onClick={() => handleShare()}
-          className="ml-2 flex items-center rounded-full px-5 py-2 relative min-w-[170px] justify-center"
+          disabled={isLoading}
+          className={`ml-2 flex items-center rounded-full px-5 py-2 relative min-w-[170px] justify-center ${
+            isLoading ? 'opacity-70 cursor-not-allowed' : ''
+          }`}
           style={{
             background:
               "linear-gradient(271deg, rgba(254,228,179,0.06) 0%, rgba(255,217,147,0.06) 100%)",
@@ -557,10 +557,20 @@ const DetailSection: React.FC<DetailSectionProps> = ({
               可兑换
             </span>
           </div>
-          <img src={share} className="h-6 mr-1" alt="" />
-          <span className="text-[#E6D3A7] text-[15px] font-normal">
-            分享好友得积分
-          </span>
+          {isLoading ? (
+            <>
+              <div className="animate-spin rounded-full h-5 w-5 border-2 border-[#E6D3A7] border-t-transparent mr-2"></div>
+              <span className="text-[#E6D3A7] text-[15px] font-normal">
+              </span>
+            </>
+          ) : (
+            <>
+              <img src={share} className="h-6 mr-1" alt="" />
+              <span className="text-[#E6D3A7] text-[15px] font-normal">
+                分享好友得积分
+              </span>
+            </>
+          )}
         </button>
       </div>}
     </div>
