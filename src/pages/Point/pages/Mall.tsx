@@ -27,10 +27,10 @@ export const Mall = () => {
     skip: !token,
   });
   // staging
-  // const parsedUserData = JSON.parse(userData || "{}");
+  const parsedUserData = JSON.parse(userData || "{}");
 
   //prod
-  const parsedUserData = userData;
+  // const parsedUserData = userData;
 
   const integralDetails = userData?.data?.integral;
   const coupon = userData?.data?.coupon;

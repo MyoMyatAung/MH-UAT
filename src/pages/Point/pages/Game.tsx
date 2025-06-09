@@ -21,6 +21,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import lock from "../imgs/lock.png";
 
 export const Game = () => {
   const myLucky = useRef<any>();
@@ -33,6 +34,15 @@ export const Game = () => {
   const { data: userData } = useGetUserQuery(undefined, {
     skip: !token,
   });
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // staging
+  const parsedUserData = JSON.parse(userData || "{}");
+
+  //prod
+  // const parsedUserData = userData;
+
   const [prizeItem, setPrizeItem] = useState<any>(); //中奖物品
   const [hasNext, setHasNext] = useState<boolean>(true); //是否可以抽奖
   const [lockid, setLockid] = useState<boolean>(false); //防抖
@@ -47,8 +57,13 @@ export const Game = () => {
 
   const [canSlidePrev, setCanSlidePrev] = useState(false);
   const [canSlideNext, setCanSlideNext] = useState(true);
+  const [spinGroups, setSpinGroups] = useState<any[]>([]);
+  const myLuckyRefs = useRef<any[]>([]);
+  const currentGroup = spinGroups[activeIndex];
+  const isLocked = !currentGroup?.is_unlocked;
 
   const handleSlideChange = (swiper: any) => {
+    setActiveIndex(swiper.activeIndex);
     setCanSlidePrev(!swiper.isBeginning);
     setCanSlideNext(!swiper.isEnd);
   };
@@ -68,14 +83,47 @@ export const Game = () => {
     },
   ]);
 
-  console.log(userData);
+  // console.log(userData);
+
+  // useEffect(() => {
+  //   const list: any[] = [];
+  //   console.log(data?.data)
+  //   // @ts-ignore
+  //   const sortList = sortWith([ascend(prop("id"))])(data?.data?.prizes ?? []);
+  //   sortList.forEach((prize: any) => {
+  //     list.push({
+  //       background: "#FFF7DF",
+  //       fonts: [
+  //         {
+  //           text: prize.name,
+  //           fontColor: "#E1281E",
+  //           fontSize: 16,
+  //           fontWeight: 500,
+  //           top: 10,
+  //           fontStyle: "PingFang SC",
+  //         },
+  //       ],
+  //       imgs: [
+  //         {
+  //           src: prize.image,
+  //           top: 40,
+  //           width: 24,
+  //           height: 24,
+  //         },
+  //       ],
+  //     });
+  //   });
+
+  //   setPrizes(list);
+  // }, [data?.data]);
 
   useEffect(() => {
-    const list: any[] = [];
-    // @ts-ignore
-    const sortList = sortWith([ascend(prop("id"))])(data?.data?.prizes ?? []);
-    sortList.forEach((prize: any) => {
-      list.push({
+    if (!data?.data?.prize_groups) return;
+
+    const formattedGroups = data.data.prize_groups.map((group: any) => {
+      const sorted = group.prizes.sort((a: any, b: any) => a.id - b.id);
+
+      const formattedPrizes = sorted.map((prize: any) => ({
         background: "#FFF7DF",
         fonts: [
           {
@@ -95,11 +143,19 @@ export const Game = () => {
             height: 24,
           },
         ],
-      });
+      }));
+
+      return {
+        group_id: group.group_id,
+        name: group.name,
+        prizes: formattedPrizes,
+        free_draws_per_day: group.free_draws_per_day,
+        is_unlocked: group.is_unlocked,
+      };
     });
 
-    setPrizes(list);
-  }, [data?.data?.prizes?.length]);
+    setSpinGroups(formattedGroups); // <-- array of spin configurations
+  }, [data?.data]);
 
   const handleEnd = () => {
     setLockid(false);
@@ -117,18 +173,68 @@ export const Game = () => {
     }
   };
 
+  // const handleStart = useLockFn(async () => {
+  //   const obj = data?.data;
+  //   if (!obj.open_now) {
+  //     setMsg({
+  //       show: true,
+  //       msg: obj.open_hours_text,
+  //     });
+  //     return;
+  //   }
+  //   if (!hasNext || lockid) {
+  //     return;
+  //   }
+
+  //   if (!loading) {
+  //     setLockid(true);
+  //     setPrizeItem(undefined);
+  //     let index = 0;
+
+  //     try {
+  //       const res = await sendSpin();
+  //       myLucky.current.play();
+  //       // @ts-ignore
+  //       const sortList = sortWith([ascend(prop("id"))])(
+  //         data?.data?.prizes ?? []
+  //       );
+  //       sortList?.forEach?.((i: any, k: number) => {
+  //         if (i.id === res.data.prize.id) {
+  //           index = k;
+  //         }
+  //       });
+
+  //       // @ts-ignore
+  //       setHasNext(res?.data?.has_next);
+  //       setPrizeItem(res.data);
+  //       refresh();
+  //     } catch (e) {
+  //       setLockid(!true);
+  //       setMsg({
+  //         show: true,
+  //         msg: e,
+  //       });
+  //     }
+  //     myLucky.current.stop(index);
+  //   }
+  // });
+
   const handleStart = useLockFn(async () => {
     const obj = data?.data;
-    if (!obj.open_now) {
+    const currentGroup = spinGroups[activeIndex];
+
+    if (!obj.open_now || !currentGroup?.is_unlocked) {
       setMsg({
         show: true,
-        msg: obj.open_hours_text,
+        msg: obj?.open_hours_text || "活动暂未开放",
       });
       return;
     }
-    if (!hasNext || lockid) {
-      return;
-    }
+
+    if (!hasNext || lockid || !currentGroup) return;
+
+    const luckyRef = myLuckyRefs.current[activeIndex];
+    if (!luckyRef) return;
 
     if (!loading) {
       setLockid(true);
@@ -136,30 +242,27 @@ export const Game = () => {
       let index = 0;
 
       try {
+        // You may need to pass group_id to the API here:
         const res = await sendSpin();
-        myLucky.current.play();
-        // @ts-ignore
-        const sortList = sortWith([ascend(prop("id"))])(
-          data?.data?.prizes ?? []
-        );
-        sortList?.forEach?.((i: any, k: number) => {
-          if (i.id === res.data.prize.id) {
-            index = k;
+
+        luckyRef.play();
+
+        const sorted = [...currentGroup.prizes].sort((a, b) => a.id - b.id);
+        sorted.forEach((p, i) => {
+          if (p.name === res.data.prize.name) {
+            index = i;
           }
         });
 
-        // @ts-ignore
         setHasNext(res?.data?.has_next);
         setPrizeItem(res.data);
         refresh();
       } catch (e) {
-        setLockid(!true);
-        setMsg({
-          show: true,
-          msg: e,
-        });
+        setMsg({ show: true, msg: e });
       }
-      myLucky.current.stop(index);
+
+      luckyRef.stop(index);
+      setLockid(false);
     }
   });
 
@@ -186,16 +289,16 @@ export const Game = () => {
           <div className=" flex justify-center items-center gap-[8px]">
             <img
               className=" w-[48px] h-[48px] rounded-full"
-              src={userData?.data?.avatar}
+              src={parsedUserData?.data?.avatar}
               alt=""
             />
             <div className="">
               <h1 className=" text-[#512D00] text-[16px] font-[700]">
-                {userData?.data?.username}
+                {parsedUserData?.data?.username}
               </h1>
               <img
                 className=" w-[72px] h-[24px]"
-                src={userData?.data?.level}
+                src={parsedUserData?.data?.level}
                 alt=""
               />
             </div>
@@ -292,9 +395,8 @@ export const Game = () => {
           spaceBetween={50}
           className="relative w-full h-[468px]"
         >
-          {[0, 1, 2].map((index) => (
-            <SwiperSlide key={index}>
-              {/* SPIN WHEEL COMPONENT */}
+          {spinGroups.map((group, index) => (
+            <SwiperSlide key={group.group_id}>
               <div className="relative w-full h-[468px]">
                 <img
                   alt=""
@@ -305,28 +407,33 @@ export const Game = () => {
                       : "ml-[-195px] w-[390px]"
                   }`}
                 />
+
                 <div
                   className={`absolute z-[2] flex justify-center items-center w-full h-[408px] ${
                     smallWidthRatio ? "mt-[-37px]" : ""
                   }`}
                 >
                   <LuckyWheel
-                    ref={myLucky}
+                    ref={(el: any) => (myLuckyRefs.current[index] = el)}
+                    // ref={myLucky}
                     width={smallWidthRatio ? "220px" : "270px"}
                     height={smallWidthRatio ? "220px" : "270px"}
                     defaultConfig={{ gutter: 6 }}
                     blocks={blocks}
-                    prizes={prizes}
+                    prizes={group.prizes}
                     buttons={buttons}
                     onStart={handleStart}
                     onEnd={handleEnd}
                   />
                 </div>
+
+                {/* Optional: group-specific info */}
                 <div
                   className={`h-[20px] w-[128px] absolute z-[3] ${
                     smallWidthRatio ? "bottom-[148px]" : "bottom-[80px]"
                   } left-[50%] ml-[-58px] text-[12px] text-white truncate`}
                 >
+                  {/* <span>每日免费次数 {group.free_draws_per_day}</span> */}
                   {data?.data?.open_now ? (
                     <span>
                       今日免费抽奖次数{data?.data?.today_available_free_num}/
@@ -337,19 +444,24 @@ export const Game = () => {
                   )}
                 </div>
               </div>
-              {/* Custom Nav Buttons */}
-              <div className="custom-prev absolute left-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer">
-                <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
-                  <img src={left} alt="prev" />
-                </button>
-              </div>
-              <div className="custom-next absolute right-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer">
-                <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
-                  <img src={right} alt="next" className="w-4 h-4" />
-                </button>
-              </div>
             </SwiperSlide>
           ))}
+
+          {/* Navigation Buttons outside of loop */}
+          {/* {canSlidePrev && ( */}
+          <div className="custom-prev absolute left-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer">
+            <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
+              <img src={left} alt="prev" />
+            </button>
+          </div>
+          {/* )} */}
+          {/* {canSlideNext && ( */}
+          <div className="custom-next absolute right-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer">
+            <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
+              <img src={right} alt="next" className="w-4 h-4" />
+            </button>
+          </div>
+          {/* )} */}
         </Swiper>
 
         {loading ? (
@@ -368,14 +480,16 @@ export const Game = () => {
               <button
                 onTouchEnd={handleStart}
                 onClick={handleStart}
-                className="w-11/12 h-12 mb-8 py-3 bg-amber new_spin_button rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex  bottom-[50px]"
+                className="w-11/12 h-12 mb-8 py-3 bg-amber new_spin_button rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex gap-1  bottom-[50px]"
               >
                 <div className="text-center text-orange-900 text-base font-medium leading-normal">
-                  开始抽奖{" "}
+                  {/* 开始抽奖{" "}
                   {data?.data?.today_available_free_num >= 1
                     ? ``
-                    : `(消耗${data?.data?.points_per_draw}积分)`}
+                    : `(消耗${data?.data?.points_per_draw}积分)`} */}
+                  {isLocked ? "尚未解锁" : "开始抽奖"}
                 </div>
+                {isLocked && <img src={lock} alt="" />}
               </button>
             ) : (
               <button
