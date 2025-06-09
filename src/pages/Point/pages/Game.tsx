@@ -117,6 +117,36 @@ export const Game = () => {
   //   setPrizes(list);
   // }, [data?.data]);
 
+  const getButtonConfig = (group: any) => {
+    const defaultImg = {
+      src: "./pointer.png",
+      top: -60,
+      width: 100,
+      height: 115,
+    };
+
+    return [
+      {
+        radius: "40%",
+        pointer: true,
+        imgs: group?.spinwheel_image
+          ? [
+              {
+                src: group.spinwheel_image,
+                top: -60,
+                width: 100,
+                height: 115,
+              },
+            ]
+          : [defaultImg],
+      },
+    ];
+  };
+
+  const buttonConfigs = data?.data?.prize_groups?.map((group: any) =>
+    getButtonConfig(group)
+  );
+
   useEffect(() => {
     if (!data?.data?.prize_groups) return;
 
@@ -421,7 +451,8 @@ export const Game = () => {
                     defaultConfig={{ gutter: 6 }}
                     blocks={blocks}
                     prizes={group.prizes}
-                    buttons={buttons}
+                    // buttons={buttons}
+                    buttons={buttonConfigs?.[index]}
                     onStart={handleStart}
                     onEnd={handleEnd}
                   />
