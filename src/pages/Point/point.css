@@ -101,3 +101,11 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.new_spin_button {
+  border-radius: 49px;
+  background: var(
+    --Gold-Linear,
+    linear-gradient(180deg, #fff 0%, #ffc989 152.27%)
+  );
+}

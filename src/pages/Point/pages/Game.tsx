@@ -14,7 +14,13 @@ import newHead from "../imgs/newHead.png";
 import crowd from "../imgs/crowd.png";
 import btnbg from "../imgs/btnbg.png";
 import diamond from "../imgs/diamond.svg";
+import left from "../imgs/left.svg";
+import right from "../imgs/right.svg";
 import { useGetUserQuery } from "../../../pages/profile/services/profileApi";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
 
 export const Game = () => {
   const myLucky = useRef<any>();
@@ -37,6 +43,15 @@ export const Game = () => {
   const smallWidthRatio = window.innerWidth < 390;
   const [blocks] = useState([{ padding: "0px", background: "#E51D17" }]);
   const [prizes, setPrizes] = useState<any[]>([]);
+  const [swiperInstance, setSwiperInstance] = useState(null);
+
+  const [canSlidePrev, setCanSlidePrev] = useState(false);
+  const [canSlideNext, setCanSlideNext] = useState(true);
+
+  const handleSlideChange = (swiper: any) => {
+    setCanSlidePrev(!swiper.isBeginning);
+    setCanSlideNext(!swiper.isEnd);
+  };
 
   const [buttons] = useState([
     {
@@ -215,7 +230,7 @@ export const Game = () => {
         </div>
 
         {/* spin */}
-        <div className="relative w-full h-[468px]">
+        <div className="relative w-full h-[468px] hidden">
           <img
             alt=""
             src="./zp.png"
@@ -260,6 +275,83 @@ export const Game = () => {
           </div>
         </div>
 
+        {/* newSpin */}
+        <Swiper
+          modules={[Navigation]}
+          navigation={{
+            nextEl: ".custom-next",
+            prevEl: ".custom-prev",
+          }}
+          onSwiper={(swiper: any) => {
+            setSwiperInstance(swiper);
+            setCanSlidePrev(!swiper.isBeginning);
+            setCanSlideNext(!swiper.isEnd);
+          }}
+          onSlideChange={handleSlideChange}
+          slidesPerView={1}
+          spaceBetween={50}
+          className="relative w-full h-[468px]"
+        >
+          {[0, 1, 2].map((index) => (
+            <SwiperSlide key={index}>
+              {/* SPIN WHEEL COMPONENT */}
+              <div className="relative w-full h-[468px]">
+                <img
+                  alt=""
+                  src="./zp.png"
+                  className={`absolute z-[1] left-[50%] ${
+                    smallWidthRatio
+                      ? "ml-[-160px] w-[320px]"
+                      : "ml-[-195px] w-[390px]"
+                  }`}
+                />
+                <div
+                  className={`absolute z-[2] flex justify-center items-center w-full h-[408px] ${
+                    smallWidthRatio ? "mt-[-37px]" : ""
+                  }`}
+                >
+                  <LuckyWheel
+                    ref={myLucky}
+                    width={smallWidthRatio ? "220px" : "270px"}
+                    height={smallWidthRatio ? "220px" : "270px"}
+                    defaultConfig={{ gutter: 6 }}
+                    blocks={blocks}
+                    prizes={prizes}
+                    buttons={buttons}
+                    onStart={handleStart}
+                    onEnd={handleEnd}
+                  />
+                </div>
+                <div
+                  className={`h-[20px] w-[128px] absolute z-[3] ${
+                    smallWidthRatio ? "bottom-[148px]" : "bottom-[80px]"
+                  } left-[50%] ml-[-58px] text-[12px] text-white truncate`}
+                >
+                  {data?.data?.open_now ? (
+                    <span>
+                      今日免费抽奖次数{data?.data?.today_available_free_num}/
+                      {data?.data?.free_draws_per_day}
+                    </span>
+                  ) : (
+                    <span>{data?.data?.open_hours_text}</span>
+                  )}
+                </div>
+              </div>
+              {/* Custom Nav Buttons */}
+              <div className="custom-prev absolute left-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer">
+                <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
+                  <img src={left} alt="prev" />
+                </button>
+              </div>
+              <div className="custom-next absolute right-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer">
+                <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
+                  <img src={right} alt="next" className="w-4 h-4" />
+                </button>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
         {loading ? (
           <button
             //  onTouchEnd={handleStart}
@@ -276,7 +368,7 @@ export const Game = () => {
               <button
                 onTouchEnd={handleStart}
                 onClick={handleStart}
-                className="w-11/12 h-12 mb-8 py-3 bg-amber-400 rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex  bottom-[50px]"
+                className="w-11/12 h-12 mb-8 py-3 bg-amber new_spin_button rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex  bottom-[50px]"
               >
                 <div className="text-center text-orange-900 text-base font-medium leading-normal">
                   开始抽奖{" "}
