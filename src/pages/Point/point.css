@@ -77,3 +77,27 @@
   line-height: 20px; /* 200% */
   letter-spacing: 0.1px;
 }
+
+.new_record_btn {
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(6px);
+}
+
+.new_user_box {
+  border-radius: 12px;
+  background: var(
+    --Paper-Linear,
+    linear-gradient(180deg, #fff 0%, #ffecd4 100%)
+  );
+}
+
+.new_date_head_text {
+  background: var(
+    --Gold-Linear,
+    linear-gradient(180deg, #fff 0%, #ffc989 152.27%)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

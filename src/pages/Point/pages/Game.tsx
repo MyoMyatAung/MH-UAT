@@ -9,13 +9,24 @@ import numeral from "numeral";
 // @ts-ignore
 import { LuckyWheel } from "@lucky-canvas/react";
 import { useWatch } from "react-hook-form";
+import newBg from "../imgs/newBg.jpg";
+import newHead from "../imgs/newHead.png";
+import crowd from "../imgs/crowd.png";
+import btnbg from "../imgs/btnbg.png";
+import diamond from "../imgs/diamond.svg";
+import { useGetUserQuery } from "../../../pages/profile/services/profileApi";
 
 export const Game = () => {
   const myLucky = useRef<any>();
+  const isLoggedIn = localStorage.getItem("authToken");
+  const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const { data, error, loading, refresh } = useRequest<any, any>(() =>
     getLotteryItems()
   );
-console.log(data)
+  const token = parsedLoggedIn?.data?.access_token;
+  const { data: userData } = useGetUserQuery(undefined, {
+    skip: !token,
+  });
   const [prizeItem, setPrizeItem] = useState<any>(); //中奖物品
   const [hasNext, setHasNext] = useState<boolean>(true); //是否可以抽奖
   const [lockid, setLockid] = useState<boolean>(false); //防抖
@@ -41,6 +52,8 @@ console.log(data)
       ],
     },
   ]);
+
+  console.log(userData);
 
   useEffect(() => {
     const list: any[] = [];
@@ -75,7 +88,7 @@ console.log(data)
 
   const handleEnd = () => {
     setLockid(false);
-    refresh()
+    refresh();
     if (prizeItem?.win_status) {
       setMsg({
         show: true,
@@ -136,19 +149,72 @@ console.log(data)
   });
 
   return (
-    <div className="container min-h-screen ">
+    <div className="container ">
       <Alert
         {...msg}
         onClose={() => {
           setMsg({ msg: "", show: false });
         }}
       />
-      <img alt="" src="./gamebg.png" className="fixed w-full h-screen z-0" />
+      <img alt="" src={newBg} className="fixed w-full h-screen z-0" />
       <GameHead />
-      <div className="flex flex-col  py-6 justify-center items-center relative">
-        <div className="px-6 h-[150px]">
-          <img alt="" src="./gamehead.png" className="" />
+      <div className="flex flex-col py-[1px] justify-center items-center relative">
+        <div className="px-6 pb-1 relative flex justify-center">
+          <img alt="" src={newHead} className="" />
+          <span className="new_date_head_text text-[14px] font-[700] absolute bottom-[35px]">
+            2025-06-15-16:30
+          </span>
         </div>
+        {/* userBox */}
+        <div className="new_user_box p-[12px] w-[350px] flex justify-between items-center">
+          {/* user */}
+          <div className=" flex justify-center items-center gap-[8px]">
+            <img
+              className=" w-[48px] h-[48px] rounded-full"
+              src={userData?.data?.avatar}
+              alt=""
+            />
+            <div className="">
+              <h1 className=" text-[#512D00] text-[16px] font-[700]">
+                {userData?.data?.username}
+              </h1>
+              <img
+                className=" w-[72px] h-[24px]"
+                src={userData?.data?.level}
+                alt=""
+              />
+            </div>
+          </div>
+          {/* btn */}
+          <button className=" relative w-[110px] overflow-hidden flex justify-center items-center py-[15px] gap-[4px] rounded-[14px] px-[20px]">
+            <img src={btnbg} className=" absolute z-[1]" alt="" />
+            <div className=" absolute flex z-[2]">
+              <span className=" text-white text-[10px] font-[700]">
+                我要升级
+              </span>
+              <img src={diamond} alt="" />
+            </div>
+          </button>
+        </div>
+        {/* progress */}
+        <div className="relative w-[350px] max-w-4xl mx-auto py-3">
+          {/* Background Line (incomplete section) */}
+          <div className="absolute top-1/2 left-0 right-0 h-3 bg-white/40 rounded-full transform -translate-y-1/2 z-0" />
+          {/* Progress Line (completed section) */}
+          <div
+            className="absolute top-1/2 left-0 h-3 bg-white rounded-full transform -translate-y-1/2 z-0"
+            style={{ width: "50%" }}
+          />{" "}
+          {/* Adjust this width based on progress */}
+          {/* Icons */}
+          <div className="relative flex justify-between items-center z-10">
+            <img src={crowd} alt="Step 1" className="w-16 h-16" />
+            <img src={crowd} alt="Step 2" className="w-16 h-16" />
+            <img src={crowd} alt="Step 3" className="w-16 h-16" />
+          </div>
+        </div>
+
+        {/* spin */}
         <div className="relative w-full h-[468px]">
           <img
             alt=""
@@ -183,7 +249,6 @@ console.log(data)
               smallWidthRatio ? "bottom-[148px]" : "bottom-[80px]"
             } left-[50%] ml-[-58px] text-[12px] text-white truncate`}
           >
-          
             {data?.data?.open_now ? (
               <span>
                 今日免费抽奖次数{data?.data?.today_available_free_num}/
@@ -196,49 +261,46 @@ console.log(data)
         </div>
 
         {loading ? (
-           <button
-          //  onTouchEnd={handleStart}
-            //  onClick={handleStart}
-            className="w-11/12 h-12 px-[100px] py-3 bg-zinc-300 rounded-[49px] shadow shadow-inner border border-zinc-300 justify-center items-center inline-flex fixed bottom-[50px] z-[99]"
-           >
-             <div className="text-center text-orange-900 text-base font-medium leading-normal">
-             加载中。。。
-              
-             </div>
-           </button>
-        ) : (
-          
-       <>
-        {data?.data?.open_now ? (
           <button
-          onTouchEnd={handleStart}
-            onClick={handleStart}
-            className="w-11/12 h-12 py-3 bg-amber-400 rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex fixed bottom-[50px]"
+            //  onTouchEnd={handleStart}
+            //  onClick={handleStart}
+            className="w-11/12 h-12 px-[100px] mb-8 py-3 bg-zinc-300 rounded-[49px] shadow shadow-inner border border-zinc-300 justify-center items-center inline-flex  bottom-[50px] z-[999]"
           >
             <div className="text-center text-orange-900 text-base font-medium leading-normal">
-              开始抽奖{" "}
-              {data?.data?.today_available_free_num >= 1
-                ? ``
-                : `(消耗${data?.data?.points_per_draw}积分)`}
+              加载中。。。
             </div>
           </button>
         ) : (
-          <button
-          onTouchEnd={handleStart}
-            onClick={handleStart}
-            className="w-11/12 h-12 px-[100px] py-3 bg-zinc-300 rounded-[49px] shadow shadow-inner border border-zinc-300 justify-center items-center inline-flex fixed bottom-[50px] z-[99]"
-          >
-            <div className="text-center text-neutral-400 text-base font-medium leading-normal">
-              活动暂未开放
-            </div>
-          </button>
+          <>
+            {data?.data?.open_now ? (
+              <button
+                onTouchEnd={handleStart}
+                onClick={handleStart}
+                className="w-11/12 h-12 mb-8 py-3 bg-amber-400 rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex  bottom-[50px]"
+              >
+                <div className="text-center text-orange-900 text-base font-medium leading-normal">
+                  开始抽奖{" "}
+                  {data?.data?.today_available_free_num >= 1
+                    ? ``
+                    : `(消耗${data?.data?.points_per_draw}积分)`}
+                </div>
+              </button>
+            ) : (
+              <button
+                onTouchEnd={handleStart}
+                onClick={handleStart}
+                className="w-11/12 h-12 mb-8 px-[100px] py-3 bg-zinc-300 rounded-[49px] shadow shadow-inner border border-zinc-300 justify-center items-center inline-flex bottom-[50px] z-[99]"
+              >
+                <div className="text-center text-neutral-400 text-base font-medium leading-normal">
+                  活动暂未开放
+                </div>
+              </button>
+            )}
+          </>
         )}
-       </>
-        )}
-
       </div>
     </div>
   );
 };
 
-export default Game
+export default Game;
