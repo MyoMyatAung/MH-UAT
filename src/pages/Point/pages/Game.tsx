@@ -273,10 +273,11 @@ export const Game = () => {
       setLockid(true);
       setPrizeItem(undefined);
       let index = 0;
+      console.log(currentGroup.group_id);
 
       try {
         // You may need to pass group_id to the API here:
-        const res = await sendSpin();
+        const res = await sendSpin(currentGroup.group_id);
 
         luckyRef.play();
 
@@ -305,8 +306,6 @@ export const Game = () => {
     isUnlocked: group.is_unlocked,
     name: group.name,
   }));
-
-  console.log(spinGroups);
 
   return (
     <div className="container ">
