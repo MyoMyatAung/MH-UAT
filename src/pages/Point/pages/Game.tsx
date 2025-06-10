@@ -321,7 +321,8 @@ export const Game = () => {
         <div className="px-6 pb-1 relative flex justify-center">
           <img alt="" src={newHead} className="" />
           <span className="new_date_head_text text-[14px] font-[700] absolute bottom-[35px]">
-            2025-06-15-16:30
+            {/* 2025-06-15-16:30 */}
+            {data?.data?.end_date ?? "2025-06-15-16:30"}
           </span>
         </div>
         {/* userBox */}
