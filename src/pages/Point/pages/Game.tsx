@@ -22,6 +22,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import lock from "../imgs/lock.png";
+import TextVirtual from "./TextVirtual";
 
 export const Game = () => {
   const myLucky = useRef<any>();
@@ -302,9 +303,10 @@ export const Game = () => {
     id: group.group_id,
     src: group.image,
     isUnlocked: group.is_unlocked,
+    name: group.name,
   }));
 
-  console.log("gp img", groupImages);
+  console.log(spinGroups);
 
   return (
     <div className="container ">
@@ -371,12 +373,22 @@ export const Game = () => {
           {/* Step Images */}
           <div className="relative flex justify-between items-center z-10 px-2">
             {groupImages?.map((img: any, idx: any) => (
-              <div key={img.id} className="relative w-[54px] h-[38px]">
+              <div
+                key={img.id}
+                className="relative w-[54px] flex flex-col items-center h-[38px]"
+              >
                 <img
                   src={img.src || crowd}
                   alt={`Step ${idx + 1}`}
                   className={`w-full h-full object-cover`}
                 />
+                <h1
+                  className={` text-[12px] ${
+                    currentIndex === idx ? "text-white" : "text-white/60"
+                  }`}
+                >
+                  {img.name}
+                </h1>
               </div>
             ))}
           </div>
@@ -457,7 +469,7 @@ export const Game = () => {
                       : "ml-[-195px] w-[390px]"
                   }`}
                 />
-
+                {/* spin */}
                 <div
                   className={`absolute z-[2] flex justify-center items-center w-full h-[408px] ${
                     smallWidthRatio ? "mt-[-37px]" : ""
@@ -476,6 +488,11 @@ export const Game = () => {
                     onStart={handleStart}
                     onEnd={handleEnd}
                   />
+
+                  {/* virtual_lottery_winners */}
+                  <div className=" absolute w-full flex justify-center bottom-[-30px]">
+                    <TextVirtual data={data} />
+                  </div>
                 </div>
 
                 {/* Optional: group-specific info */}
