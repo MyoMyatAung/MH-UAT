@@ -61,8 +61,10 @@ export const Game = () => {
   const myLuckyRefs = useRef<any[]>([]);
   const currentGroup = spinGroups[activeIndex];
   const isLocked = !currentGroup?.is_unlocked;
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleSlideChange = (swiper: any) => {
+    setCurrentIndex(swiper.activeIndex);
     setActiveIndex(swiper.activeIndex);
     setCanSlidePrev(!swiper.isBeginning);
     setCanSlideNext(!swiper.isEnd);
@@ -296,6 +298,14 @@ export const Game = () => {
     }
   });
 
+  const groupImages = data?.data?.prize_groups?.map((group: any) => ({
+    id: group.group_id,
+    src: group.image,
+    isUnlocked: group.is_unlocked,
+  }));
+
+  console.log("gp img", groupImages);
+
   return (
     <div className="container ">
       <Alert
@@ -344,21 +354,31 @@ export const Game = () => {
             </div>
           </button>
         </div>
+
         {/* progress */}
-        <div className="relative w-[350px] max-w-4xl mx-auto py-3">
+        <div className="relative w-[350px] max-w-4xl mx-auto py-5">
           {/* Background Line (incomplete section) */}
           <div className="absolute top-1/2 left-0 right-0 h-3 bg-white/40 rounded-full transform -translate-y-1/2 z-0" />
-          {/* Progress Line (completed section) */}
+
+          {/* Progress Line (completed section, use actual percent if needed) */}
           <div
             className="absolute top-1/2 left-0 h-3 bg-white rounded-full transform -translate-y-1/2 z-0"
-            style={{ width: "50%" }}
-          />{" "}
-          {/* Adjust this width based on progress */}
-          {/* Icons */}
-          <div className="relative flex justify-between items-center z-10">
-            <img src={crowd} alt="Step 1" className="w-16 h-16" />
-            <img src={crowd} alt="Step 2" className="w-16 h-16" />
-            <img src={crowd} alt="Step 3" className="w-16 h-16" />
+            style={{
+              width: `${((currentIndex + 1) / groupImages?.length) * 100}%`,
+            }}
+          />
+
+          {/* Step Images */}
+          <div className="relative flex justify-between items-center z-10 px-2">
+            {groupImages?.map((img: any, idx: any) => (
+              <div key={img.id} className="relative w-[54px] h-[38px]">
+                <img
+                  src={img.src || crowd}
+                  alt={`Step ${idx + 1}`}
+                  className={`w-full h-full object-cover`}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
@@ -509,6 +529,7 @@ export const Game = () => {
           <>
             {data?.data?.open_now ? (
               <button
+                disabled={isLocked}
                 onTouchEnd={handleStart}
                 onClick={handleStart}
                 className="w-11/12 h-12 mb-8 py-3 bg-amber new_spin_button rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex gap-1  bottom-[50px]"
