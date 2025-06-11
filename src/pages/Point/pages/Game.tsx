@@ -5,6 +5,7 @@ import { GameHead, Loader, Panel, Alert } from "../components";
 import { getLotteryItems, sendSpin } from "../api";
 import { sortWith, ascend, prop } from "ramda";
 import dayjs from "dayjs";
+import fakeUser from "../imgs/avat.svg";
 import numeral from "numeral";
 // @ts-ignore
 import { LuckyWheel } from "@lucky-canvas/react";
@@ -22,19 +23,23 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import lock from "../imgs/lock.png";
+import cc from "../../Point/coupon.png";
 import TextVirtual from "./TextVirtual";
+import { useNavigate } from "react-router-dom";
 
 export const Game = () => {
   const myLucky = useRef<any>();
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
+  const [spinLoad, setSpinLoad] = useState(false);
   const { data, error, loading, refresh } = useRequest<any, any>(() =>
     getLotteryItems()
   );
   const token = parsedLoggedIn?.data?.access_token;
-  const { data: userData } = useGetUserQuery(undefined, {
+  const { data: userData, refetch } = useGetUserQuery(undefined, {
     skip: !token,
   });
+  const navigate = useNavigate();
 
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -43,6 +48,8 @@ export const Game = () => {
 
   //prod
   // const parsedUserData = userData;
+
+  console.log(parsedUserData);
 
   const [prizeItem, setPrizeItem] = useState<any>(); //中奖物品
   const [hasNext, setHasNext] = useState<boolean>(true); //是否可以抽奖
@@ -193,6 +200,8 @@ export const Game = () => {
   const handleEnd = () => {
     setLockid(false);
     refresh();
+    refetch();
+    setSpinLoad(false);
     if (prizeItem?.win_status) {
       setMsg({
         show: true,
@@ -270,6 +279,7 @@ export const Game = () => {
     if (!luckyRef) return;
 
     if (!loading) {
+      setSpinLoad(true);
       setLockid(true);
       setPrizeItem(undefined);
       let index = 0;
@@ -307,6 +317,26 @@ export const Game = () => {
     name: group.name,
   }));
 
+  const userIntegral = parsedUserData?.data?.integral ?? 0;
+
+  // Determine current level and level bounds
+  let levelMin = 0;
+  let levelMax = 2000;
+
+  if (userIntegral >= 4000) {
+    levelMin = 4000;
+    levelMax = 6000;
+  } else if (userIntegral >= 2000) {
+    levelMin = 2000;
+    levelMax = 4000;
+  }
+
+  const levelRange = levelMax - levelMin;
+  const progressPercent = Math.min(
+    ((userIntegral - levelMin) / levelRange) * 100,
+    100
+  );
+
   return (
     <div className="container ">
       <Alert
@@ -331,12 +361,16 @@ export const Game = () => {
           <div className=" flex justify-center items-center gap-[8px]">
             <img
               className=" w-[48px] h-[48px] rounded-full"
-              src={parsedUserData?.data?.avatar}
+              src={
+                parsedUserData?.data?.avatar
+                  ? parsedUserData?.data?.avata
+                  : fakeUser
+              }
               alt=""
             />
             <div className="">
               <h1 className=" text-[#512D00] text-[16px] font-[700]">
-                {parsedUserData?.data?.username}
+                {parsedUserData?.data?.nickname ?? "user"}
               </h1>
               <img
                 className=" w-[72px] h-[24px]"
@@ -346,11 +380,14 @@ export const Game = () => {
             </div>
           </div>
           {/* btn */}
-          <button className=" relative w-[110px] overflow-hidden flex justify-center items-center py-[15px] gap-[4px] rounded-[14px] px-[20px]">
+          <button
+            onClick={() => navigate("/point_info")}
+            className=" relative w-[110px] overflow-hidden flex justify-center items-center py-[15px] gap-[4px] rounded-[14px] px-[20px]"
+          >
             <img src={btnbg} className=" absolute z-[1]" alt="" />
-            <div className=" absolute flex z-[2]">
+            <div className=" absolute flex gap-1 justify-center items-center z-[2]">
               <span className=" text-white text-[10px] font-[700]">
-                我要升级
+                获取抽奖劵
               </span>
               <img src={diamond} alt="" />
             </div>
@@ -366,7 +403,8 @@ export const Game = () => {
           <div
             className="absolute top-1/2 left-0 h-3 bg-white rounded-full transform -translate-y-1/2 z-0"
             style={{
-              width: `${((currentIndex + 1) / groupImages?.length) * 100}%`,
+              // width: `${((currentIndex + 1) / groupImages?.length) * 100}%`,
+              width: `${progressPercent}%`,
             }}
           />
 
@@ -499,17 +537,21 @@ export const Game = () => {
                 <div
                   className={`h-[20px] w-[128px] absolute z-[3] ${
                     smallWidthRatio ? "bottom-[148px]" : "bottom-[80px]"
-                  } left-[50%] ml-[-58px] text-[12px] text-white truncate`}
+                  } left-[50%] ml-[-58px] text-[13px] font-[900] text-white truncate`}
                 >
-                  {/* <span>每日免费次数 {group.free_draws_per_day}</span> */}
-                  {data?.data?.open_now ? (
+                  <span className=" flex justify-center items-center">
+                    抽奖劵 x {parsedUserData?.data?.lottery_tickets}{" "}
+                    <img src={cc} alt="" />{" "}
+                  </span>
+
+                  {/* {data?.data?.open_now ? (
                     <span>
                       今日免费抽奖次数{data?.data?.today_available_free_num}/
                       {data?.data?.free_draws_per_day}
                     </span>
                   ) : (
                     <span>{data?.data?.open_hours_text}</span>
-                  )}
+                  )} */}
                 </div>
               </div>
             </SwiperSlide>
@@ -532,7 +574,7 @@ export const Game = () => {
           {/* )} */}
         </Swiper>
 
-        {loading ? (
+        {loading || spinLoad ? (
           <button
             //  onTouchEnd={handleStart}
             //  onClick={handleStart}
