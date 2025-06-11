@@ -26,6 +26,7 @@ import lock from "../imgs/lock.png";
 import cc from "../../Point/coupon.png";
 import TextVirtual from "./TextVirtual";
 import { useNavigate } from "react-router-dom";
+import WinAlert from "../components/WinAlert";
 
 export const Game = () => {
   const myLucky = useRef<any>();
@@ -49,7 +50,7 @@ export const Game = () => {
   //prod
   // const parsedUserData = userData;
 
-  console.log(parsedUserData);
+  // console.log(parsedUserData);
 
   const [prizeItem, setPrizeItem] = useState<any>(); //中奖物品
   const [hasNext, setHasNext] = useState<boolean>(true); //是否可以抽奖
@@ -57,6 +58,11 @@ export const Game = () => {
   const [msg, setMsg] = useState<any>({
     show: false,
     msg: "",
+  });
+  const [win, setWin] = useState<any>({
+    show: false,
+    msg: "",
+    img: "",
   });
   const smallWidthRatio = window.innerWidth < 390;
   const [blocks] = useState([{ padding: "0px", background: "#E51D17" }]);
@@ -203,9 +209,14 @@ export const Game = () => {
     refetch();
     setSpinLoad(false);
     if (prizeItem?.win_status) {
-      setMsg({
+      // setMsg({
+      //   show: true,
+      //   msg: `恭喜您获得${prizeItem.prize.name}`,
+      // });
+      setWin({
         show: true,
-        msg: `恭喜您获得${prizeItem.prize.name}`,
+        msg: `${prizeItem.prize.name}`,
+        img: `${prizeItem.prize.image}`,
       });
     } else {
       setMsg({
@@ -343,6 +354,12 @@ export const Game = () => {
         {...msg}
         onClose={() => {
           setMsg({ msg: "", show: false });
+        }}
+      />
+      <WinAlert
+        {...win}
+        onClose={() => {
+          setWin({ msg: "", show: false, img: "" });
         }}
       />
       <img alt="" src={newBg} className="fixed w-full h-screen z-0" />
@@ -621,3 +638,38 @@ export const Game = () => {
 };
 
 export default Game;
+
+// {
+//   "msg": "成功",
+//   "data": {
+//       "win_status": true,
+//       "prize": {
+//           "id": 12,
+//           "name": "5积分",
+//           "image": "https://t1.021huaying.com/uploads/2023-07-14/80/0e05241559efba8d608e5c461223f083.webp",
+//           "content": "5",
+//           "probability": 10,
+//           "prize_type": "point"
+//       },
+//       "user_activity": 9,
+//       "user_tickets": 68,
+//       "has_next": true
+//   }
+
+// {
+//   "msg": "成功",
+//   "data": {
+//       "win_status": false,
+//       "prize": {
+//           "id": 2,
+//           "name": "谢谢参与",
+//           "image": "https://t1.021huaying.com/uploads/2023-07-14/fa/7ff2db973ed41216031586a3b8aa0c89.webp",
+//           "content": "0",
+//           "probability": 50,
+//           "prize_type": "point"
+//       },
+//       "user_activity": 4,
+//       "user_tickets": 66,
+//       "has_next": true
+//   }
+// }

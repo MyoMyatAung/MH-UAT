@@ -109,3 +109,24 @@
     linear-gradient(180deg, #fff 0%, #ffc989 152.27%)
   );
 }
+
+.congrat_text {
+  background: var(
+    --Orange-Linear,
+    linear-gradient(216deg, #ff8517 16.19%, #f54100 55.29%, #ff4e00 94.38%)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.congrat_accept_btn {
+  border-radius: 49px;
+  border: 2px solid #ffdfb1;
+  background: var(
+    --Paper-Linear,
+    linear-gradient(180deg, #fff 0%, #ffecd4 100%)
+  );
+  box-shadow: 0px 7px 4px 0px #f61e0e, 0px -5px 5px 0px #ffbe82 inset,
+    0px 4px 3px 0px #ffe6a4 inset;
+}
