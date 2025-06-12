@@ -328,7 +328,7 @@ export const Game = () => {
     name: group.name,
   }));
 
-  const userIntegral = parsedUserData?.data?.integral ?? 0;
+  const userIntegral = parsedUserData?.data?.active ?? 0;
 
   // Determine current level and level bounds
   let levelMin = 0;
