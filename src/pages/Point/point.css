@@ -130,3 +130,17 @@
   box-shadow: 0px 7px 4px 0px #f61e0e, 0px -5px 5px 0px #ffbe82 inset,
     0px 4px 3px 0px #ffe6a4 inset;
 }
+
+.new_record_btn {
+  border-radius: 4px;
+  background: var(
+    --Orange-Pin-k-Linear,
+    linear-gradient(
+      97deg,
+      #ffbe92 3.5%,
+      #ff4c1c 24.69%,
+      rgba(239, 25, 137, 0.8) 71.84%,
+      #ffb081 97.21%
+    )
+  );
+}
