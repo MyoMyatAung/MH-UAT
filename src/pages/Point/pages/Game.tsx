@@ -149,9 +149,9 @@ export const Game = () => {
           ? [
               {
                 src: group.spinwheel_image,
-                top: -60,
-                width: 100,
-                height: 115,
+                top: -50,
+                width: 73,
+                height: 88,
               },
             ]
           : [defaultImg],
@@ -273,6 +273,7 @@ export const Game = () => {
   // });
 
   const handleStart = useLockFn(async () => {
+    console.log("enter");
     const obj = data?.data;
     const currentGroup = spinGroups[activeIndex];
 
@@ -314,6 +315,7 @@ export const Game = () => {
         refresh();
       } catch (e) {
         setMsg({ show: true, msg: e });
+        setSpinLoad(false);
       }
 
       luckyRef.stop(index);
@@ -347,6 +349,18 @@ export const Game = () => {
     ((userIntegral - levelMin) / levelRange) * 100,
     100
   );
+
+  const swiperRef = useRef<any>(null);
+
+  // Set active index when spinGroups is ready
+  useEffect(() => {
+    if (swiperRef.current && spinGroups.length > 0) {
+      const unlockedIndex = spinGroups.findIndex((group) => group.is_unlocked);
+      if (unlockedIndex >= 0) {
+        swiperRef.current.slideTo(unlockedIndex, 0); // Slide without animation
+      }
+    }
+  }, [spinGroups]);
 
   return (
     <div className="container ">
@@ -503,6 +517,7 @@ export const Game = () => {
             prevEl: ".custom-prev",
           }}
           onSwiper={(swiper: any) => {
+            swiperRef.current = swiper;
             setSwiperInstance(swiper);
             setCanSlidePrev(!swiper.isBeginning);
             setCanSlideNext(!swiper.isEnd);
@@ -606,7 +621,7 @@ export const Game = () => {
             {data?.data?.open_now ? (
               <button
                 disabled={isLocked}
-                onTouchEnd={handleStart}
+                // onTouchEnd={handleStart}
                 onClick={handleStart}
                 className="w-11/12 h-12 mb-8 py-3 bg-amber new_spin_button rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex gap-1  bottom-[50px]"
               >
@@ -638,38 +653,3 @@ export const Game = () => {
 };
 
 export default Game;
-
-// {
-//   "msg": "成功",
-//   "data": {
-//       "win_status": true,
-//       "prize": {
-//           "id": 12,
-//           "name": "5积分",
-//           "image": "https://t1.021huaying.com/uploads/2023-07-14/80/0e05241559efba8d608e5c461223f083.webp",
-//           "content": "5",
-//           "probability": 10,
-//           "prize_type": "point"
-//       },
-//       "user_activity": 9,
-//       "user_tickets": 68,
-//       "has_next": true
-//   }
-
-// {
-//   "msg": "成功",
-//   "data": {
-//       "win_status": false,
-//       "prize": {
-//           "id": 2,
-//           "name": "谢谢参与",
-//           "image": "https://t1.021huaying.com/uploads/2023-07-14/fa/7ff2db973ed41216031586a3b8aa0c89.webp",
-//           "content": "0",
-//           "probability": 50,
-//           "prize_type": "point"
-//       },
-//       "user_activity": 4,
-//       "user_tickets": 66,
-//       "has_next": true
-//   }
-// }

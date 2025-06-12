@@ -14,7 +14,7 @@ interface WinAlertProps {
 const WinAlert: React.FC<WinAlertProps> = ({ onClose, msg, show, img }) => {
   const navigate = useNavigate();
 
-  console.log(msg, show);
+  // console.log(msg, show);
 
   return (
     <Transition show={show} as={Fragment}>
