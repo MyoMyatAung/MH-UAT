@@ -1,7 +1,7 @@
 import { FC, useCallback, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
-import winbg from "../imgs/winbg.png";
+import winbg from "../imgs/reward.png";
 import "../point.css";
 
 interface WinAlertProps {
@@ -42,9 +42,9 @@ const WinAlert: React.FC<WinAlertProps> = ({ onClose, msg, show, img }) => {
         >
           <div className="fixed z-30 inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4">
-              <div className=" relative h-[290px] flex justify-center items-center w-full">
-                <img className=" w-[290px] h-[290px]" src={winbg} alt="" />
-                <div className=" absolute w-[260px] py-5 flex flex-col justify-between items-center rounded-2xl h-[250px] top-[-50px] bg-white">
+              <div className=" relative h-[400px] flex justify-center items-center w-full">
+                <img className=" w-[290px] h-[400px]" src={winbg} alt="" />
+                <div className=" absolute w-[260px] py-5 flex flex-col justify-between items-center rounded-2xl h-[250px] top-[30px] ">
                   <h1 className="congrat_text text-[24px] font-[500]">
                     恭喜获得
                   </h1>
