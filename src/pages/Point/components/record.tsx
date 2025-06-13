@@ -9,6 +9,7 @@ import "dayjs/locale/zh-cn";
 import reload from "../imgs/reload.svg";
 import spinLoad from "../imgs/spinLoad.svg";
 import "../point.css";
+import noList from "../test3.png";
 
 dayjs.locale("zh-cn");
 dayjs.extend(relativeTime);
@@ -88,53 +89,62 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
                   </div>
                 </Dialog.Title>
                 <Dialog.Description className="flex gap-2 flex-col">
-                  {!dataList.length && (
-                    <div className="w-full h-[68px] py-6 justify-center items-center gap-2.5 inline-flex">
-                      <div className="text-center text-black text-opacity-40 text-sm font-normal leading-tight">
-                        暂无抽奖记录
-                      </div>
-                    </div>
-                  )}
-                  {loading ? (
+                  {!dataList.length ? (
                     <div className=" w-full h-[280px] flex flex-col justify-center items-center">
-                      <img src={spinLoad} className=" animate-spin" alt="" />
+                      <img src={noList} className="" alt="" />
                       <span className=" text-[#D20065] text-[14px] font-[400]">
-                        Refreshing ...
+                        暂无抽奖记录
                       </span>
                     </div>
                   ) : (
-                    <div
-                      className="h-[280px] overflow-y-auto"
-                      id={`scrollableDiv-record`}
-                    >
-                      <InfiniteScroll
-                        className="w-full flex-col justify-start items-start"
-                        dataLength={dataList.length}
-                        next={fetchMoreData}
-                        hasMore={dataList.length < (data?.data?.total ?? 1)}
-                        loader={<h4></h4>}
-                        scrollableTarget={`scrollableDiv-record`}
-                      >
-                        {dataList.map((item: any, key: number) => (
-                          <div
-                            className="w-full py-3 border-b border-black border-opacity-5 justify-between items-center inline-flex"
-                            key={key}
+                    <>
+                      {loading ? (
+                        <div className=" w-full h-[280px] flex flex-col justify-center items-center">
+                          <img
+                            src={spinLoad}
+                            className=" animate-spin"
+                            alt=""
+                          />
+                          <span className=" text-[#D20065] text-[14px] font-[400]">
+                            Refreshing ...
+                          </span>
+                        </div>
+                      ) : (
+                        <div
+                          className="h-[280px] overflow-y-auto"
+                          id={`scrollableDiv-record`}
+                        >
+                          <InfiniteScroll
+                            className="w-full flex-col justify-start items-start"
+                            dataLength={dataList.length}
+                            next={fetchMoreData}
+                            // hasMore={dataList.length < (data?.data?.total ?? 1)}
+                            hasMore={false}
+                            loader={<h4></h4>}
+                            scrollableTarget={`scrollableDiv-record`}
                           >
-                            <div className="text-center text-red-700 text-base font-medium leading-tight">
-                              {item.content}
-                            </div>
-                            <div className="self-stretch flex-col justify-center items-end gap-1 inline-flex">
-                              <div className="text-center text-black text-opacity-80 text-[12px] font-normal leading-[14.40px]">
-                                {dayjs.unix(item.create_time).fromNow()}
-                              </div>
-                              {/* <div className="text-center text-black text-opacity-40 text-[12px] font-normal leading-[14.40px]">
+                            {dataList.map((item: any, key: number) => (
+                              <div
+                                className="w-full py-3 border-b border-black border-opacity-5 justify-between items-center inline-flex"
+                                key={key}
+                              >
+                                <div className="text-center text-red-700 text-base font-medium leading-tight">
+                                  {item.content}
+                                </div>
+                                <div className="self-stretch flex-col justify-center items-end gap-1 inline-flex">
+                                  <div className="text-center text-black text-opacity-80 text-[12px] font-normal leading-[14.40px]">
+                                    {dayjs.unix(item.create_time).fromNow()}
+                                  </div>
+                                  {/* <div className="text-center text-black text-opacity-40 text-[12px] font-normal leading-[14.40px]">
                               消耗积分：{item.points_used}
                             </div> */}
-                            </div>
-                          </div>
-                        ))}
-                      </InfiniteScroll>
-                    </div>
+                                </div>
+                              </div>
+                            ))}
+                          </InfiniteScroll>
+                        </div>
+                      )}
+                    </>
                   )}
                   <button
                     className=" text-sm py-3 w-full text-white font-medium new_record_btn"
