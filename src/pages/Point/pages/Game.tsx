@@ -338,15 +338,16 @@ export const Game = () => {
   const userIntegral = parsedUserData?.data?.active ?? 0;
 
   // Determine current level and level bounds
+  const levelThresholds = [0, 2000, 4000, 9000];
   let levelMin = 0;
-  let levelMax = 2000;
+  let levelMax = levelThresholds[levelThresholds.length - 1];
 
-  if (userIntegral >= 4000) {
-    levelMin = 4000;
-    levelMax = 6000;
-  } else if (userIntegral >= 2000) {
-    levelMin = 2000;
-    levelMax = 4000;
+  for (let i = 1; i < levelThresholds.length; i++) {
+    if (userIntegral < levelThresholds[i]) {
+      levelMin = levelThresholds[i - 1];
+      levelMax = levelThresholds[i];
+      break;
+    }
   }
 
   const levelRange = levelMax - levelMin;
@@ -354,6 +355,8 @@ export const Game = () => {
     ((userIntegral - levelMin) / levelRange) * 100,
     100
   );
+
+  console.log(progressPercent, levelRange);
 
   const swiperRef = useRef<any>(null);
 
@@ -367,7 +370,7 @@ export const Game = () => {
     }
   }, [spinGroups]);
 
-  console.log(currentGroup);
+  // console.log(currentGroup);
 
   return (
     <div className="container ">
@@ -433,7 +436,7 @@ export const Game = () => {
         </div>
 
         {/* progress */}
-        <div className="relative w-[350px] max-w-4xl mx-auto py-5">
+        <div className="relative w-[350px] overflow-hidden max-w-4xl mx-auto py-5">
           {/* Background Line (incomplete section) */}
           <div className="absolute top-1/2 left-0 right-0 h-3 bg-white/40 rounded-full transform -translate-y-1/2 z-0" />
 
@@ -637,7 +640,11 @@ export const Game = () => {
                 disabled={isLocked}
                 // onTouchEnd={handleStart}
                 onClick={handleStart}
-                className={`w-11/12 h-12 mb-8 py-3 bg-amber ${isLocked && currentGroup?.button_state === "disabled" ? "new_spin_button_lock" : "new_spin_button"} rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex gap-1  bottom-[50px]`}
+                className={`w-11/12 h-12 mb-8 py-3 bg-amber ${
+                  isLocked && currentGroup?.button_state === "disabled"
+                    ? "new_spin_button_lock"
+                    : "new_spin_button"
+                } rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex gap-1  bottom-[50px]`}
               >
                 <div className="text-center text-orange-900 text-base font-medium leading-normal">
                   {/* 开始抽奖{" "}
