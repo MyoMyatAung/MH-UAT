@@ -170,6 +170,7 @@ export const Game = () => {
       const sorted = group.prizes.sort((a: any, b: any) => a.id - b.id);
 
       const formattedPrizes = sorted.map((prize: any) => ({
+        id: prize.id,
         background: "#FFF7DF",
         fonts: [
           {
@@ -294,7 +295,6 @@ export const Game = () => {
       setSpinLoad(true);
       setLockid(true);
       setPrizeItem(undefined);
-      let index = 0;
       console.log(currentGroup.group_id);
 
       try {
@@ -303,12 +303,15 @@ export const Game = () => {
 
         luckyRef.play();
 
+        let index = 0;
+        console.log(currentGroup);
         const sorted = [...currentGroup.prizes].sort((a, b) => a.id - b.id);
         sorted.forEach((p, i) => {
-          if (p.name === res.data.prize.name) {
+          if (p.id === res.data.prize.id) {
             index = i;
           }
         });
+        luckyRef.stop(index);
 
         setHasNext(res?.data?.has_next);
         setPrizeItem(res.data);
@@ -318,7 +321,7 @@ export const Game = () => {
         setSpinLoad(false);
       }
 
-      luckyRef.stop(index);
+      // luckyRef.stop(index);
       setLockid(false);
     }
   });
