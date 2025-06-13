@@ -604,7 +604,7 @@ export const Game = () => {
           {/* Navigation Buttons outside of loop */}
           <div
             className={`custom-prev absolute left-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer ${
-              canSlidePrev ? "" : "opacity-0 pointer-events-none"
+              canSlidePrev ? "" : ""
             }`}
           >
             <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
@@ -614,7 +614,7 @@ export const Game = () => {
 
           <div
             className={`custom-next absolute right-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer ${
-              canSlideNext ? "" : "opacity-0 pointer-events-none"
+              canSlideNext ? "" : ""
             }`}
           >
             <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
