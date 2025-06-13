@@ -198,6 +198,8 @@ export const Game = () => {
         prizes: formattedPrizes,
         free_draws_per_day: group.free_draws_per_day,
         is_unlocked: group.is_unlocked,
+        activity_max: group.activity_max,
+        button_state: group.button_state,
       };
     });
 
@@ -365,6 +367,8 @@ export const Game = () => {
     }
   }, [spinGroups]);
 
+  console.log(currentGroup);
+
   return (
     <div className="container ">
       <Alert
@@ -416,11 +420,11 @@ export const Game = () => {
           {/* btn */}
           <button
             onClick={() => navigate("/point_info")}
-            className=" relative w-[110px] overflow-hidden flex justify-center items-center py-[15px] gap-[4px] rounded-[14px] px-[20px]"
+            className=" relative w-[130px] overflow-hidden flex justify-center items-center py-[18px] gap-[4px] rounded-[14px]"
           >
             <img src={btnbg} className=" absolute z-[1]" alt="" />
             <div className=" absolute flex gap-1 justify-center items-center z-[2]">
-              <span className=" text-white text-[10px] font-[700]">
+              <span className=" text-white text-[14px] font-[700]">
                 获取抽奖劵
               </span>
               <img src={diamond} alt="" />
@@ -455,8 +459,10 @@ export const Game = () => {
                   className={`w-full h-full object-cover`}
                 />
                 <h1
-                  className={` text-[12px] ${
-                    currentIndex === idx ? "text-white" : "text-white/60"
+                  className={` text-[12px] font-[700] ${
+                    currentIndex === idx
+                      ? "active_progress_text"
+                      : "text-white/60"
                   }`}
                 >
                   {img.name}
@@ -593,20 +599,25 @@ export const Game = () => {
           ))}
 
           {/* Navigation Buttons outside of loop */}
-          {/* {canSlidePrev && ( */}
-          <div className="custom-prev absolute left-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer">
+          <div
+            className={`custom-prev absolute left-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer ${
+              canSlidePrev ? "" : "opacity-0 pointer-events-none"
+            }`}
+          >
             <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
               <img src={left} alt="prev" />
             </button>
           </div>
-          {/* )} */}
-          {/* {canSlideNext && ( */}
-          <div className="custom-next absolute right-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer">
+
+          <div
+            className={`custom-next absolute right-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer ${
+              canSlideNext ? "" : "opacity-0 pointer-events-none"
+            }`}
+          >
             <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
               <img src={right} alt="next" className="w-4 h-4" />
             </button>
           </div>
-          {/* )} */}
         </Swiper>
 
         {loading || spinLoad ? (
@@ -626,16 +637,20 @@ export const Game = () => {
                 disabled={isLocked}
                 // onTouchEnd={handleStart}
                 onClick={handleStart}
-                className="w-11/12 h-12 mb-8 py-3 bg-amber new_spin_button rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex gap-1  bottom-[50px]"
+                className={`w-11/12 h-12 mb-8 py-3 bg-amber ${isLocked && currentGroup?.button_state === "disabled" ? "new_spin_button_lock" : "new_spin_button"} rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex gap-1  bottom-[50px]`}
               >
                 <div className="text-center text-orange-900 text-base font-medium leading-normal">
                   {/* 开始抽奖{" "}
                   {data?.data?.today_available_free_num >= 1
                     ? ``
                     : `(消耗${data?.data?.points_per_draw}积分)`} */}
-                  {isLocked ? "尚未解锁" : "开始抽奖"}
+                  {isLocked && currentGroup?.button_state === "enabled"
+                    ? "尚未解锁"
+                    : "开始抽奖"}
                 </div>
-                {isLocked && <img src={lock} alt="" />}
+                {isLocked && currentGroup?.button_state === "enabled" && (
+                  <img src={lock} alt="" />
+                )}
               </button>
             ) : (
               <button

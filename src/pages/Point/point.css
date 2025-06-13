@@ -109,6 +109,15 @@
     linear-gradient(180deg, #fff 0%, #ffc989 152.27%)
   );
 }
+.new_spin_button_lock {
+  border-radius: 49px;
+  background: linear-gradient(
+      0deg,
+      rgba(119, 119, 119, 0.32) 0%,
+      rgba(119, 119, 119, 0.32) 100%
+    ),
+    linear-gradient(180deg, #fff 0%, #ffc989 152.27%);
+}
 
 .congrat_text {
   background: var(
@@ -143,4 +152,14 @@
       #ffb081 97.21%
     )
   );
+}
+
+.active_progress_text {
+  background: var(
+    --Gold-Linear,
+    linear-gradient(180deg, #fff 0%, #ffc989 152.27%)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

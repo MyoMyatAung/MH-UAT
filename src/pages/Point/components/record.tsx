@@ -55,6 +55,11 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
     }
   }, [data]);
 
+  const handleRefresh = () => {
+    refresh()
+    setData([])
+  }
+
   return (
     <Transition show={show} as={Fragment}>
       <Dialog open={true} onClose={onClose}>
@@ -85,11 +90,11 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
                 <Dialog.Title className="text-black text-base font-medium leading-snug text-center">
                   <div className=" flex justify-between w-full">
                     <span>中奖记录</span>
-                    <img onClick={() => refresh()} src={reload} alt="" />
+                    <img onClick={handleRefresh} src={reload} alt="" />
                   </div>
                 </Dialog.Title>
                 <Dialog.Description className="flex gap-2 flex-col">
-                  {!dataList.length ? (
+                  {!data?.data?.list.length ? (
                     <div className=" w-full h-[280px] flex flex-col justify-center items-center">
                       <img src={noList} className="" alt="" />
                       <span className=" text-[#D20065] text-[14px] font-[400]">
