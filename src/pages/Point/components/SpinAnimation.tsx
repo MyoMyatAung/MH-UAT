@@ -1,62 +1,92 @@
 import React, { useState } from "react";
 import AnimationLoader from "./animation-loader";
 import loadingAnimation from "../../../assets/Point/animation.json";
+import pack from "../../../assets/Point/pack.json";
+import mall from "../../../assets/Point/mall.json";
+import closeSpin from "../../../assets/Point/closeSpin.svg";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setAuthModel } from "../../../features/login/ModelSlice";
+import { motion, AnimatePresence } from "framer-motion";
 
-interface SpinAnimationProps {}
-
-const SpinAnimation: React.FC<SpinAnimationProps> = ({}) => {
+const SpinAnimation: React.FC = () => {
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [userHasClosedAnimation, setUserHasClosedAnimation] = useState(
     sessionStorage.getItem("animationClosed") === "true"
   );
+  const [showLoading, setShowLoading] = useState(false);
 
-  const handleAnimationClick = () => {
-    console.log(token);
+  const handleAnimationClick = (name: string) => {
     if (!token) {
-      dispatch(setAuthModel(true)); // Open the login modal if not logged in
+      dispatch(setAuthModel(true));
     } else {
-      navigate("/game");
+      navigate(`/${name}`);
       setUserHasClosedAnimation(true);
       sessionStorage.setItem("animationClosed", "true");
     }
   };
+
+  const toggleLoading = () => {
+    setShowLoading((prev) => !prev);
+  };
+
   return (
     <>
       {!userHasClosedAnimation && (
-        <div className="fixed bottom-[8rem] right-9 z-[9999] rounded-full p-2">
-          <div className="relative">
-            <button className="absolute top-4 right-7 bg-white rounded-full w-5 h-5 flex items-center justify-center text-black z-[10000]">
-              <svg
+        <div className="fixed bottom-[5rem] right-2 z-[9999] rounded-full p-2">
+          <div className="relative flex flex-col items-center">
+            {/* Close Button */}
+            <button className="absolute bottom-[5rem] right-2 bg-white rounded-full w-5 h-5 flex items-center justify-center text-black z-[10000]">
+              <img
                 onClick={() => {
                   setUserHasClosedAnimation(true);
                   sessionStorage.setItem("animationClosed", "true");
                 }}
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="20" height="20" rx="10" fill="white" />
-                <path
-                  d="M10.0001 9.04778L13.3336 5.71429L14.2858 6.66653L10.9523 10L14.2858 13.3335L13.3336 14.2857L10.0001 10.9522L6.66659 14.2857L5.71436 13.3335L9.04784 10L5.71436 6.66653L6.66659 5.71429L10.0001 9.04778Z"
-                  fill="black"
-                />
-              </svg>
+                src={closeSpin}
+                alt=""
+              />
             </button>
-            <AnimationLoader
-              animationData={loadingAnimation}
-              width={120}
-              height={120}
-              onClick={handleAnimationClick}
-            />
+
+            {/* Loading Animation with Bounce */}
+            <AnimatePresence>
+              {showLoading && (
+                <motion.div
+                  className=" flex flex-col"
+                  initial={{ y: 100, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 100, opacity: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 20,
+                  }}
+                >
+                  <AnimationLoader
+                    animationData={loadingAnimation}
+                    width={90}
+                    height={90}
+                    onClick={() => handleAnimationClick("game")}
+                  />
+                  <AnimationLoader
+                    animationData={mall}
+                    width={70}
+                    height={70}
+                    onClick={() => handleAnimationClick("point_mall")}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Pack Animation */}
+            <div onClick={toggleLoading}>
+              <AnimationLoader animationData={pack} width={100} height={100} />
+            </div>
           </div>
         </div>
       )}
