@@ -56,9 +56,9 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
   }, [data]);
 
   const handleRefresh = () => {
-    refresh()
-    setData([])
-  }
+    refresh();
+    setData([]);
+  };
 
   return (
     <Transition show={show} as={Fragment}>
@@ -111,7 +111,7 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
                             alt=""
                           />
                           <span className=" text-[#D20065] text-[14px] font-[400]">
-                            Refreshing ...
+                            清爽 ...
                           </span>
                         </div>
                       ) : (

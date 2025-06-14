@@ -371,7 +371,9 @@ const App: React.FC = () => {
                   </div>
                 )}
 
-              {!showUpdateNotification && !showNotice && <SpinAnimation />}
+              {!showUpdateNotification &&
+                !showNotice &&
+                location.pathname === "/" && <SpinAnimation />}
 
               <div className="flex-grow">
                 <Suspense
