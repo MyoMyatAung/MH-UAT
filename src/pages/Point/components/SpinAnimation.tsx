@@ -14,8 +14,6 @@ interface SpinAnimationProps {
 }
 
 const SpinAnimation: React.FC<SpinAnimationProps> = ({ open }) => {
-  console.log("open =>", open);
-
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
@@ -42,9 +40,18 @@ const SpinAnimation: React.FC<SpinAnimationProps> = ({ open }) => {
     setShowLoading((prev) => !prev);
   };
 
+  const hasLottery = open?.some(
+    (item: any) => item.type === "lottery" && item.is_open
+  );
+  const hasMall = open?.some(
+    (item: any) => item.type === "point_mall" && item.is_open
+  );
+  const shouldShowPack = hasLottery || hasMall;
+  console.log(" to open =>", shouldShowPack);
+
   return (
     <>
-      {!userHasClosedAnimation && (
+      {!userHasClosedAnimation && shouldShowPack && (
         <div className="fixed bottom-[5rem] right-2 z-[9999] rounded-full p-2">
           <div className="relative flex flex-col items-center">
             {/* Close Button */}
@@ -69,7 +76,7 @@ const SpinAnimation: React.FC<SpinAnimationProps> = ({ open }) => {
                   exit={{ y: 100, opacity: 0 }}
                   transition={{
                     type: "spring",
-                    stiffness: 300,
+                    stiffness: 400,
                     damping: 20,
                   }}
                 >
@@ -83,8 +90,8 @@ const SpinAnimation: React.FC<SpinAnimationProps> = ({ open }) => {
                           <AnimationLoader
                             key={type}
                             animationData={loadingAnimation}
-                            width={90}
-                            height={90}
+                            width={100}
+                            height={100}
                             onClick={() => handleAnimationClick("game")}
                           />
                         );
@@ -95,8 +102,8 @@ const SpinAnimation: React.FC<SpinAnimationProps> = ({ open }) => {
                           <AnimationLoader
                             key={type}
                             animationData={mall}
-                            width={70}
-                            height={70}
+                            width={80}
+                            height={80}
                             onClick={() => handleAnimationClick("point_mall")}
                           />
                         );
@@ -110,7 +117,7 @@ const SpinAnimation: React.FC<SpinAnimationProps> = ({ open }) => {
 
             {/* Pack Animation */}
             <div onClick={toggleLoading}>
-              <AnimationLoader animationData={pack} width={100} height={100} />
+              <AnimationLoader animationData={pack} width={110} height={110} />
             </div>
           </div>
         </div>
