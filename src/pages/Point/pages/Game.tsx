@@ -337,27 +337,28 @@ export const Game = () => {
 
   const userIntegral = parsedUserData?.data?.active;
 
-  // Determine current level and level bounds
-  const levelThresholds = [0, 2000, 4000, 9000];
-  let levelMin = 0;
-  let levelMax = levelThresholds[levelThresholds.length - 1];
+  // // Determine current level and level bounds
+  // const levelThresholds = [0, 2000, 4000, 9000];
+  // let levelMin = 0;
+  // let levelMax = levelThresholds[levelThresholds.length - 1];
 
-  for (let i = 1; i < levelThresholds.length; i++) {
-    if (userIntegral < levelThresholds[i]) {
-      levelMin = levelThresholds[i - 1];
-      levelMax = levelThresholds[i];
-      break;
-    }
-  }
+  // for (let i = 1; i < levelThresholds.length; i++) {
+  //   if (userIntegral < levelThresholds[i]) {
+  //     levelMin = levelThresholds[i - 1];
+  //     levelMax = levelThresholds[i];
+  //     break;
+  //   }
+  // }
 
-  const levelRange = levelMax - levelMin;
-  const progressPercent = Math.min(
-    ((userIntegral - levelMin) / levelRange) * 100,
-    100
-  );
+  // const levelRange = levelMax - levelMin;
+  // const progressPercent = Math.min(
+  //   ((userIntegral - levelMin) / levelRange) * 100,
+  //   100
+  // );
 
-  console.log(progressPercent, levelRange);
+  // console.log(progressPercent, levelRange);
 
+  const progressPercent = userIntegral < 100 ? 10 : (userIntegral / 100) > 100 ? 100 : Math.max((userIntegral / 100), 5);
   const swiperRef = useRef<any>(null);
 
   // Set active index when spinGroups is ready
@@ -445,7 +446,7 @@ export const Game = () => {
             className="absolute top-1/2 left-0 h-3 bg-white rounded-full transform -translate-y-1/2 z-0"
             style={{
               // width: `${((currentIndex + 1) / groupImages?.length) * 100}%`,
-              width: `${userIntegral / 100 > 100 ? 100 : userIntegral / 100}%`,
+              width: `${progressPercent}%`,
             }}
           />
 
