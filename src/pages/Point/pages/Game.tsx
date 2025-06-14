@@ -335,7 +335,7 @@ export const Game = () => {
     name: group.name,
   }));
 
-  const userIntegral = parsedUserData?.data?.active ?? 0;
+  const userIntegral = parsedUserData?.data?.active;
 
   // Determine current level and level bounds
   const levelThresholds = [0, 2000, 4000, 9000];
@@ -445,7 +445,7 @@ export const Game = () => {
             className="absolute top-1/2 left-0 h-3 bg-white rounded-full transform -translate-y-1/2 z-0"
             style={{
               // width: `${((currentIndex + 1) / groupImages?.length) * 100}%`,
-              width: `${progressPercent}%`,
+              width: `${userIntegral / 100 > 100 ? 100 : userIntegral / 100}%`,
             }}
           />
 

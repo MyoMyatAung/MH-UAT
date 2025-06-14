@@ -20,45 +20,49 @@ type RecordProps = {
 };
 
 export const Record: FC<RecordProps> = ({ show, onClose }) => {
-  const [pageConfig, setPageConfig] = useState({
-    page: 1,
-    pageSize: 10,
-  });
+  const [pageConfig, setPageConfig] = useState({ page: 1, pageSize: 10 });
   const [dataList, setData] = useState<any[]>([]);
+  const [hasMore, setHasMore] = useState(true);
 
-  const { data, error, loading, refresh } = useRequest<any, any>(
-    () => getRecords(pageConfig),
-    {
-      debounceWait: 300,
-      refreshDeps: [pageConfig],
-    }
-  );
+  const { run, loading } = useRequest(getRecords, {
+    manual: true,
+    onSuccess: (res : any) => {
+      const list = res?.data?.list ?? [];
+      const total = res?.data?.total ?? 0;
+
+      if (pageConfig.page === 1) {
+        setData(list);
+      } else {
+        setData((prev) => [...prev, ...list]);
+      }
+
+      if (dataList.length + list.length >= total) {
+        setHasMore(false);
+      }
+    },
+  });
 
   const fetchMoreData = () => {
-    setPageConfig({
-      ...pageConfig,
-      page: pageConfig.page + 1,
-    });
+    const nextPage = pageConfig.page + 1;
+    setPageConfig({ ...pageConfig, page: nextPage });
+    run({ page: nextPage, pageSize: pageConfig.pageSize });
+  };
+
+  const handleRefresh = () => {
+    setData([]);
+    setPageConfig({ page: 1, pageSize: 10 });
+    setHasMore(true);
+    run({ page: 1, pageSize: 10 });
   };
 
   useEffect(() => {
     if (show) {
-      setData([]); // Clear previous data
-      setPageConfig({ ...pageConfig, page: 1 }); // Reset page to 1
-      refresh(); // Fetch new data
+      setData([]);
+      setPageConfig({ page: 1, pageSize: 10 });
+      setHasMore(true);
+      run({ page: 1, pageSize: 10 });
     }
-  }, [show]); // Trigger on "show" change
-
-  useEffect(() => {
-    if (data?.data?.list?.length) {
-      setData((prevData) => [...prevData, ...data.data.list]);
-    }
-  }, [data]);
-
-  const handleRefresh = () => {
-    refresh();
-    setData([]);
-  };
+  }, [show]);
 
   return (
     <Transition show={show} as={Fragment}>
@@ -88,71 +92,63 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
             <div className="flex min-h-full items-center justify-center p-4">
               <Dialog.Panel className="w-80 max-w-sm rounded-[12px] bg-white p-6 flex gap-4 flex-col">
                 <Dialog.Title className="text-black text-base font-medium leading-snug text-center">
-                  <div className=" flex justify-between w-full">
+                  <div className="flex justify-between w-full">
                     <span>中奖记录</span>
-                    <img onClick={handleRefresh} src={reload} alt="" />
+                    <img onClick={handleRefresh} src={reload} alt="reload" />
                   </div>
                 </Dialog.Title>
                 <Dialog.Description className="flex gap-2 flex-col">
-                  {!data?.data?.list.length ? (
-                    <div className=" w-full h-[280px] flex flex-col justify-center items-center">
-                      <img src={noList} className="" alt="" />
-                      <span className=" text-[#D20065] text-[14px] font-[400]">
+                  {loading && dataList.length === 0 ? (
+                    <div className="w-full h-[280px] flex flex-col justify-center items-center">
+                      <img src={spinLoad} className="animate-spin" alt="" />
+                      <span className="text-[#D20065] text-[14px] font-[400]">
+                        清爽 ...
+                      </span>
+                    </div>
+                  ) : dataList.length === 0 ? (
+                    <div className="w-full h-[280px] flex flex-col justify-center items-center">
+                      <img src={noList} alt="empty" />
+                      <span className="text-[#D20065] text-[14px] font-[400]">
                         暂无抽奖记录
                       </span>
                     </div>
                   ) : (
-                    <>
-                      {loading ? (
-                        <div className=" w-full h-[280px] flex flex-col justify-center items-center">
-                          <img
-                            src={spinLoad}
-                            className=" animate-spin"
-                            alt=""
-                          />
-                          <span className=" text-[#D20065] text-[14px] font-[400]">
-                            清爽 ...
-                          </span>
-                        </div>
-                      ) : (
-                        <div
-                          className="h-[280px] overflow-y-auto"
-                          id={`scrollableDiv-record`}
-                        >
-                          <InfiniteScroll
-                            className="w-full flex-col justify-start items-start"
-                            dataLength={dataList.length}
-                            next={fetchMoreData}
-                            // hasMore={dataList.length < (data?.data?.total ?? 1)}
-                            hasMore={false}
-                            loader={<h4></h4>}
-                            scrollableTarget={`scrollableDiv-record`}
+                    <div
+                      className="h-[280px] overflow-y-auto"
+                      id="scrollableDiv-record"
+                    >
+                      <InfiniteScroll
+                        className="w-full flex-col justify-start items-start"
+                        dataLength={dataList.length}
+                        next={fetchMoreData}
+                        hasMore={hasMore}
+                        loader={
+                          <div className="w-full text-center py-2 text-gray-400 text-sm">
+                            加载中...
+                          </div>
+                        }
+                        scrollableTarget="scrollableDiv-record"
+                      >
+                        {dataList.map((item: any, key: number) => (
+                          <div
+                            key={key}
+                            className="w-full py-3 border-b border-black border-opacity-5 justify-between items-center inline-flex"
                           >
-                            {dataList.map((item: any, key: number) => (
-                              <div
-                                className="w-full py-3 border-b border-black border-opacity-5 justify-between items-center inline-flex"
-                                key={key}
-                              >
-                                <div className="text-center text-red-700 text-base font-medium leading-tight">
-                                  {item.content}
-                                </div>
-                                <div className="self-stretch flex-col justify-center items-end gap-1 inline-flex">
-                                  <div className="text-center text-black text-opacity-80 text-[12px] font-normal leading-[14.40px]">
-                                    {dayjs.unix(item.create_time).fromNow()}
-                                  </div>
-                                  {/* <div className="text-center text-black text-opacity-40 text-[12px] font-normal leading-[14.40px]">
-                              消耗积分：{item.points_used}
-                            </div> */}
-                                </div>
+                            <div className="text-center text-red-700 text-base font-medium leading-tight">
+                              {item.content}
+                            </div>
+                            <div className="self-stretch flex-col justify-center items-end gap-1 inline-flex">
+                              <div className="text-center text-black text-opacity-80 text-[12px] font-normal leading-[14.40px]">
+                                {dayjs.unix(item.create_time).fromNow()}
                               </div>
-                            ))}
-                          </InfiniteScroll>
-                        </div>
-                      )}
-                    </>
+                            </div>
+                          </div>
+                        ))}
+                      </InfiniteScroll>
+                    </div>
                   )}
                   <button
-                    className=" text-sm py-3 w-full text-white font-medium new_record_btn"
+                    className="text-sm py-3 w-full text-white font-medium new_record_btn"
                     onClick={onClose}
                   >
                     确定

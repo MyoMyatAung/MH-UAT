@@ -9,7 +9,13 @@ import { useDispatch } from "react-redux";
 import { setAuthModel } from "../../../features/login/ModelSlice";
 import { motion, AnimatePresence } from "framer-motion";
 
-const SpinAnimation: React.FC = () => {
+interface SpinAnimationProps {
+  open: any; // or more specific: open: boolean or open: SomeType
+}
+
+const SpinAnimation: React.FC<SpinAnimationProps> = ({ open }) => {
+  console.log("open =>", open);
+
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const token = parsedLoggedIn?.data?.access_token;
@@ -27,8 +33,8 @@ const SpinAnimation: React.FC = () => {
       dispatch(setAuthModel(true));
     } else {
       navigate(`/${name}`);
-      setUserHasClosedAnimation(true);
-      sessionStorage.setItem("animationClosed", "true");
+      // setUserHasClosedAnimation(true);
+      // sessionStorage.setItem("animationClosed", "true");
     }
   };
 
@@ -57,7 +63,7 @@ const SpinAnimation: React.FC = () => {
             <AnimatePresence>
               {showLoading && (
                 <motion.div
-                  className=" flex flex-col"
+                  className="flex flex-col"
                   initial={{ y: 100, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: 100, opacity: 0 }}
@@ -67,18 +73,37 @@ const SpinAnimation: React.FC = () => {
                     damping: 20,
                   }}
                 >
-                  <AnimationLoader
-                    animationData={loadingAnimation}
-                    width={90}
-                    height={90}
-                    onClick={() => handleAnimationClick("game")}
-                  />
-                  <AnimationLoader
-                    animationData={mall}
-                    width={70}
-                    height={70}
-                    onClick={() => handleAnimationClick("point_mall")}
-                  />
+                  {open
+                    ?.filter((item: any) => item.is_open)
+                    .map((item: any) => {
+                      const { type } = item;
+
+                      if (type === "lottery") {
+                        return (
+                          <AnimationLoader
+                            key={type}
+                            animationData={loadingAnimation}
+                            width={90}
+                            height={90}
+                            onClick={() => handleAnimationClick("game")}
+                          />
+                        );
+                      }
+
+                      if (type === "point_mall") {
+                        return (
+                          <AnimationLoader
+                            key={type}
+                            animationData={mall}
+                            width={70}
+                            height={70}
+                            onClick={() => handleAnimationClick("point_mall")}
+                          />
+                        );
+                      }
+
+                      return null;
+                    })}
                 </motion.div>
               )}
             </AnimatePresence>

@@ -37,6 +37,7 @@ import { useGetRecommendedMoviesQuery } from "./pages/home/services/homeApi";
 import Announce from "./components/Announce";
 import land from "./assets/login/land.webp";
 import SpinAnimation from "./pages/Point/components/SpinAnimation";
+import { useGetOpenStateQuery } from "./pages/Point/service/PointApi";
 // import { Game } from "./pages/Point/pages/Game";
 // import Menber from "./pages/share/member";
 // import Share from "./pages/share";
@@ -92,6 +93,7 @@ const App: React.FC = () => {
   const { data: headerData, isLoading: topicsLoading } =
     useGetHeaderTopicsQuery();
   // const { data: notiData, isLoading: notiLoading } = useGetNotificationQuery();
+  const { data: open } = useGetOpenStateQuery("");
 
   const [showNotice, setShowNotice] = useState(false);
   const [preloadedImage, setPreloadedImage] = useState<string | null>(null);
@@ -335,7 +337,6 @@ const App: React.FC = () => {
       (window as any).webkit.messageHandlers.jsBridge
     );
   }
-
   return (
     <>
       {data?.data && (
@@ -373,7 +374,9 @@ const App: React.FC = () => {
 
               {!showUpdateNotification &&
                 !showNotice &&
-                location.pathname === "/" && <SpinAnimation />}
+                location.pathname === "/" && (
+                  <SpinAnimation open={open?.data} />
+                )}
 
               <div className="flex-grow">
                 <Suspense
