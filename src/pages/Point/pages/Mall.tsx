@@ -33,7 +33,7 @@ export const Mall = () => {
   // const parsedUserData = userData;
 
   const integralDetails = parsedUserData?.data?.integral;
-  const coupon = integralDetails?.data?.coupon;
+  const coupon = parsedUserData?.data?.coupon;
   const [pageConfig, setPageConfig] = useState({
     page: 1,
     pageSize: 6,
