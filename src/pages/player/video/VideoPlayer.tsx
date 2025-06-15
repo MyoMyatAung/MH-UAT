@@ -24,13 +24,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const inactivityTimeout = useRef<number | null>(null);
   const [reHeight, setReHeight] = useState(false);
   const [isLandscape, setIsLandscape] = useState(false);
-  
+
   // Function to check if browser natively supports HLS
   const hasNativeHLSSupport = () => {
     return false;
-    const video = document.createElement('video');
-    return video.canPlayType('application/vnd.apple.mpegurl') !== '' ||
-           video.canPlayType('application/x-mpegURL') !== '';
+    const video = document.createElement("video");
+    return (
+      video.canPlayType("application/vnd.apple.mpegurl") !== "" ||
+      video.canPlayType("application/x-mpegURL") !== ""
+    );
   };
 
   // Function to get token from localStorage
@@ -114,26 +116,25 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             // Use native HLS support (Safari, iOS, etc.)
             art.video.src = videoUrl;
             console.log("Using native HLS support");
-            
+
             // Add error handling for native HLS
-            art.video.addEventListener('error', (e) => {
+            art.video.addEventListener("error", (e) => {
               console.error("Native HLS error:", e);
               handleVideoError(videoUrl);
             });
-            
-            // Add timeout for loading
-            const loadTimeout = setTimeout(() => {
-              if (art.video.readyState === 0) {
-                console.error("Video loading timeout");
-                handleVideoError(videoUrl);
-              }
-            }, 10000); // 10 second timeout
-            
-            // Clear timeout when video starts loading
-            art.video.addEventListener('loadstart', () => {
-              clearTimeout(loadTimeout);
-            });
-            
+
+            // // Add timeout for loading
+            // const loadTimeout = setTimeout(() => {
+            //   if (art.video.readyState === 0) {
+            //     console.error("Video loading timeout");
+            //     handleVideoError(videoUrl);
+            //   }
+            // }, 10000); // 10 second timeout
+
+            // // Clear timeout when video starts loading
+            // art.video.addEventListener("loadstart", () => {
+            //   clearTimeout(loadTimeout);
+            // });
           } else if (Hls.isSupported()) {
             // Fallback to HLS.js for browsers without native support
             hls = new Hls();
@@ -152,28 +153,28 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 }
               }
             });
-            
-            // Add timeout for HLS loading
-            const hlsTimeout = setTimeout(() => {
-              if (art.video.readyState === 0) {
-                console.error("HLS loading timeout");
-                handleVideoError(videoUrl);
-              }
-            }, 10000); // 10 second timeout
-            
-            // Clear timeout when manifest is loaded
-            hls.on(Hls.Events.MANIFEST_LOADED, () => {
-              clearTimeout(hlsTimeout);
-            });
-            
+
+            // // Add timeout for HLS loading
+            // const hlsTimeout = setTimeout(() => {
+            //   if (art.video.readyState === 0) {
+            //     console.error("HLS loading timeout");
+            //     handleVideoError(videoUrl);
+            //   }
+            // }, 10000); // 10 second timeout
+
+            // // Clear timeout when manifest is loaded
+            // hls.on(Hls.Events.MANIFEST_LOADED, () => {
+            //   clearTimeout(hlsTimeout);
+            // });
+
             console.log("Using HLS.js library");
           } else {
             // Neither native nor HLS.js support available
             art.video.src = videoUrl;
             console.log("No HLS support detected, trying direct URL");
-            
+
             // Add error handling for fallback
-            art.video.addEventListener('error', (e) => {
+            art.video.addEventListener("error", (e) => {
               console.error("Video error (no HLS support):", e);
               handleVideoError(videoUrl);
             });
@@ -181,9 +182,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         } else {
           // Non-HLS video
           art.video.src = videoUrl;
-          
+
           // Add error handling for regular videos
-          art.video.addEventListener('error', (e) => {
+          art.video.addEventListener("error", (e) => {
             console.error("Video error:", e);
             handleVideoError(videoUrl);
           });
@@ -277,20 +278,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     };
   }, [videoUrl, resumeTime]);
 
-
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden && playerRef.current) {
         playerRef.current.pause();
       }
     };
-  
+
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
-  
+
   // Define the event handler
   const sendNativeEvent = (message: string) => {
     if (
@@ -355,7 +355,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   return (
     <div
       id="my-player"
-      className={`relative w-full bg-black ${reHeight ? "h-[220px]" : "h-[220px]"}`}
+      className={`relative w-full bg-black ${
+        reHeight ? "h-[220px]" : "h-[220px]"
+      }`}
     >
       {/* Back button */}
       {isControlsVisible && (
@@ -416,4 +418,3 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 };
 
 export default VideoPlayer;
-

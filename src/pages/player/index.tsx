@@ -582,7 +582,7 @@ const DetailPage: React.FC = () => {
         <>
           <div className="sticky top-0 z-50">
             <div id="upper-div">
-              {currentEpisode && !wholePageError ? (
+              {!wholePageError ? (
                 !isPlayerLoading ? (
                   <VideoPlayer
                     key={currentEpisode?.episode_id}
