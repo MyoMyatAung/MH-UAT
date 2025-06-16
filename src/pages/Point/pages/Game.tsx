@@ -77,11 +77,18 @@ export const Game = () => {
   const isLocked = !currentGroup?.is_unlocked;
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  useEffect(() => {
+    if (spinGroups.length > 0) {
+      setCanSlidePrev(currentIndex > 0);
+      setCanSlideNext(currentIndex < spinGroups.length - 1);
+    }
+  }, [spinGroups, currentIndex]);
+
   const handleSlideChange = (swiper: any) => {
     setCurrentIndex(swiper.activeIndex);
     setActiveIndex(swiper.activeIndex);
-    setCanSlidePrev(!swiper.isBeginning);
-    setCanSlideNext(!swiper.isEnd);
+    setCanSlidePrev(swiper.activeIndex > 0);
+    setCanSlideNext(swiper.activeIndex < spinGroups.length - 1);
   };
 
   const [buttons] = useState([
@@ -358,7 +365,12 @@ export const Game = () => {
 
   // console.log(progressPercent, levelRange);
 
-  const progressPercent = userIntegral < 100 ? 10 : (userIntegral / 100) > 100 ? 100 : Math.max((userIntegral / 100), 5);
+  const progressPercent =
+    userIntegral < 100
+      ? 10
+      : userIntegral / 100 > 100
+      ? 100
+      : Math.max(userIntegral / 100, 5);
   const swiperRef = useRef<any>(null);
 
   // Set active index when spinGroups is ready
@@ -532,8 +544,6 @@ export const Game = () => {
           onSwiper={(swiper: any) => {
             swiperRef.current = swiper;
             setSwiperInstance(swiper);
-            setCanSlidePrev(!swiper.isBeginning);
-            setCanSlideNext(!swiper.isEnd);
           }}
           onSlideChange={handleSlideChange}
           slidesPerView={1}
@@ -605,7 +615,7 @@ export const Game = () => {
           {/* Navigation Buttons outside of loop */}
           <div
             className={`custom-prev absolute left-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer ${
-              canSlidePrev ? "" : ""
+              canSlidePrev ? "" : "hidden"
             }`}
           >
             <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
@@ -615,7 +625,7 @@ export const Game = () => {
 
           <div
             className={`custom-next absolute right-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer ${
-              canSlideNext ? "" : ""
+              canSlideNext ? "" : "hidden"
             }`}
           >
             <button className="w-10 h-10 rounded-full shadow-md flex items-center justify-center">
