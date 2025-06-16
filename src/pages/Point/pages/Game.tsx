@@ -386,12 +386,13 @@ export const Game = () => {
 
   // console.log(progressPercent, levelRange);
 
-  const progressPercent =
-    userIntegral < 100
-      ? 10
-      : userIntegral / 100 > 100
-      ? 100
-      : Math.max(userIntegral / 100, 5);
+  // const progressPercent =
+  //   userIntegral < 100
+  //     ? 10
+  //     : userIntegral / 100 > 100
+  //     ? 100
+  //     : Math.max(userIntegral / 100, 5);
+  const progressPercent = data?.data?.progress_percent
   const swiperRef = useRef<any>(null);
 
   // Set active index when spinGroups is ready
