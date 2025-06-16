@@ -562,6 +562,8 @@ const DetailPage: React.FC = () => {
     fetchMovieDetail(movieDetail?.id);
   };
 
+  console.log(wholePageError, "wholePageError");
+
   const showRecommandMovie = (id: string) => {
     setCurrentEpisode(null);
     setMovieDetail(null);

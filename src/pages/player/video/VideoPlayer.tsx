@@ -123,11 +123,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
               handleVideoError(videoUrl);
             });
 
-            // // Add timeout for loading
+            // Add timeout for loading
             // const loadTimeout = setTimeout(() => {
             //   if (art.video.readyState === 0) {
             //     console.error("Video loading timeout");
-            //     handleVideoError(videoUrl);
+            //     // handleVideoError(videoUrl);
             //   }
             // }, 10000); // 10 second timeout
 
