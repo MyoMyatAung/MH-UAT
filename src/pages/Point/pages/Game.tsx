@@ -77,6 +77,23 @@ export const Game = () => {
   const isLocked = !currentGroup?.is_unlocked;
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Add this new function to determine image dimensions
+  const getPrizeImageDimensions = (prizeType: string) => {
+    if (prizeType === "item") {
+      return {
+        width: 50,
+        height: 50,
+        top: 35,
+      };
+    }
+    // Default dimensions for coins and other prizes
+    return {
+      width: 24,
+      height: 24,
+      top: 40,
+    };
+  };
+
   useEffect(() => {
     if (spinGroups.length > 0) {
       setCanSlidePrev(currentIndex > 0);
@@ -176,28 +193,32 @@ export const Game = () => {
     const formattedGroups = data.data.prize_groups.map((group: any) => {
       const sorted = group.prizes.sort((a: any, b: any) => a.id - b.id);
 
-      const formattedPrizes = sorted.map((prize: any) => ({
-        id: prize.id,
-        background: "#FFF7DF",
-        fonts: [
-          {
-            text: prize.name,
-            fontColor: "#E1281E",
-            fontSize: 16,
-            fontWeight: 500,
-            top: 10,
-            fontStyle: "PingFang SC",
-          },
-        ],
-        imgs: [
-          {
-            src: prize.image,
-            top: 40,
-            width: 24,
-            height: 24,
-          },
-        ],
-      }));
+      const formattedPrizes = sorted.map((prize: any) => {
+        const dimensions = getPrizeImageDimensions(prize.prize_type);
+        return {
+          id: prize.id,
+          background: "#FFF7DF",
+          fonts: [
+            {
+              text: prize.name,
+              fontColor: "#E1281E",
+              fontSize: 14,
+              fontWeight: 900,
+              top: 10,
+              fontStyle: "PingFang SC",
+              padding: "20px",
+            },
+          ],
+          imgs: [
+            {
+              src: prize.image,
+              top: dimensions.top,
+              width: dimensions.width,
+              height: dimensions.height,
+            },
+          ],
+        };
+      });
 
       return {
         group_id: group.group_id,
@@ -210,7 +231,7 @@ export const Game = () => {
       };
     });
 
-    setSpinGroups(formattedGroups); // <-- array of spin configurations
+    setSpinGroups(formattedGroups);
   }, [data?.data]);
 
   const handleEnd = () => {
@@ -472,7 +493,9 @@ export const Game = () => {
                 <img
                   src={img.src || crowd}
                   alt={`Step ${idx + 1}`}
-                  className={`w-full h-full object-cover`}
+                  className={` ${
+                    currentIndex === idx ? "scale-110" : "scale-100"
+                  } w-full h-full object-cover`}
                 />
                 <h1
                   className={` text-[12px] font-[700] ${
