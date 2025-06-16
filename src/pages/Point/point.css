@@ -78,12 +78,6 @@
   letter-spacing: 0.1px;
 }
 
-.new_record_btn {
-  border-radius: 100px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(6px);
-}
-
 .new_user_box {
   border-radius: 12px;
   background: var(
@@ -141,7 +135,7 @@
 }
 
 .new_record_btn {
-  border-radius: 4px;
+  border-radius: 8px;
   background: var(
     --Orange-Pin-k-Linear,
     linear-gradient(
@@ -162,4 +156,10 @@
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.new_record_btn_head {
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(6px);
 }

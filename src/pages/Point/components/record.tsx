@@ -26,7 +26,7 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
 
   const { run, loading } = useRequest(getRecords, {
     manual: true,
-    onSuccess: (res : any) => {
+    onSuccess: (res: any) => {
       const list = res?.data?.list ?? [];
       const total = res?.data?.total ?? 0;
 
@@ -108,7 +108,7 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
                   ) : dataList.length === 0 ? (
                     <div className="w-full h-[280px] flex flex-col justify-center items-center">
                       <img src={noList} alt="empty" />
-                      <span className="text-[#D20065] text-[14px] font-[400]">
+                      <span className="text-black/40 text-[14px] font-[400]">
                         暂无抽奖记录
                       </span>
                     </div>
@@ -124,7 +124,7 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
                         hasMore={hasMore}
                         loader={
                           <div className="w-full text-center py-2 text-gray-400 text-sm">
-                            加载中...
+                            刷新中...
                           </div>
                         }
                         scrollableTarget="scrollableDiv-record"
@@ -148,7 +148,7 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
                     </div>
                   )}
                   <button
-                    className="text-sm py-3 w-full text-white font-medium new_record_btn"
+                    className="text-sm py-3 w-full text-white font-medium rounded-lg new_record_btn"
                     onClick={onClose}
                   >
                     确定

@@ -392,7 +392,7 @@ export const Game = () => {
   //     : userIntegral / 100 > 100
   //     ? 100
   //     : Math.max(userIntegral / 100, 5);
-  const progressPercent = data?.data?.progress_percent
+  const progressPercent = data?.data?.progress_percent;
   const swiperRef = useRef<any>(null);
 
   // Set active index when spinGroups is ready
@@ -489,20 +489,25 @@ export const Game = () => {
             {groupImages?.map((img: any, idx: any) => (
               <div
                 key={img.id}
-                className="relative w-[54px] flex flex-col items-center h-[38px]"
+                className="relative w-[54px] flex flex-col items-center h-[38px] cursor-pointer"
+                onClick={() => {
+                  if (swiperRef.current) {
+                    swiperRef.current.slideTo(idx);
+                  }
+                }}
               >
                 <img
                   src={img.src || crowd}
                   alt={`Step ${idx + 1}`}
-                  className={` ${
-                    currentIndex === idx ? "scale-110" : "scale-100"
-                  } w-full h-full object-cover`}
+                  className={`w-full h-full object-cover ${
+                    currentIndex === idx ? " scale-125" : ""
+                  }`}
                 />
                 <h1
-                  className={` text-[12px] font-[700] ${
+                  className={`  font-[700] ${
                     currentIndex === idx
-                      ? "active_progress_text"
-                      : "text-white/60"
+                      ? "active_progress_text text-[13px]"
+                      : "text-white/60 text-[12px]"
                   }`}
                 >
                   {img.name}
@@ -572,7 +577,7 @@ export const Game = () => {
           onSlideChange={handleSlideChange}
           slidesPerView={1}
           spaceBetween={50}
-          className="relative w-full h-[468px]"
+          className=" absolute bottom-8 w-full h-[438px]"
         >
           {spinGroups.map((group, index) => (
             <SwiperSlide key={group.group_id}>
@@ -638,7 +643,7 @@ export const Game = () => {
 
           {/* Navigation Buttons outside of loop */}
           <div
-            className={`custom-prev absolute left-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer ${
+            className={`custom-prev absolute left-0 top-[45%] transform -translate-y-1/2 z-10 cursor-pointer ${
               canSlidePrev ? "" : "hidden"
             }`}
           >
@@ -648,7 +653,7 @@ export const Game = () => {
           </div>
 
           <div
-            className={`custom-next absolute right-0 top-[42%] transform -translate-y-1/2 z-10 cursor-pointer ${
+            className={`custom-next absolute right-0 top-[45%] transform -translate-y-1/2 z-10 cursor-pointer ${
               canSlideNext ? "" : "hidden"
             }`}
           >
@@ -675,7 +680,7 @@ export const Game = () => {
                 disabled={isLocked}
                 // onTouchEnd={handleStart}
                 onClick={handleStart}
-                className={`w-11/12 h-12 mb-8 py-3 bg-amber ${
+                className={`w-11/12 h-12 mb-2 py-3 bg-amber ${
                   isLocked && currentGroup?.button_state === "disabled"
                     ? "new_spin_button_lock"
                     : "new_spin_button"
@@ -691,7 +696,20 @@ export const Game = () => {
                     : "开始抽奖"}
                 </div>
                 {isLocked && currentGroup?.button_state === "enabled" && (
-                  <img src={lock} alt="" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="16"
+                    viewBox="0 0 14 16"
+                    fill="none"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M7 0.299805C8.11391 0.299805 9.18207 0.742621 9.96973 1.53027C10.7574 2.31793 11.2002 3.38609 11.2002 4.5V6.59961H11.9004C13.06 6.59971 13.9999 7.54057 14 8.7002V13.5996C14 14.7593 13.0601 15.7001 11.9004 15.7002H2.10059C0.940788 15.7002 0 14.7594 0 13.5996V8.7002C0.000132015 7.54051 0.940869 6.59961 2.10059 6.59961H2.7998V4.5C2.7998 3.38609 3.24262 2.31793 4.03027 1.53027C4.81793 0.742621 5.88609 0.299805 7 0.299805ZM7 1.7002C6.25739 1.7002 5.54561 1.99541 5.02051 2.52051C4.49541 3.04561 4.2002 3.75739 4.2002 4.5V6.59961H9.7998V4.5C9.7998 3.75739 9.50459 3.04561 8.97949 2.52051C8.45439 1.99541 7.74261 1.7002 7 1.7002Z"
+                      fill="#64421A"
+                    />
+                  </svg>
                 )}
               </button>
             ) : (

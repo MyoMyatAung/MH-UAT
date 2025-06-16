@@ -47,7 +47,7 @@ export const GameHead = ({}) => {
         </button>
         {/* <p className="font-medium text-base">幸运大转盘</p> */}
         <button
-          className="min-w-[60px] px-[12px] text-sm text-white focus:outline-none new_record_btn focus:bg-white"
+          className="min-w-[60px] px-[12px] py-[4px] text-sm text-white focus:outline-none new_record_btn_head focus:bg-white"
           onClick={toggle}
         >
           中奖记录
