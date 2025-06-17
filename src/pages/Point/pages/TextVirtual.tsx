@@ -17,6 +17,7 @@ const TextVirtual: React.FC<VirtualProps> = ({ data }) => {
       autoplay={{ delay: 2000, disableOnInteraction: false }}
       modules={[Autoplay]}
       className="h-[20px]"
+      allowTouchMove={false}
     >
       {data?.data?.virtual_lottery_winners?.map((item: any, index: number) => {
         const template = item.text || "用户 :name 成功瓜分红包 :price";
