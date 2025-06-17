@@ -322,6 +322,9 @@ export const Game = () => {
   // });
 
   const handleStart = useLockFn(async () => {
+    if (!token) {
+      return;
+    }
     const obj = data?.data;
     const currentGroup = spinGroups[activeIndex];
 
