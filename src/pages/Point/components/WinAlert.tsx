@@ -9,9 +9,10 @@ interface WinAlertProps {
   msg: string;
   show: boolean;
   img: string;
+  btnText: string
 }
 
-const WinAlert: React.FC<WinAlertProps> = ({ onClose, msg, show, img }) => {
+const WinAlert: React.FC<WinAlertProps> = ({ onClose, msg, show, img,btnText }) => {
   const navigate = useNavigate();
 
   // console.log(msg, show);
@@ -55,7 +56,7 @@ const WinAlert: React.FC<WinAlertProps> = ({ onClose, msg, show, img }) => {
                   className="congrat_accept_btn text-[18px] font-[600] py-[9px] px-[40px] rounded-[12px] absolute bottom-5 text-[#4E2A00]"
                   onClick={onClose}
                 >
-                  开心收下
+                  {btnText}
                 </button>
               </div>
             </div>

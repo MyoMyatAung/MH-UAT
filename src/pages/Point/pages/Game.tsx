@@ -248,11 +248,18 @@ export const Game = () => {
         show: true,
         msg: `${prizeItem.prize.name}`,
         img: `${prizeItem.prize.image}`,
+        btnText : "开心收下"
       });
     } else {
-      setMsg({
+      // setMsg({
+      //   show: true,
+      //   msg: `谢谢参与,您未中奖`,
+      // });
+      setWin({
         show: true,
-        msg: `谢谢参与,您未中奖`,
+        msg: `${prizeItem.prize.name}`,
+        img: `${prizeItem.prize.image}`,
+        btnText : "我知道了"
       });
     }
   };
