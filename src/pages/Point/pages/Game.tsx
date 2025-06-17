@@ -248,7 +248,7 @@ export const Game = () => {
         show: true,
         msg: `${prizeItem.prize.name}`,
         img: `${prizeItem.prize.image}`,
-        btnText : "开心收下"
+        btnText: "开心收下",
       });
     } else {
       // setMsg({
@@ -259,7 +259,7 @@ export const Game = () => {
         show: true,
         msg: `${prizeItem.prize.name}`,
         img: `${prizeItem.prize.image}`,
-        btnText : "我知道了"
+        btnText: "我知道了",
       });
     }
   };
@@ -318,15 +318,26 @@ export const Game = () => {
       setMsg({
         show: true,
         msg: "抽奖劵不足，请通过邀请好友获取",
-        navBtn : "获取抽奖劵"
+        navBtn: "获取抽奖劵",
       });
       return;
     }
 
-    if (!obj.open_now || !currentGroup?.is_unlocked) {
+    if (!currentGroup?.is_unlocked && data?.data?.progress_percent < 50) {
       setMsg({
         show: true,
-        msg: obj?.open_hours_text || "活动暂未开放",
+        msg: "少侠，您的等级过低没有资格参加此活动",
+        navBtn: "我要升级",
+      });
+      return;
+    } else if (
+      !currentGroup?.is_unlocked &&
+      data?.data?.progress_percent > 50
+    ) {
+      setMsg({
+        show: true,
+        msg: "少侠，您的武学境界已超凡脱俗，此轮盘不再适用于您",
+        navBtn: "前往更高级转盘",
       });
       return;
     }

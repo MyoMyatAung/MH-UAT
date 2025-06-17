@@ -1,7 +1,7 @@
 import { FC, useCallback, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
-import winbg from "../imgs/reward.png";
+import winbg from "../imgs/reward.webp";
 import "../point.css";
 
 interface WinAlertProps {
