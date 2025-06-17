@@ -684,7 +684,7 @@ export const Game = () => {
             className="w-11/12 h-12 px-[100px] mb-8 py-3 bg-zinc-300 rounded-[49px] shadow shadow-inner border border-zinc-300 justify-center items-center inline-flex  bottom-[50px] z-[999]"
           >
             <div className="text-center text-orange-900 text-base font-medium leading-normal">
-              加载中。。。
+              loading...
             </div>
           </button>
         ) : (
@@ -695,7 +695,7 @@ export const Game = () => {
                 // onTouchEnd={handleStart}
                 onClick={handleStart}
                 className={`w-11/12 h-12 mb-2 py-3 bg-amber ${
-                  isLocked && currentGroup?.button_state === "disabled"
+                  isLocked || currentGroup?.button_state === "disabled"
                     ? "new_spin_button_lock"
                     : "new_spin_button"
                 } rounded-[49px] shadow-inner border border-orange-200 justify-center items-center inline-flex gap-1  bottom-[50px]`}

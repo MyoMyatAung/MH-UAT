@@ -95,7 +95,6 @@ const App: React.FC = () => {
   // const { data: notiData, isLoading: notiLoading } = useGetNotificationQuery();
 
   //staging remove skip
-  const { data: open } = useGetOpenStateQuery("", {skip : true});
 
   const [showNotice, setShowNotice] = useState(false);
   const [preloadedImage, setPreloadedImage] = useState<string | null>(null);
@@ -239,6 +238,15 @@ const App: React.FC = () => {
     }
   }, [location.pathname]);
 
+  const { data: open } = useGetOpenStateQuery("");
+  const [isopen, setIsopen] = useState(false);
+  useEffect(() => {
+    if (open?.data) {
+      setIsopen(true);
+    }
+  }, [open]);
+  console.log(" is open", open?.data);
+
   useEffect(() => {
     if (location.pathname !== "/") {
       const lastFetchTime = sessionStorage.getItem("lastRefetchTime");
@@ -374,11 +382,9 @@ const App: React.FC = () => {
                   </div>
                 )}
 
-              {!showUpdateNotification &&
-                !showNotice &&
-                location.pathname === "/" && (
-                  <SpinAnimation open={open?.data} />
-                )}
+              {!showNotice && location.pathname === "/" && (
+                <SpinAnimation open={open?.data} />
+              )}
 
               <div className="flex-grow">
                 <Suspense
