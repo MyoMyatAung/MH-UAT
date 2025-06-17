@@ -93,7 +93,9 @@ const App: React.FC = () => {
   const { data: headerData, isLoading: topicsLoading } =
     useGetHeaderTopicsQuery();
   // const { data: notiData, isLoading: notiLoading } = useGetNotificationQuery();
-  const { data: open } = useGetOpenStateQuery("");
+
+  //staging remove skip
+  const { data: open } = useGetOpenStateQuery("", {skip : true});
 
   const [showNotice, setShowNotice] = useState(false);
   const [preloadedImage, setPreloadedImage] = useState<string | null>(null);
