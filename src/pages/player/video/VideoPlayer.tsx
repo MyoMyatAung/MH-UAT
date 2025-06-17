@@ -79,6 +79,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           autoplay: true,
           playbackRate: true,
           setting: true,
+          autoOrientation: false,
           // fullscreen: true,
           airplay: true,
           controls: [
