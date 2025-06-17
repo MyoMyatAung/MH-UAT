@@ -46,7 +46,7 @@ export const Alert: FC<AlertProps> = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="z-20 fixed inset-0 bg-black/30" />
+          <div className="z-20 fixed inset-0 bg-black/60" />
         </Transition.Child>
 
         <Transition.Child
@@ -79,7 +79,7 @@ export const Alert: FC<AlertProps> = ({
                         <button className=" text-sm py-3 w-full text-black font-medium rounded border border-black/10" onClick={onClose} >
                           取消
                         </button>
-                        <button className="bg-[#ff6a33] text-sm py-3 w-full text-white font-medium rounded" onClick={handleNavTask} >
+                        <button className="new_open_task_btn text-sm py-3 w-full text-white font-medium rounded" onClick={handleNavTask} >
                           {
                             btnText ? btnText : '获取积分'
                           }

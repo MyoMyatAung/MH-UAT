@@ -163,3 +163,16 @@
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(6px);
 }
+
+.new_open_task_btn {
+  border-radius: 8px;
+  background: linear-gradient(
+      87deg,
+      #ffbe92 -19.07%,
+      #ff4c1c 8.31%,
+      rgba(239, 25, 137, 0.8) 69.22%,
+      #ffb081 102%
+    ),
+    var(--Nav-Linear, #fa652e);
+  background-blend-mode: soft-light, normal, normal;
+}

@@ -304,9 +304,17 @@ export const Game = () => {
   // });
 
   const handleStart = useLockFn(async () => {
-    console.log("enter");
     const obj = data?.data;
     const currentGroup = spinGroups[activeIndex];
+
+    if (data?.data?.user_tickets === 0) {
+      setMsg({
+        show: true,
+        msg: "抽奖劵不足，请通过邀请好友获取",
+        navBtn : "获取抽奖劵"
+      });
+      return;
+    }
 
     if (!obj.open_now || !currentGroup?.is_unlocked) {
       setMsg({
@@ -624,8 +632,7 @@ export const Game = () => {
                   } left-[50%] ml-[-58px] text-[13px] font-[900] text-white truncate`}
                 >
                   <span className=" flex justify-center items-center">
-                    抽奖劵 x {parsedUserData?.data?.lottery_tickets}{" "}
-                    <img src={cc} alt="" />{" "}
+                    抽奖劵 x {data?.data?.user_tickets} <img src={cc} alt="" />{" "}
                   </span>
 
                   {/* {data?.data?.open_now ? (
