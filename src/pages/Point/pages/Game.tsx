@@ -27,6 +27,8 @@ import cc from "../../Point/coupon.png";
 import TextVirtual from "./TextVirtual";
 import { useNavigate } from "react-router-dom";
 import WinAlert from "../components/WinAlert";
+import { setAuthModel } from "../../../features/login/ModelSlice";
+import { useDispatch } from "react-redux";
 
 export const Game = () => {
   const myLucky = useRef<any>();
@@ -55,6 +57,7 @@ export const Game = () => {
   const [prizeItem, setPrizeItem] = useState<any>(); //中奖物品
   const [hasNext, setHasNext] = useState<boolean>(true); //是否可以抽奖
   const [lockid, setLockid] = useState<boolean>(false); //防抖
+  const dispatch = useDispatch();
   const [msg, setMsg] = useState<any>({
     show: false,
     msg: "",
@@ -93,6 +96,14 @@ export const Game = () => {
       top: 40,
     };
   };
+
+  const handleLogin = () => {
+    dispatch(setAuthModel(true));
+  };
+
+  useEffect(() => {
+    refresh();
+  }, [token]);
 
   useEffect(() => {
     if (spinGroups.length > 0) {
@@ -476,27 +487,44 @@ export const Game = () => {
             />
             <div className="">
               <h1 className=" text-[#512D00] text-[16px] font-[700]">
-                {parsedUserData?.data?.nickname ?? "user"}
+                {parsedUserData?.data?.nickname ?? "登录或注册账号"}
               </h1>
-              <img
-                className=" w-[72px] h-[24px]"
-                src={parsedUserData?.data?.level}
-                alt=""
-              />
+              {parsedUserData?.data?.level ? (
+                <img
+                  className=" w-[72px] h-[24px]"
+                  src={parsedUserData?.data?.level}
+                  alt=""
+                />
+              ) : (
+                <span className=" text-[#64421A] text=[16px] font-[600]">
+                  解锁更多精彩奖励
+                </span>
+              )}
             </div>
           </div>
           {/* btn */}
-          <button
-            onClick={() => navigate("/point_info")}
-            className=" relative w-[130px] overflow-hidden flex justify-center items-center py-[18px] gap-[4px] rounded-[14px]"
-          >
+          <button className=" relative w-[130px] overflow-hidden flex justify-center items-center py-[18px] gap-[4px] rounded-[14px]">
             <img src={btnbg} className=" absolute z-[1]" alt="" />
-            <div className=" absolute flex gap-1 justify-center items-center z-[2]">
-              <span className=" text-white text-[14px] font-[700]">
-                获取抽奖劵
-              </span>
-              <img src={diamond} alt="" />
-            </div>
+            {token ? (
+              <div
+                onClick={() => navigate("/point_info")}
+                className=" absolute flex gap-1 justify-center items-center z-[2]"
+              >
+                <span className=" text-white text-[14px] font-[700]">
+                  获取抽奖劵
+                </span>
+                <img src={diamond} alt="" />
+              </div>
+            ) : (
+              <div
+                onClick={handleLogin}
+                className=" absolute flex gap-1 justify-center items-center z-[2]"
+              >
+                <span className=" text-white text-[14px] font-[700]">
+                  点击登录
+                </span>
+              </div>
+            )}
           </button>
         </div>
 
