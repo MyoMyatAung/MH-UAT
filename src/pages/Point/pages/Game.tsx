@@ -49,7 +49,7 @@ export const Game = () => {
   // staging
   // const parsedUserData = JSON.parse(userData || "{}");
 
-  //prod
+  // prod
   const parsedUserData = userData;
 
   // console.log(parsedUserData);
@@ -323,6 +323,7 @@ export const Game = () => {
 
   const handleStart = useLockFn(async () => {
     if (!token) {
+      handleLogin();
       return;
     }
     const obj = data?.data;
@@ -737,7 +738,7 @@ export const Game = () => {
           <>
             {data?.data?.open_now ? (
               <button
-                disabled={isLocked}
+                // disabled={isLocked}
                 // onTouchEnd={handleStart}
                 onClick={handleStart}
                 className={`w-11/12 h-12 mb-2 py-3 bg-amber ${
