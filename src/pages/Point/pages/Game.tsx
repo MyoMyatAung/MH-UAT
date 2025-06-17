@@ -327,7 +327,7 @@ export const Game = () => {
       setMsg({
         show: true,
         msg: "少侠，您的等级过低没有资格参加此活动",
-        navBtn: "我要升级",
+        navBtn: true,
       });
       return;
     } else if (
@@ -337,8 +337,12 @@ export const Game = () => {
       setMsg({
         show: true,
         msg: "少侠，您的武学境界已超凡脱俗，此轮盘不再适用于您",
-        navBtn: "前往更高级转盘",
+        navBtn: true,
+        btnText: "前往更高级转盘",
+        opentask: false,
       });
+      swiperRef.current.slideTo(3);
+
       return;
     }
 
