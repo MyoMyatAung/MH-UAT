@@ -9,10 +9,16 @@ interface WinAlertProps {
   msg: string;
   show: boolean;
   img: string;
-  btnText: string
+  btnText: string;
 }
 
-const WinAlert: React.FC<WinAlertProps> = ({ onClose, msg, show, img,btnText }) => {
+const WinAlert: React.FC<WinAlertProps> = ({
+  onClose,
+  msg,
+  show,
+  img,
+  btnText,
+}) => {
   const navigate = useNavigate();
 
   // console.log(msg, show);
@@ -46,14 +52,15 @@ const WinAlert: React.FC<WinAlertProps> = ({ onClose, msg, show, img,btnText }) 
               <div className=" relative h-[400px] flex justify-center items-center w-full">
                 <img className=" w-[290px] h-[400px]" src={winbg} alt="" />
                 <div className=" absolute w-[260px] py-5 flex flex-col justify-between items-center rounded-2xl h-[250px] top-[30px] ">
-                  <h1 className="congrat_text text-[24px] font-[500]">
-                    恭喜获得
+                  <h1 className="congrat_text flex justify-center gap-[10px] items-center text-[24px] font-[500]">
+                    <span className=" test_congrat_line1"></span> 恭喜获得{" "}
+                    <span className="test_congrat_line2 rotate-180"></span>
                   </h1>
                   <img className=" w-[80px] h-[80px]" src={img} alt="" />
                   <h1 className="congrat_text text-[20px] font-[600]">{msg}</h1>
                 </div>
                 <button
-                  className="congrat_accept_btn text-[18px] font-[600] py-[9px] px-[40px] rounded-[12px] absolute bottom-5 text-[#4E2A00]"
+                  className="congrat_accept_btn text-[18px] font-[700] py-[9px] px-[40px] rounded-[12px] absolute bottom-5 text-[#4E2A00]"
                   onClick={onClose}
                 >
                   {btnText}

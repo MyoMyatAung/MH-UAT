@@ -176,3 +176,15 @@
     var(--Nav-Linear, #fa652e);
   background-blend-mode: soft-light, normal, normal;
 }
+
+.test_congrat_line1 {
+  width: 31px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 153, 79, 0.00) 0%, #FF8C22 100%);
+}
+
+.test_congrat_line2 {
+  width: 31px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 153, 79, 0.00) 0%, #FF8C22 100%);
+}
