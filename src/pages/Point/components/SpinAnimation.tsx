@@ -27,13 +27,16 @@ const SpinAnimation: React.FC<SpinAnimationProps> = ({ open }) => {
   const [showLoading, setShowLoading] = useState(false);
 
   const handleAnimationClick = (name: string) => {
-    // if (!token) {
-    //   dispatch(setAuthModel(true));
-    // } else {
+    console.log(name);
+    if (name === "game") {
       navigate(`/${name}`);
-      // setUserHasClosedAnimation(true);
-      // sessionStorage.setItem("animationClosed", "true");
-    // }
+    } else {
+      if (!token) {
+        dispatch(setAuthModel(true));
+      } else {
+        navigate(`/${name}`);
+      }
+    }
   };
 
   const toggleLoading = () => {
