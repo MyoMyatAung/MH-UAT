@@ -639,7 +639,7 @@ export const Game = () => {
           onSlideChange={handleSlideChange}
           slidesPerView={1}
           spaceBetween={50}
-          className=" absolute bottom-8 w-full h-[438px]"
+          className=" absolute bottom-8 w-full h-[458px]"
         >
           {spinGroups.map((group, index) => (
             <SwiperSlide key={group.group_id}>
@@ -674,7 +674,7 @@ export const Game = () => {
                   />
 
                   {/* virtual_lottery_winners */}
-                  <div className=" absolute w-full flex justify-center bottom-[-30px]">
+                  <div className=" absolute w-full flex justify-center bottom-[-50px]">
                     <TextVirtual data={data} />
                   </div>
                 </div>

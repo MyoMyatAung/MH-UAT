@@ -180,11 +180,33 @@
 .test_congrat_line1 {
   width: 31px;
   height: 2px;
-  background: linear-gradient(90deg, rgba(255, 153, 79, 0.00) 0%, #FF8C22 100%);
+  background: linear-gradient(90deg, rgba(255, 153, 79, 0) 0%, #ff8c22 100%);
 }
 
 .test_congrat_line2 {
   width: 31px;
   height: 2px;
-  background: linear-gradient(90deg, rgba(255, 153, 79, 0.00) 0%, #FF8C22 100%);
+  background: linear-gradient(90deg, rgba(255, 153, 79, 0) 0%, #ff8c22 100%);
+}
+
+@keyframes scrollText {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.scroll-animation {
+  animation: scrollText 130s linear infinite;
+  /* display: inline-block; */
+  white-space: nowrap;
+  padding-left: 24px;
+  padding-right: 48px;
+}
+
+.new_v_text_box {
+  border-radius: 46px;
+  background: rgba(128, 19, 18, 0.48);
 }
