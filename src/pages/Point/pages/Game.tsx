@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import WinAlert from "../components/WinAlert";
 import { setAuthModel } from "../../../features/login/ModelSlice";
 import { useDispatch } from "react-redux";
+import ImageWithPlaceholder from "../../../pages/profile/components/info/ImageWithPlaceholder";
 
 export const Game = () => {
   const myLucky = useRef<any>();
@@ -468,19 +469,20 @@ export const Game = () => {
       />
       <img alt="" src={newBg} className="fixed w-full h-screen z-0" />
       <GameHead />
-      <div className="flex flex-col py-[1px] justify-center items-center relative">
-        <div className="px-6 pb-1 relative flex justify-center">
+      {/* event */}
+        <div className="px-6 pb-1 flex justify-center absolute top-0">
           <img alt="" src={newHead} className="" />
           <span className="new_date_head_text text-[14px] font-[700] absolute bottom-[35px]">
             {/* 2025-06-15-16:30 */}
             {data?.data?.end_date ?? "2025-06-15-16:30"}
           </span>
         </div>
+      <div className="flex flex-col py-[1px] justify-center items-center relative">
         {/* userBox */}
-        <div className="new_user_box p-[12px] w-[350px] flex justify-between items-center">
+        <div className="new_user_box mt-[120px] p-[12px] w-[350px] flex justify-between items-center">
           {/* user */}
           <div className=" flex justify-center items-center gap-[8px]">
-            <img
+            {/* <img
               className=" w-[48px] h-[48px] rounded-full"
               src={
                 parsedUserData?.data?.avatar
@@ -488,6 +490,17 @@ export const Game = () => {
                   : fakeUser
               }
               alt=""
+            /> */}
+            <ImageWithPlaceholder
+              width={48}
+              height={48}
+              src={
+                parsedUserData?.data?.avatar
+                  ? parsedUserData?.data?.avatar
+                  : fakeUser
+              }
+              alt="user"
+              className="rounded-full"
             />
             <div className="">
               <h1 className=" text-[#512D00] text-[16px] font-[700]">
@@ -639,7 +652,7 @@ export const Game = () => {
           onSlideChange={handleSlideChange}
           slidesPerView={1}
           spaceBetween={50}
-          className=" absolute bottom-8 w-full h-[458px]"
+          className=" absolute bottom-8 w-full h-[455px]"
         >
           {spinGroups.map((group, index) => (
             <SwiperSlide key={group.group_id}>
