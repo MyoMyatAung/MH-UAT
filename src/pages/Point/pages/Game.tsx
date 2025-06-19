@@ -441,6 +441,10 @@ export const Game = () => {
   const progressPercent = data?.data?.progress_percent;
   const swiperRef = useRef<any>(null);
 
+  useEffect(() => {
+    window.scrollTo(0,100)
+  },[])
+
   // Set active index when spinGroups is ready
   useEffect(() => {
     if (swiperRef.current && spinGroups.length > 0) {
@@ -470,16 +474,16 @@ export const Game = () => {
       <img alt="" src={newBg} className="fixed w-full h-screen z-0" />
       <GameHead />
       {/* event */}
-        <div className="px-6 pb-1 flex justify-center absolute top-0">
+        <div className="px-6 pb-1 flex justify-center absolute top-[-10px]">
           <img alt="" src={newHead} className="" />
           <span className="new_date_head_text text-[14px] font-[700] absolute bottom-[35px]">
             {/* 2025-06-15-16:30 */}
             {data?.data?.end_date ?? "2025-06-15-16:30"}
           </span>
         </div>
-      <div className="flex flex-col py-[1px] justify-center items-center relative">
+      <div className="flex flex-col py-[1px] justify-cente items-center relative">
         {/* userBox */}
-        <div className="new_user_box mt-[120px] p-[12px] w-[350px] flex justify-between items-center">
+        <div className="new_user_box mt-[110px] p-[12px] w-[350px] flex justify-between items-center">
           {/* user */}
           <div className=" flex justify-center items-center gap-[8px]">
             {/* <img
@@ -652,7 +656,7 @@ export const Game = () => {
           onSlideChange={handleSlideChange}
           slidesPerView={1}
           spaceBetween={50}
-          className=" absolute bottom-8 w-full h-[455px]"
+          className=" absolute bottom-10 w-full h-[455px]"
         >
           {spinGroups.map((group, index) => (
             <SwiperSlide key={group.group_id}>
