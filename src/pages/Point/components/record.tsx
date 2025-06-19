@@ -102,7 +102,7 @@ export const Record: FC<RecordProps> = ({ show, onClose }) => {
                     <div className="w-full h-[280px] flex flex-col justify-center items-center">
                       <img src={spinLoad} className="animate-spin" alt="" />
                       <span className="text-[#D20065] text-[14px] font-[400]">
-                        清爽 ...
+                        加载中…
                       </span>
                     </div>
                   ) : dataList.length === 0 ? (
