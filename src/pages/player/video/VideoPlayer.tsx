@@ -28,7 +28,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   // Function to check if browser natively supports HLS
   const hasNativeHLSSupport = () => {
-    return false;
     const video = document.createElement("video");
     return (
       video.canPlayType("application/vnd.apple.mpegurl") !== "" ||
@@ -126,19 +125,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
               console.error("Native HLS error:", e);
               handleVideoError(videoUrl);
             });
-
-            // Add timeout for loading
-            // const loadTimeout = setTimeout(() => {
-            //   if (art.video.readyState === 0) {
-            //     console.error("Video loading timeout");
-            //     // handleVideoError(videoUrl);
-            //   }
-            // }, 10000); // 10 second timeout
-
-            // // Clear timeout when video starts loading
-            // art.video.addEventListener("loadstart", () => {
-            //   clearTimeout(loadTimeout);
-            // });
           } else if (Hls.isSupported()) {
             // Fallback to HLS.js for browsers without native support
             hls = new Hls();
