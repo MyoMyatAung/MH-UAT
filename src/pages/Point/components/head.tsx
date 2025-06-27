@@ -1,4 +1,5 @@
-import { FC } from "react";
+import { FC, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 type HeadProps = {
@@ -7,11 +8,14 @@ type HeadProps = {
 };
 
 export const Head: FC<HeadProps> = ({ title, nomore }) => {
+  const { pointMall } = useSelector((state: any) => state.model);
+  console.log(pointMall);
+  const [count, setcount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const routerLink = () => {
     if (location.pathname === "/point_mall") {
-      navigate(-1);
+      navigate(pointMall);
     } else {
       navigate(-1);
     }
@@ -42,7 +46,7 @@ export const Head: FC<HeadProps> = ({ title, nomore }) => {
         <button
           className="text-sm w-[60px] focus:outline-none bg-transparent"
           style={{ cursor: "pointer" }}
-          onClick={() => navigate("/list",{ replace: true })}
+          onClick={() => navigate("/list")}
         >
           {nomore ? "" : "订单信息"}
         </button>
