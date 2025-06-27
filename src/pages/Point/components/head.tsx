@@ -10,17 +10,8 @@ export const Head: FC<HeadProps> = ({ title, nomore }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const routerLink = () => {
-    if (location.pathname === "/") {
-      try {
-        // @ts-ignore
-        JsBridge?.openNativePage?.(JSON.stringify({ pageName: "invite-home" }));
-      } catch (e) {
-        // @ts-ignore
-        dsBridge.call(
-          "openNativePage",
-          JSON.stringify({ pageName: "invite-home" })
-        );
-      }
+    if (location.pathname === "/point_mall") {
+      navigate(-1);
     } else {
       navigate(-1);
     }
@@ -39,10 +30,8 @@ export const Head: FC<HeadProps> = ({ title, nomore }) => {
           className="font-medium text-base focus:outline-none bg-transparent"
           style={{ cursor: "pointer" }}
           onClick={() => {
-            if (location.pathname === "/list") {
-              navigate(-1);
-            } else if (location.pathname !== "/point_mall") {
-              navigate("/point_mall");
+            if (location.pathname !== "/point_mall") {
+              navigate("/point_mall", { replace: true });
             }
             // If already on /point_mall, do nothing
           }}
@@ -50,9 +39,13 @@ export const Head: FC<HeadProps> = ({ title, nomore }) => {
           {title ?? "积分商城"}
         </button>
 
-        <Link className="text-sm w-[60px]" to="/list">
+        <button
+          className="text-sm w-[60px] focus:outline-none bg-transparent"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/list",{ replace: true })}
+        >
           {nomore ? "" : "订单信息"}
-        </Link>
+        </button>
       </div>
       <div className="w-full h-[54px] flex justify-between items-center px-4"></div>
     </>
