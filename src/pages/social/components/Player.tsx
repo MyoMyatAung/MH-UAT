@@ -580,11 +580,18 @@ const Player = ({
         },
       },
     });
+    // Set up event listeners
 
-    artPlayerInstanceRef.current.on("play", () => setIsPlaying(true));
+    artPlayerInstanceRef.current.on("play", () => {
+      setIsPlaying(true);
+      setError(false);
+    });
+
     artPlayerInstanceRef.current.on("pause", () => setIsPlaying(false));
+
     artPlayerInstanceRef.current.on("error", () => {
       setError(true);
+      destroyPlayer();
     });
   };
 
@@ -627,15 +634,23 @@ const Player = ({
     };
   }, [src, thumbnail, autoMode]);
 
+  const initializingRef = useRef(false);
+
   const handleRetry = () => {
+    if (initializingRef.current) return;
+
     setError(false);
-    setLoading(true);
+    setLoading(false);
+    initializingRef.current = true;
+
+    destroyPlayer();
+
     setTimeout(() => {
-      setLoading(false);
       if (playerContainerRef.current && !artPlayerInstanceRef.current) {
         initializePlayer();
       }
-    }, 500);
+      initializingRef.current = false;
+    }, 150);
   };
 
   return (
