@@ -30,15 +30,18 @@ import WinAlert from "../components/WinAlert";
 import { setAuthModel } from "../../../features/login/ModelSlice";
 import { useDispatch } from "react-redux";
 import ImageWithPlaceholder from "../../../pages/profile/components/info/ImageWithPlaceholder";
+import useLotteryItems from "../../../utils/useLotteryItems";
 
 export const Game = () => {
   const myLucky = useRef<any>();
   const isLoggedIn = localStorage.getItem("authToken");
   const parsedLoggedIn = isLoggedIn ? JSON.parse(isLoggedIn) : null;
   const [spinLoad, setSpinLoad] = useState(false);
-  const { data, error, loading, refresh } = useRequest<any, any>(() =>
-    getLotteryItems()
-  );
+  // const { data, error, loading, refresh } = useRequest<any, any>(() =>
+  //   getLotteryItems()
+  // );
+  const { data, loading, error, refresh } = useLotteryItems();
+
   const token = parsedLoggedIn?.data?.access_token;
   const { data: userData, refetch } = useGetUserQuery(undefined, {
     skip: !token,
@@ -442,8 +445,8 @@ export const Game = () => {
   const swiperRef = useRef<any>(null);
 
   useEffect(() => {
-    window.scrollTo(0,100)
-  },[])
+    window.scrollTo(0, 100);
+  }, []);
 
   // Set active index when spinGroups is ready
   useEffect(() => {
@@ -474,13 +477,13 @@ export const Game = () => {
       <img alt="" src={newBg} className="fixed w-full h-screen z-0" />
       <GameHead />
       {/* event */}
-        <div className="px-6 pb-1 flex justify-center absolute top-[-10px]">
-          <img alt="" src={newHead} className="" />
-          <span className="new_date_head_text text-[14px] font-[700] absolute bottom-[35px]">
-            {/* 2025-06-15-16:30 */}
-            {data?.data?.end_date ?? "2025-06-15-16:30"}
-          </span>
-        </div>
+      <div className="px-6 pb-1 flex justify-center absolute top-[-10px]">
+        <img alt="" src={newHead} className="" />
+        <span className="new_date_head_text text-[14px] font-[700] absolute bottom-[35px]">
+          {/* 2025-06-15-16:30 */}
+          {data?.data?.end_date ?? "2025-06-15-16:30"}
+        </span>
+      </div>
       <div className="flex flex-col py-[1px] justify-cente items-center relative">
         {/* userBox */}
         <div className="new_user_box mt-[110px] p-[12px] w-[350px] flex justify-between items-center">
