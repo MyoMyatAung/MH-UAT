@@ -563,6 +563,7 @@ const PostList = ({
             {post.file_type === "audio" && (
               <AudioPlayer
                 src={post?.files[0]?.resourceURL}
+                title={post?.files[0]?.audio_file_name || post?.description}
                 index={index}
                 setActivePlayer={setActivePlayer}
                 activePlayer={activePlayer}
@@ -581,7 +582,9 @@ const PostList = ({
                 )}
 
                 <div>
-                  <p className="text-gray-400 text-[12px]">{post?.create_time}</p>
+                  <p className="text-gray-400 text-[12px]">
+                    {post?.create_time}
+                  </p>
                 </div>
 
                 <div className="flex gap-x-5  items-center justify-center">
