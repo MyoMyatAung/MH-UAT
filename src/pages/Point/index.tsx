@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BG from "../../assets/share/BG.png";
 import Header from "./Header";
 import Top from "./Top";
@@ -15,7 +15,8 @@ import {
   useGetInvitaionMemberQuery,
 } from "./service/PointApi";
 import Loader from "../../components/login/Loader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setActivePointTab } from "../home/slice/HomeSlice";
 
 const Index = ({ showTab = true }) => {
   const isLoggedIn = localStorage.getItem("authToken");
@@ -44,6 +45,12 @@ const Index = ({ showTab = true }) => {
       skip: !token,
     }
   );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setActivePointTab(2)); // shows Tab2 by default
+  }, []);
 
   const { data: userData, error } = useGetUserQuery(undefined, {
     skip: !token,
