@@ -24,7 +24,7 @@ import {
 } from "../../services/newEncryption";
 import { useGetInviteNoticeQuery } from "../Point/service/PointApi";
 import Alert from "./Alert";
-import { setPointMall } from "../../features/login/ModelSlice";
+import { setAuthModel, setPointMall } from "../../features/login/ModelSlice";
 
 interface ShareProps {}
 
@@ -272,9 +272,16 @@ const Share: React.FC<ShareProps> = ({}) => {
       <Alert list={list} img={fire} />
       {/* invited user */}
       <div className="flex invite_user mx-[20px] justify-around items-center mt-[20px] p-4">
-        <Link
-        onClick={() =>  dispatch(setPointMall("/share"))}
-          to={"/point_mall"}
+        <div
+          // onClick={() => dispatch(setPointMall("/share"))}
+          onClick={() => {
+            if (userData) {
+              dispatch(setPointMall("/share"));
+              navigate("/point_mall");
+            } else {
+              dispatch(setAuthModel(true));
+            }
+          }}
           className=" flex flex-col items-center justify-center gap-[8px]"
         >
           <img
@@ -293,14 +300,21 @@ const Share: React.FC<ShareProps> = ({}) => {
             </div>
             <img src={go} alt="" />
           </div>
-        </Link>
+        </div>
         <p className=" line"></p>
         <div
-          onClick={() => navigate("/share/member")}
+          // onClick={() => navigate("/share/member")}
+          onClick={() => {
+            if (userData) {
+              navigate("/share/member");
+            } else {
+              dispatch(setAuthModel(true));
+            }
+          }}
           className=" flex flex-col items-center justify-center gap-[8px]"
         >
           <h1 className=" text-[18px] font-[600] text-white/70">
-            {userData?.data?.invite_user_num}
+            {userData?.data?.invite_user_num || 0}
           </h1>
           <div className=" flex justify-center items-center gap-[6px]">
             <h1 className="text-center text-[12px] font-[500] text-[#CCC3B2]">

@@ -448,9 +448,7 @@ const CommentComponent: React.FC<CommentProps> = ({
                                   {reply.status !== 0 && (
                                     <span
                                       className="time text-commentIcon text-sm mr-4 cursor-pointer hover:text-blue-400"
-                                      onClick={() =>
-                                        handleReplyClick(comment.id)
-                                      }
+                                      onClick={() => handleReplyClick(reply.id)}
                                     >
                                       回复
                                     </span>
@@ -545,14 +543,35 @@ const CommentComponent: React.FC<CommentProps> = ({
       {/* Create new comment or reply */}
       {isLoggedIn ? (
         <div className="create-comment bg-commentInput p-2 rounded-lg w-full comment-btn">
-          {/* Reply indicator */}
+          {/* Reply indicator to test reply work nor not, change hidden to flex */}
           {replyingTo && (
             <div className=" hidden items-center justify-between bg-gray-700 p-2 rounded-md mb-2">
               <div className="flex items-center">
                 <span className="text-gray-300 text-sm mr-2">回复:</span>
                 <span className="text-blue-400 text-sm">
-                  {comments.find((c: Comment) => c.id === replyingTo)?.user
-                    ?.nickname || "用户"}
+                  {(() => {
+                    // First check if replyingTo is a top-level comment
+                    const topLevelComment = comments.find(
+                      (c: Comment) => c.id === replyingTo
+                    );
+                    if (topLevelComment) {
+                      return topLevelComment.user?.nickname || "用户";
+                    }
+
+                    // If not found in top-level comments, check in replies
+                    for (const comment of comments) {
+                      if (comment.replies && comment.replies.list) {
+                        const reply = comment.replies.list.find(
+                          (r: Reply) => r.id === replyingTo
+                        );
+                        if (reply) {
+                          return reply.user?.nickname || "用户";
+                        }
+                      }
+                    }
+
+                    return "用户";
+                  })()}
                 </span>
               </div>
               <button
