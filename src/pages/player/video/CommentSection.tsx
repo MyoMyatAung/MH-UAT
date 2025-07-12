@@ -39,7 +39,7 @@ const CommentComponent: React.FC<CommentProps> = ({
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const commentInputRef = useRef<HTMLInputElement>(null);
+  const commentInputRef = useRef<HTMLTextAreaElement>(null);
   const [isLoggedIn, setIsLoggedLogIn] = useState<boolean>(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [openReportPopup, setOpenReportPopup] = useState(false);
@@ -287,12 +287,29 @@ const CommentComponent: React.FC<CommentProps> = ({
 
   useEffect(() => {
     if (replyingTo !== null && commentInputRef.current) {
+      console.log("Focusing input for reply to:", replyingTo);
       commentInputRef.current.focus();
+      // Scroll to the input
+      commentInputRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   }, [replyingTo]);
 
   const handleLoad = () => {
     setPage((prev) => prev + 1);
+  };
+
+  const handleReplyClick = (commentId: number) => {
+    console.log("Reply button clicked for comment:", commentId);
+    console.log("Is logged in:", isLoggedIn);
+    if (!isLoggedIn) {
+      dispatch(setAuthModel(true));
+      return;
+    }
+    setReplyingTo(commentId);
+    console.log("ReplyingTo set to:", commentId);
   };
 
   return (
@@ -358,8 +375,8 @@ const CommentComponent: React.FC<CommentProps> = ({
                     <div>
                       {comment.status !== 0 && (
                         <span
-                          className="time text-commentIcon text-sm mr-4"
-                          onClick={() => setReplyingTo(comment.id)}
+                          className="time text-commentIcon text-sm mr-4 cursor-pointer hover:text-blue-400"
+                          onClick={() => handleReplyClick(comment.id)}
                         >
                           回复
                         </span>
@@ -430,8 +447,8 @@ const CommentComponent: React.FC<CommentProps> = ({
                                 <div>
                                   {reply.status !== 0 && (
                                     <span
-                                      className="time text-commentIcon text-sm mr-4"
-                                      onClick={() => setReplyingTo(comment.id)}
+                                      className="time text-commentIcon text-sm mr-4 cursor-pointer hover:text-blue-400"
+                                      onClick={() => handleReplyClick(reply.id)}
                                     >
                                       回复
                                     </span>
@@ -525,48 +542,93 @@ const CommentComponent: React.FC<CommentProps> = ({
       </div>
       {/* Create new comment or reply */}
       {isLoggedIn ? (
-        <div className="create-comment bg-commentInput p-2 flex items-center justify-center rounded-lg w-full  comment-btn">
-          <img
-            src={user?.avatar || ProfileImg}
-            alt="User Avatar"
-            className={`w-8 h-8 rounded-full mr-1`}
-          />
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            onKeyDown={(e) => {
-              console.log("e.key is=>", e.key);
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault(); // Prevent default submit behavior
-                setNewComment((prev) => prev + "\n"); // Add a new line
-                setNumberOfRow((prev) => prev + 1); // Increment rows
-              } else if (e.key === "Backspace") {
-                // Calculate the number of newlines in the comment
-                const newNumberOfRows =
-                  (newComment.match(/\n/g) || []).length + 1;
+        <div className="create-comment bg-commentInput p-2 rounded-lg w-full comment-btn">
+          {/* Reply indicator to test reply work nor not, change hidden to flex */}
+          {replyingTo && (
+            <div className=" hidden items-center justify-between bg-gray-700 p-2 rounded-md mb-2">
+              <div className="flex items-center">
+                <span className="text-gray-300 text-sm mr-2">回复:</span>
+                <span className="text-blue-400 text-sm">
+                  {(() => {
+                    // First check if replyingTo is a top-level comment
+                    const topLevelComment = comments.find(
+                      (c: Comment) => c.id === replyingTo
+                    );
+                    if (topLevelComment) {
+                      return topLevelComment.user?.nickname || "用户";
+                    }
 
-                // Update the number of rows dynamically
-                setNumberOfRow(newNumberOfRows > 1 ? newNumberOfRows : 1);
-              }
-            }}
-            className="flex-grow bg-source text-white border-0 outline-none p-2 rounded-md focus:outline-none focus:ring-0"
-            placeholder={"确认过眼神，你是发言人！"}
-            rows={numberOfRow} // Dynamically adjust the rows
-          />
+                    // If not found in top-level comments, check in replies
+                    for (const comment of comments) {
+                      if (comment.replies && comment.replies.list) {
+                        const reply = comment.replies.list.find(
+                          (r: Reply) => r.id === replyingTo
+                        );
+                        if (reply) {
+                          return reply.user?.nickname || "用户";
+                        }
+                      }
+                    }
 
-          {newComment && (
-            <button
-              onClick={handleCreateCommentOrReply}
-              className="bg-playerNavigator text-white py-2 px-4 ml-3 rounded-md focus:outline-none"
-              disabled={loading}
-            >
-              {loading ? (
-                <FontAwesomeIcon icon={faSpinner} />
-              ) : (
-                <span>发送</span>
-              )}
-            </button>
+                    return "用户";
+                  })()}
+                </span>
+              </div>
+              <button
+                onClick={() => setReplyingTo(null)}
+                className="text-gray-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
           )}
+
+          <div className="flex items-center justify-center">
+            <img
+              src={user?.avatar || ProfileImg}
+              alt="User Avatar"
+              className={`w-8 h-8 rounded-full mr-1`}
+            />
+            <textarea
+              ref={commentInputRef}
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              onKeyDown={(e) => {
+                console.log("e.key is=>", e.key);
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault(); // Prevent default submit behavior
+                  setNewComment((prev) => prev + "\n"); // Add a new line
+                  setNumberOfRow((prev) => prev + 1); // Increment rows
+                } else if (e.key === "Backspace") {
+                  // Calculate the number of newlines in the comment
+                  const newNumberOfRows =
+                    (newComment.match(/\n/g) || []).length + 1;
+
+                  // Update the number of rows dynamically
+                  setNumberOfRow(newNumberOfRows > 1 ? newNumberOfRows : 1);
+                }
+              }}
+              className="flex-grow bg-source text-white border-0 outline-none p-2 rounded-md focus:outline-none focus:ring-0"
+              placeholder={
+                replyingTo ? "写回复..." : "确认过眼神，你是发言人！"
+              }
+              rows={numberOfRow} // Dynamically adjust the rows
+            />
+
+            {newComment && (
+              <button
+                onClick={handleCreateCommentOrReply}
+                className="bg-playerNavigator text-white py-2 px-4 ml-3 rounded-md focus:outline-none"
+                disabled={loading}
+              >
+                {loading ? (
+                  <FontAwesomeIcon icon={faSpinner} />
+                ) : (
+                  <span>发送</span>
+                )}
+              </button>
+            )}
+          </div>
         </div>
       ) : (
         <div className="create-comment mt-6 flex items-center justify-center rounded-lg w-full comment-btn">
