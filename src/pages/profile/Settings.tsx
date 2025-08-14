@@ -52,22 +52,18 @@ const Settings = () => {
   const handleLogOut = async () => {
     try {
       await logOutUser().unwrap();
-      localStorage.removeItem("authToken");
+      localStorage.clear();
       dispatch(clearUser());
 
+      navigate("/profile");
+    } catch (error) {
+      localStorage.clear();
+      dispatch(clearUser());
+    } finally {
       dispatch(
         showToast({
           message: "成功退出",
           type: "success",
-        })
-      );
-
-      navigate("/profile");
-    } catch (error) {
-      dispatch(
-        showToast({
-          message: "退出失败",
-          type: "error",
         })
       );
     }
