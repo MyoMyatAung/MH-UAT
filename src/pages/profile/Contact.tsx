@@ -37,7 +37,7 @@ const Contact = () => {
   //   console.log(data)
   //   if (data) {
   //     const name = data?.data?.code;
-  //     const str = name.toString(); 
+  //     const str = name.toString();
   //     const formatted = `${str[0]}.${str[1]}.${str[2]}.${str[3]}`;
   //     setVname(formatted);
   //   }
@@ -52,7 +52,7 @@ const Contact = () => {
         <div className="flex justify-center -mt-[100px] text-center h-screen">
           <div className="flex flex-col justify-center items-center">
             <img src={logo} alt="" className="w-[90px]" />
-            <p className="contact-text mt-3">版本号 2.5.4 N</p>
+            <p className="contact-text mt-3">版本号 2.5.5 N</p>
           </div>
         </div>
 
