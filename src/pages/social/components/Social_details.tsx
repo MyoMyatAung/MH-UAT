@@ -388,44 +388,38 @@ const Social_details: React.FC<any> = ({
             </button>
           </div>
         </div>
-        {isFetching || isLoading ? (
-          <div className="flex bg-background justify-center items-center w-full py-[100px]">
-            <Loader />
-          </div>
-        ) : (
-          <>
-            <div className=" h-[4px] bg-black w-full"></div>
-            {/* comment */}
-            <Comment
-              setList={setList}
-              post_id={post.post_id}
-              list={list}
-              isFetching={hasMore}
-              isLoading={isLoading}
-            />
+        <>
+          <div className=" h-[4px] bg-black w-full"></div>
+          {/* comment */}
+          <Comment
+            setList={setList}
+            post_id={post.post_id}
+            list={list}
+            isFetching={isFetching}
+            isLoading={isLoading}
+          />
 
-            <InfiniteScroll
-              // className=" h-[100px]"
-              dataLength={list.length}
-              next={fetchMoreDataCmt}
-              hasMore={hasMore}
-              loader={
-                <div className="flex bg-background justify-center items-center w-full pb-32 pt-14">
-                  <Loader />
-                </div>
-              }
-              endMessage={
-                <div className="flex bg-background justify-center items-center w-full pb-32 pt-14">
-                  <p style={{ textAlign: "center" }}>
-                    <b className=" hidden text-white/60">没有更多评论</b>
-                  </p>
-                </div>
-              }
-            >
-              <></>
-            </InfiniteScroll>
-          </>
-        )}
+          <InfiniteScroll
+            // className=" h-[100px]"
+            dataLength={list.length}
+            next={fetchMoreDataCmt}
+            hasMore={hasMore}
+            loader={
+              <div className="flex bg-background justify-center items-center w-full pb-32 pt-14">
+                <Loader />
+              </div>
+            }
+            endMessage={
+              <div className="flex bg-background justify-center items-center w-full pb-32 pt-14">
+                <p style={{ textAlign: "center" }}>
+                  <b className=" hidden text-white/60">没有更多评论</b>
+                </p>
+              </div>
+            }
+          >
+            <></>
+          </InfiniteScroll>
+        </>
       </div>
     </div>
   );

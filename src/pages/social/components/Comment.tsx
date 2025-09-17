@@ -16,9 +16,9 @@ import Reply from "./Reply";
 
 const Comment: React.FC<any> = ({
   list,
-  isFetching,
   post_id,
   setList,
+  isFetching,
   isLoading,
 }) => {
   const [panding, setpanding] = useState(false);
