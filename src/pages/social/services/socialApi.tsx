@@ -74,7 +74,7 @@ export const socialApi = createApi({
       );
 
       headers.set("Accept-Language", "en");
-      headers.set("x-client-version", "3100");
+      headers.set("x-client-version", "3101");
       if (settings.filterToggle) {
         headers.set("X-Client-Setting", JSON.stringify({ "pure-mode": 1 }));
       } else {
