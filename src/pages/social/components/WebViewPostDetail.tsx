@@ -212,23 +212,23 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
         <div className="p-4 fixed bottom-[74px] left-0 z-30 w-full flex flex-col gap-2">
           <button
             onClick={handleRedirectClick}
-            className="bg-gradient-to-r from-[#FE58B5] to-[#FF9153] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
+            className="bg-gradient-to-r from-[#FF4E00] to-[#FF8517] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
           >
-            View this post on website ({countdown}s)
+            在网站上查看此帖子 ({countdown}s)
           </button>
         </div>
       ) : (
         <div className="p-4 rounded-md fixed bottom-0 left-0 z-30 bg-gray-800 w-full flex flex-col gap-2">
           <button
             onClick={handleUnlockClick}
-            className="bg-gradient-to-r from-[#FE58B5] to-[#FF9153] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
+            className="bg-gradient-to-r from-[#FF4E00] to-[#FF8517] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
           >
             <FontAwesomeIcon icon={faLock} className="text-white" />
             Unlock exclusive videos{" "}
           </button>
           <p className="text-white text-center">
             Require{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FE58B5] to-[#FF9153]">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF4E00] to-[#FF8517]">
               Qi Refining Level {post.level_id} + {post.point} Points
             </span>{" "}
             to unlock this post
@@ -249,7 +249,7 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
           </button>
           <button
             onClick={handleNavigatePointInfo}
-            className="bg-gradient-to-r from-[#FE58B5] to-[#FF9153] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
+            className="bg-gradient-to-r from-[#FF4E00] to-[#FF8517] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
           >
             获取积分{" "}
           </button>
@@ -269,7 +269,7 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
           </button>
           <button
             onClick={handleNavigatePointInfo}
-            className="bg-gradient-to-r from-[#FE58B5] to-[#FF9153] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
+            className="bg-gradient-to-r from-[#FF4E00] to-[#FF8517] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
           >
             我要升级{" "}
           </button>
@@ -278,11 +278,11 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
       <Modal isOpen={isEnoughUnlock} onClose={() => setIsEnoughUnlock(false)}>
         <p className="text-white">
           解锁此帖子需 【
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FE58B5] to-[#FF9153]">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF4E00] to-[#FF8517]">
             练气四层
           </span>
           】 并消耗 【
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FE58B5] to-[#FF9153]">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF4E00] to-[#FF8517]">
             2积分
           </span>
           】
@@ -296,7 +296,7 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
           </button>
           <button
             onClick={handleUnlock}
-            className="bg-gradient-to-r from-[#FE58B5] to-[#FF9153] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
+            className="bg-gradient-to-r from-[#FF4E00] to-[#FF8517] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
             disabled={isUnlocking}
           >
             确认
@@ -305,28 +305,28 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
       </Modal>
       <Modal isOpen={showRedirectModal} onClose={handleCancel}>
         <p className="text-white">
-          You’re about to be redirected to{" "}
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FE58B5] to-[#FF9153]">
+          您将被重定向至{" "}
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF4E00] to-[#FF8517]">
             {post.post_detail.jump_url}
           </span>
-          , click{" "}
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FE58B5] to-[#FF9153]">
-            continue
+          , 点击{" "}
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF4E00] to-[#FF8517]">
+            "继续"
           </span>{" "}
-          to proceed in browser
+          在浏览器中继续
         </p>
         <div className="flex justify-center items-center w-full gap-1">
-          <button
+            <button
             onClick={handleCancel}
             className="bg-[#FFFFFF1F] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
-          >
-            Cancel
-          </button>
+            >
+            取消
+            </button>
           <button
             onClick={() => handleContinue(post.post_detail.jump_url)}
-            className="bg-gradient-to-r from-[#FE58B5] to-[#FF9153] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
+            className="bg-gradient-to-r from-[#FF4E00] to-[#FF8517] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
           >
-            Continue
+            继续
           </button>
         </div>
       </Modal>
