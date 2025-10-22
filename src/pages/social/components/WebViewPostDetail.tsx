@@ -280,11 +280,11 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
         <p className="text-white">
           解锁此帖子需 【
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF4E00] to-[#FF8517]">
-            练气四层
+            练气{post.level_id}层
           </span>
           】 并消耗 【
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF4E00] to-[#FF8517]">
-            2积分
+            {post.point}积分
           </span>
           】
         </p>
