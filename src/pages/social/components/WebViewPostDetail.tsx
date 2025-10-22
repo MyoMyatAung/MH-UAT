@@ -75,6 +75,7 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
 
   const handleRedirectClick = () => {
     setShowRedirectModal(true);
+    setCountdown(0);
   };
 
   const handleContinue = (url: string) => {
@@ -209,13 +210,14 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
         </>
       )}
       {post.unlock_post ? (
-        <div className="p-4 fixed bottom-[74px] left-0 z-30 w-full flex flex-col gap-2">
+        <div className="p-4 fixed bg-[#161619] bottom-[70px] left-0 z-[999] w-full flex flex-col gap-2">
           <button
             onClick={handleRedirectClick}
             className="bg-gradient-to-r from-[#FF4E00] to-[#FF8517] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
           >
-            在网站上查看此帖子 ({countdown}s)
+            在网站上查看此帖子 {countdown === 0 ? "" : `(${countdown}s)`}
           </button>
+          <p className="text-sm text-white text-center">30 秒后将自动跳转到网站</p>
         </div>
       ) : (
         <div className="p-4 rounded-md fixed bottom-0 left-0 z-30 bg-gray-800 w-full flex flex-col gap-2">
@@ -224,14 +226,13 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
             className="bg-gradient-to-r from-[#FF4E00] to-[#FF8517] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
           >
             <FontAwesomeIcon icon={faLock} className="text-white" />
-            Unlock exclusive videos{" "}
+            解锁独家视频
           </button>
           <p className="text-white text-center">
-            Require{" "}
+            解锁此帖子需{" "}
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF4E00] to-[#FF8517]">
-              Qi Refining Level {post.level_id} + {post.point} Points
-            </span>{" "}
-            to unlock this post
+              练气{post.level_id}层 + {post.point}积分
+            </span>
           </p>
         </div>
       )}
@@ -316,12 +317,12 @@ const WebViewPostDetail: React.FC<Props> = ({ post }) => {
           在浏览器中继续
         </p>
         <div className="flex justify-center items-center w-full gap-1">
-            <button
+          <button
             onClick={handleCancel}
             className="bg-[#FFFFFF1F] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
-            >
+          >
             取消
-            </button>
+          </button>
           <button
             onClick={() => handleContinue(post.post_detail.jump_url)}
             className="bg-gradient-to-r from-[#FF4E00] to-[#FF8517] px-4 py-2 rounded-md text-white w-full flex justify-center items-center gap-1"
