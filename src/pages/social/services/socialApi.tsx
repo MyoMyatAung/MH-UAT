@@ -74,7 +74,7 @@ export const socialApi = createApi({
       );
 
       headers.set("Accept-Language", "en");
-      headers.set("x-client-version", "3100");
+      headers.set("x-client-version", "3101");
       if (settings.filterToggle) {
         headers.set("X-Client-Setting", JSON.stringify({ "pure-mode": 1 }));
       } else {
@@ -86,26 +86,31 @@ export const socialApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ["POST_DETAIL", "LIST"],
   endpoints: (builder) => ({
     getPosts: builder.query({
       query: ({ page, path }) =>
         convertToSecureUrl(`${path ? path : "/post/list"}?page=${page}`),
+      providesTags: ["LIST"],
     }),
     getRecommandPosts: builder.query({
       query: ({ page, path }) =>
         convertToSecureUrl(
           `${path ? path : "/post/recommend/list"}?page=${page}`
         ),
+      providesTags: ["LIST"],
     }),
     getFollowPosts: builder.query({
       query: ({ page, path }) =>
         convertToSecureUrl(
           `${path ? path : "/followed/post/list"}?page=${page}`
         ),
+      providesTags: ["LIST"],
     }),
     getAudioPosts: builder.query({
       query: ({ page, path }) =>
         convertToSecureUrl(`${path ? path : "/post/audio/list"}?page=${page}`),
+      providesTags: ["LIST"],
     }),
     followUser: builder.mutation<void, { follow_user_id: any; is_follow: any }>(
       {
@@ -117,6 +122,10 @@ export const socialApi = createApi({
             follow_user_id,
           }),
         }),
+        invalidatesTags: (result, error, args) => [
+          { type: "LIST", _id: args.follow_user_id },
+          { type: "POST_DETAIL", _id: args.follow_user_id },
+        ],
       }
     ),
     likePost: builder.mutation<void, { post_id: any; is_like: any }>({
@@ -128,6 +137,10 @@ export const socialApi = createApi({
           post_id,
         }),
       }),
+      invalidatesTags: (result, error, args) => [
+        { type: "LIST", _id: args.post_id },
+        { type: "POST_DETAIL", _id: args.post_id },
+      ],
     }),
     getCommentList: builder.query({
       query: ({ post_id, page }) =>
@@ -157,6 +170,26 @@ export const socialApi = createApi({
         }),
       }),
     }),
+    getPostDetail: builder.query({
+      query: ({ id }) => {
+        // return convertToSecureUrl(`post/detail?post_id=${id}`)
+        return `${process.env.REACT_APP_API_URL}/post/detail?post_id=${id}`;
+      },
+      providesTags: ["POST_DETAIL"],
+    }),
+    unlockPost: builder.mutation<void, { post_id: any }>({
+      query: ({ post_id }) => ({
+        url: `post/unlock`,
+        method: "POST",
+        body: convertToSecurePayload({
+          post_id,
+        }),
+      }),
+      invalidatesTags: (result, error, args) => [
+        { type: "LIST", _id: args.post_id },
+        { type: "POST_DETAIL", _id: args.post_id },
+      ],
+    }),
   }),
 });
 
@@ -170,4 +203,6 @@ export const {
   useLikeCommentMutation,
   usePostCommentMutation,
   useGetAudioPostsQuery,
+  useGetPostDetailQuery,
+  useUnlockPostMutation,
 } = socialApi;
