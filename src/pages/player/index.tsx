@@ -24,6 +24,11 @@ import {
   decryptWithAes,
 } from "../../services/newEncryption";
 import PlayerLoading from "./video/PlayerLoading";
+import Modal from "../../components/Modal";
+import SetSkipForm from "./video/SkipForm";
+import { useDispatch, useSelector } from "react-redux";
+import { setShowSetSkipDialog } from "../../features/player/playerSlice";
+import SetSkipButton from "./video/SkipButton";
 
 const useDynamicHeight = () => {
   const [availableHeight, setAvailableHeight] = useState(300);
@@ -134,6 +139,8 @@ const DetailPage: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [isPlayerLoading, setIsPlayerLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const { showSetSkipDialog } = useSelector((state: any) => state.episode);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -571,141 +578,156 @@ const DetailPage: React.FC = () => {
     setCurrentEpisodeNumber(0);
     fetchMovieDetail(id);
   };
+
+  const closeSetSkipDialog = () => {
+    dispatch(setShowSetSkipDialog(false));
+  }
+
   return (
-    <div className="bg-background full-height-fallback overflow-hidden">
-      {!movieDetail ? (
-        <>
-          <PlayerLoading onBack={navigateBackFunction} />
-          <div className="flex justify-center items-center pt-52 bg-background">
-            <Loader />
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="sticky top-0 z-50">
-            <div id="upper-div">
-              {!wholePageError ? (
-                !isPlayerLoading ? (
-                  <VideoPlayer
-                    key={currentEpisode?.episode_id}
-                    videoUrl={
-                      !isPlayerLoading
-                        ? currentEpisode?.parseUrl ||
+    <>
+      <div className="bg-background full-height-fallback overflow-hidden">
+        {!movieDetail ? (
+          <>
+            <PlayerLoading onBack={navigateBackFunction} />
+            <div className="flex justify-center items-center pt-52 bg-background">
+              <Loader />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="sticky top-0 z-50">
+              <div id="upper-div">
+                {!wholePageError ? (
+                  !isPlayerLoading ? (
+                    <VideoPlayer
+                      hasNextEpisode={
+                        episodes?.length >
+                        currentEpisodeNumber + 1
+                      }
+                      key={currentEpisode?.episode_id}
+                      videoUrl={
+                        !isPlayerLoading
+                          ? currentEpisode?.parseUrl ||
                           currentEpisode?.play_url ||
                           ""
-                        : ""
-                    }
-                    onBack={navigateBackFunction}
-                    movieDetail={movieDetail}
-                    selectedEpisode={currentEpisode}
-                    resumeTime={resumeTime}
-                    handleVideoError={handleVideoError}
-                    autoPlayNextEpisode={autoPlayNextEpisode}
-                  />
+                          : ""
+                      }
+                      onBack={navigateBackFunction}
+                      movieDetail={movieDetail}
+                      selectedEpisode={currentEpisode}
+                      resumeTime={resumeTime}
+                      handleVideoError={handleVideoError}
+                      autoPlayNextEpisode={autoPlayNextEpisode}
+                    />
+                  ) : (
+                    <PlayerLoading onBack={navigateBackFunction} />
+                  )
                 ) : (
-                  <PlayerLoading onBack={navigateBackFunction} />
-                )
-              ) : (
-                <NetworkError
-                  switchNow={switchNow}
-                  refresh={refresh}
-                  onBack={navigateBackFunction}
-                />
-              )}
-            </div>
-            <div
-              className="relative flex px-2 justify-between items-center bg-background"
-              style={{
-                paddingBottom: "10px",
-                borderBottom: "2px solid #2a2a2a",
-              }}
-            >
-              <div className="flex">
-                <div
-                  className={`px-4 py-3 bg-background text-gray-400 rounded-t-lg cursor-pointer relative ${
-                    activeTab === "tab-1" ? "text-white z-10" : ""
-                  }`}
-                  onClick={() => setActiveTab("tab-1")}
-                >
-                  <span className="text-white text-[16px]">详情</span>
-                  {activeTab === "tab-1" && (
-                    <div className="absolute bottom-0 left-3 w-4/6 h-1 bg-mainColor rounded-md"></div>
-                  )}
-                </div>
-                <div
-                  className={`px-4 py-3 bg-background text-gray-400 rounded-t-lg cursor-pointer relative ${
-                    activeTab === "tab-2" ? "text-white z-10" : ""
-                  }`}
-                  onClick={() => setActiveTab("tab-2")}
-                >
-                  <span className=" text-[16px]">评论</span>
-                  <span className="text-gray-500 ml-1.5 text-sm">
-                    {commentCount > 99 ? "99+" : commentCount || 0}
-                  </span>
-                  {activeTab === "tab-2" && (
-                    <div className="absolute bottom-0 left-3.5 w-3/6 h-1 bg-mainColor rounded-md"></div>
-                  )}
+                  <NetworkError
+                    switchNow={switchNow}
+                    refresh={refresh}
+                    onBack={navigateBackFunction}
+                  />
+                )}
+              </div>
+              <div
+                className="relative flex px-2 justify-between items-center bg-background"
+                style={{
+                  paddingBottom: "10px",
+                  borderBottom: "2px solid #2a2a2a",
+                }}
+              >
+                <div className="flex justify-between w-full">
+                  <div className="flex">
+                    <div
+                      className={`px-4 py-3 bg-background text-gray-400 rounded-t-lg cursor-pointer relative ${activeTab === "tab-1" ? "text-white z-10" : ""
+                        }`}
+                      onClick={() => setActiveTab("tab-1")}
+                    >
+                      <span className="text-white text-[16px]">详情</span>
+                      {activeTab === "tab-1" && (
+                        <div className="absolute bottom-0 left-3 w-4/6 h-1 bg-mainColor rounded-md"></div>
+                      )}
+                    </div>
+                    <div
+                      className={`px-4 py-3 bg-background text-gray-400 rounded-t-lg cursor-pointer relative ${activeTab === "tab-2" ? "text-white z-10" : ""
+                        }`}
+                      onClick={() => setActiveTab("tab-2")}
+                    >
+                      <span className=" text-[16px]">评论</span>
+                      <span className="text-gray-500 ml-1.5 text-sm">
+                        {commentCount > 99 ? "99+" : commentCount || 0}
+                      </span>
+                      {activeTab === "tab-2" && (
+                        <div className="absolute bottom-0 left-3.5 w-3/6 h-1 bg-mainColor rounded-md"></div>
+                      )}
+                    </div>
+                  </div>
+                  <SetSkipButton />
                 </div>
               </div>
             </div>
-          </div>
 
-          <div
-            ref={scrollContainerRef}
-            className={`${activeTab === "tab-1" ? "overflow-y-scroll" : ""}`}
-            style={{
-              height: activeTab === "tab-1" ? `${availableHeight}px` : "auto",
-              minHeight: "auto",
-            }}
-          >
-            <DetailSection
-              adsData={adsData}
-              movieDetail={movieDetail}
-              id={id || ""}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              setCommentCount={setCommentCount}
-              commentCount={commentCount}
-              setIsModalOpen={setIsModalOpen}
-            />
-            {activeTab === "tab-1" && (
-              <>
-                <SourceSelector
-                  changeSource={handleChangeSource}
-                  episodes={episodes || []}
-                  selectedEpisode={currentEpisode}
-                  onEpisodeSelect={handleEpisodeSelect}
-                  movieDetail={movieDetail}
-                  selectedSource={selectedSource}
-                  setSelectedSource={setSelectedSource}
-                  setIsModalOpen={setIsModalOpen}
-                  isModalOpen={isModalOpen}
-                />
-                <EpisodeSelector
-                  episodes={episodes || []}
-                  onEpisodeSelect={handleEpisodeSelect}
-                  selectedEpisode={currentEpisode}
-                />
+            <div
+              ref={scrollContainerRef}
+              className={`${activeTab === "tab-1" ? "overflow-y-scroll" : ""}`}
+              style={{
+                height: activeTab === "tab-1" ? `${availableHeight}px` : "auto",
+                minHeight: "auto",
+              }}
+            >
+              <DetailSection
+                adsData={adsData}
+                movieDetail={movieDetail}
+                id={id || ""}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                setCommentCount={setCommentCount}
+                commentCount={commentCount}
+                setIsModalOpen={setIsModalOpen}
+              />
+              {activeTab === "tab-1" && (
+                <>
+                  <SourceSelector
+                    changeSource={handleChangeSource}
+                    episodes={episodes || []}
+                    selectedEpisode={currentEpisode}
+                    onEpisodeSelect={handleEpisodeSelect}
+                    movieDetail={movieDetail}
+                    selectedSource={selectedSource}
+                    setSelectedSource={setSelectedSource}
+                    setIsModalOpen={setIsModalOpen}
+                    isModalOpen={isModalOpen}
+                  />
+                  <EpisodeSelector
+                    episodes={episodes || []}
+                    onEpisodeSelect={handleEpisodeSelect}
+                    selectedEpisode={currentEpisode}
+                  />
 
-                {/* <div className="mt-8 px-4"> */}
-                {/* {adsData && <AdsSection adsDataList={adsData?.player_recommend_up} />} */}
-                {/* <NewAds section={"player_recommend_up"} fromMovie={true} /> */}
-                {/* </div> */}
-                <RecommendedList
-                  data={movieDetail}
-                  showRecommandMovie={showRecommandMovie}
-                />
-              </>
-            )}
+                  {/* <div className="mt-8 px-4"> */}
+                  {/* {adsData && <AdsSection adsDataList={adsData?.player_recommend_up} />} */}
+                  {/* <NewAds section={"player_recommend_up"} fromMovie={true} /> */}
+                  {/* </div> */}
+                  <RecommendedList
+                    data={movieDetail}
+                    showRecommandMovie={showRecommandMovie}
+                  />
+                </>
+              )}
+            </div>
+          </>
+        )}
+        {visible && (
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background text-white text-lg font-medium px-4 py-2 rounded-lg shadow-md">
+            没有更多资源了
           </div>
-        </>
-      )}
-      {visible && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background text-white text-lg font-medium px-4 py-2 rounded-lg shadow-md">
-          没有更多资源了
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+      <Modal containerStyle={{ backgroundColor: "#161619E5" }} isOpen={showSetSkipDialog} onClose={() => {}}>
+        <SetSkipForm />
+      </Modal>
+    </>
   );
 };
 
