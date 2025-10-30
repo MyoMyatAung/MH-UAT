@@ -20,6 +20,7 @@ const Comment: React.FC<any> = ({
   setList,
   isFetching,
   isLoading,
+  hideCommentInput = false,
 }) => {
   const [panding, setpanding] = useState(false);
   const [likeCmt, { isLoading: isLikeloading }] = useLikeCommentMutation();
@@ -171,7 +172,7 @@ const Comment: React.FC<any> = ({
       {list?.length === 0 && !isFetching ? (
         <div className="w-full flex flex-col justify-center items-center py-[40px] gap-[10px]">
           <img src={nc} alt="No Comments" />
-          <span>还没有评论</span>
+          <span className="text-white">还没有评论</span>
         </div>
       ) : (
         <>
@@ -311,7 +312,8 @@ const Comment: React.FC<any> = ({
                         className={`text-white/50 block cursor-pointer`}
                       >
                         {" "}
-                        --- {showReplies[cmt.id]? '关闭' :'展开'} {cmt.replies.replies_count} 条评论
+                        --- {showReplies[cmt.id] ? "关闭" : "展开"}{" "}
+                        {cmt.replies.replies_count} 条评论
                       </span>
                       {showReplies[cmt.id] && (
                         <Reply
@@ -330,44 +332,46 @@ const Comment: React.FC<any> = ({
         </>
       )}
       {/* ment mal :) */}
-      {token ? (
-        <div className=" fixed py-[12px] flex justify-center bottom-0 left-0 bg-[#1F1F21] w-screen z-[999992]">
-          <div className=" mr-[10px] grid grid-cols-6 w-full px-[20px]">
-            <input
-              ref={inputRef}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="请输入内容"
-              className=" focus:outline-none text-white py-[12px] px-[16px] col-span-5 bg-white/10 w-full rounded-[100px]"
-              type="text"
-            />
-            {isRp ? (
-              <button
-                onClick={handleReplyCmt}
-                className=" text-[#F54100] text-right text-[16px] font-[600] leading-[16px]"
-              >
-                发送
-              </button>
-            ) : (
-              <button
-                onClick={handlePostCmt}
-                className=" text-[#F54100] text-right text-[16px] font-[600] leading-[16px]"
-              >
-                发送
-              </button>
-            )}
+      {!hideCommentInput ? (
+        token ? (
+          <div className=" fixed py-[12px] flex justify-center bottom-0 left-0 bg-[#1F1F21] w-screen z-[999992]">
+            <div className=" mr-[10px] grid grid-cols-6 w-full px-[20px]">
+              <input
+                ref={inputRef}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="请输入内容"
+                className=" focus:outline-none text-white py-[12px] px-[16px] col-span-5 bg-white/10 w-full rounded-[100px]"
+                type="text"
+              />
+              {isRp ? (
+                <button
+                  onClick={handleReplyCmt}
+                  className=" text-[#F54100] text-right text-[16px] font-[600] leading-[16px]"
+                >
+                  发送
+                </button>
+              ) : (
+                <button
+                  onClick={handlePostCmt}
+                  className=" text-[#F54100] text-right text-[16px] font-[600] leading-[16px]"
+                >
+                  发送
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className=" fixed py-[12px] flex justify-center bottom-0 left-0 w-full z-[999992]">
-          <button
-            onClick={() => dispatch(setAuthModel(true))}
-            className=" m-[20px] py-[16px] rounded-[10px] bg-[#F54100] w-full"
-          >
-            登录发表评论
-          </button>
-        </div>
-      )}
+        ) : (
+          <div className=" fixed py-[12px] flex justify-center bottom-0 left-0 w-full z-[999992]">
+            <button
+              onClick={() => dispatch(setAuthModel(true))}
+              className=" m-[20px] py-[16px] rounded-[10px] bg-[#F54100] w-full"
+            >
+              登录发表评论
+            </button>
+          </div>
+        )
+      ) : null}
     </div>
   );
 };

@@ -387,14 +387,7 @@ const Navbar = () => {
           showDetail={showDetail}
           data={dataList}
           loading={
-            postsLoading ||
-            recommandLoading ||
-            followLoading ||
-            audioLoading ||
-            postsFetching ||
-            recommandFetching ||
-            followFetching ||
-            audioFetching
+            postsLoading || recommandLoading || followLoading || audioLoading
           }
           hasMore={hasMore}
           fetchMoreData={fetchMoreData}

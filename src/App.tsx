@@ -30,7 +30,7 @@ import {
   useGetNotificationQuery,
 } from "./services/helperService";
 import { setIsScrolling } from "./pages/home/slice/HomeSlice";
-import SocialComment from "./pages/social/components/Social_details";
+import SocialComment from "./pages/social/components/SocialPostDetail";
 import Social from "./pages/social";
 import Short from "./pages/short";
 import { useGetRecommendedMoviesQuery } from "./pages/home/services/homeApi";
@@ -39,6 +39,7 @@ import land from "./assets/login/land.webp";
 import SpinAnimation from "./pages/Point/components/SpinAnimation";
 import { useGetOpenStateQuery } from "./pages/Point/service/PointApi";
 import { refreshToken } from "./services/userService";
+import SocialDetailPage from "./pages/social/SocialDetailPage";
 // import { Game } from "./pages/Point/pages/Game";
 // import Menber from "./pages/share/member";
 // import Share from "./pages/share";
@@ -182,6 +183,7 @@ const App: React.FC = () => {
     location.pathname.startsWith("/search_overlay") ||
     location.pathname.startsWith("/search") ||
     location.pathname.startsWith("/profile") ||
+    location.pathname.startsWith("/detail-social") ||
     location.pathname.startsWith("/social") ||
     location.pathname.startsWith("/short") ||
     location.pathname.startsWith("/social_callback") ||
@@ -344,15 +346,17 @@ const App: React.FC = () => {
         const parsed = JSON.parse(authToken);
         const refresh_token = parsed?.data?.refresh_token;
         if (refresh_token) {
-          refreshToken(refresh_token).then((newToken) => {
-            if (newToken) {
-              // Update localStorage with new token if needed
-              // localStorage.setItem("authToken", JSON.stringify({ ...parsed, data: { ...parsed.data, ...newToken.data } }));
-            }
-          }).catch((err) => {
-            // Optionally handle refresh error (e.g., logout user)
-            console.error("Failed to refresh token", err);
-          });
+          refreshToken(refresh_token)
+            .then((newToken) => {
+              if (newToken) {
+                // Update localStorage with new token if needed
+                // localStorage.setItem("authToken", JSON.stringify({ ...parsed, data: { ...parsed.data, ...newToken.data } }));
+              }
+            })
+            .catch((err) => {
+              // Optionally handle refresh error (e.g., logout user)
+              console.error("Failed to refresh token", err);
+            });
         }
       } catch (e) {
         // Invalid token format
@@ -438,6 +442,7 @@ const App: React.FC = () => {
                     ) : (
                       <Route path="/social" element={<div />} />
                     )}
+                    <Route path="/detail-social/:id" element={<SocialDetailPage />} />
                     {/* <Route path="/social" element={<Social />} /> */}
                     {/* <Route path="/short" element={<Short />} /> */}
                     <Route path="/explorer/:id" element={<Detail />} />
