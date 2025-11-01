@@ -1,7 +1,7 @@
 import CryptoJS from "crypto-js";
 import JSEncrypt from "jsencrypt";
 import forge from "node-forge";
-
+import { REACT_APP_IS_PRODUCTION } from "../constants";
 /**
  * Generate signature using HMAC MD5
  * @param {string} str
@@ -119,7 +119,7 @@ export function decryptWithAes(data: string): any | null {
   // staging
   // return data;
   const isProd =
-    process.env.REACT_APP_IS_PRODUCTION?.toLocaleLowerCase() === "true";
+    REACT_APP_IS_PRODUCTION?.toLocaleLowerCase() === "true";
   if (!isProd) return typeof data === "string" ? JSON.parse(data) : data;
   // prod
   try {
@@ -181,7 +181,7 @@ function createSecureUrl(base: string, formData: Record<string, any>): string {
 
 export function convertToSecureUrl(apiUrl: string): string {
   const isProd =
-    process.env.REACT_APP_IS_PRODUCTION?.toLocaleLowerCase() === "true";
+    REACT_APP_IS_PRODUCTION?.toLocaleLowerCase() === "true";
   if (!isProd) return apiUrl;
 
   const [base, query] = apiUrl.split("?", 2); // Split URL into base and query string
@@ -194,7 +194,7 @@ export function convertToSecureUrl(apiUrl: string): string {
 
 export function convertToSecurePayload(formData: any): any {
   const isProd =
-    process.env.REACT_APP_IS_PRODUCTION?.toLocaleLowerCase() === "true";
+    REACT_APP_IS_PRODUCTION?.toLocaleLowerCase() === "true";
   if (!isProd) return formData;
   const publicKey = process.env.REACT_APP_PUBLIC_KEY;
 
