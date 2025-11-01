@@ -15,7 +15,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   selectedEpisode,
   resumeTime,
   handleVideoError,
-  autoPlayNextEpisode,  
+  autoPlayNextEpisode,
   hasNextEpisode = false,
 }) => {
   const playerRef = useRef<any>(null);
@@ -128,9 +128,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             {
               html: `<div id="skip-intro-control" style="display: none; justify-content: flex-end; z-index: 1000;">
                 <button style="background: #161619CC; color: #FF6A33; font-size: 12px; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer;">
-                  Skip Intro
+                  跳过片头
                 </button>
-              </div>`,
+                </div>`,
               click() {
                 // window.open('https://aimu.app')
                 // console.info('You clicked on the custom layer')
@@ -145,9 +145,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             {
               html: `<div id="next-episode-control" style="display: none; justify-content: flex-end; z-index: 1000;">
                 <button style="background: #161619CC; color: #FF6A33; font-size: 12px; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer;">
-                  Next Episode
+                  下一集
                 </button>
-              </div>`,
+                </div>`,
               click() {
                 // This will be handled by our custom event listener
               },
@@ -515,9 +515,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   return (
     <div
       id="my-player"
-      className={`relative w-full bg-black ${
-        reHeight ? "h-[220px]" : "h-[220px]"
-      }`}
+      className={`relative w-full bg-black ${reHeight ? "h-[220px]" : "h-[220px]"
+        }`}
     >
       {/* Back button */}
       {isControlsVisible && (
@@ -559,13 +558,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         {/* Video element */}
         <div
           ref={videoElementRef}
-          className={`absolute w-full ${
-            reHeight
-              ? "h-[220px]"
-              : isLandscape
+          className={`absolute w-full ${reHeight
+            ? "h-[220px]"
+            : isLandscape
               ? "h-[220px] flex items-center justify-center"
               : "h-[220px]"
-          }`}
+            }`}
           style={
             isLandscape
               ? { top: "50%", left: "50%", transform: "translate(-50%, -50%)" }
