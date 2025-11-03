@@ -563,6 +563,20 @@ const DetailPage: React.FC = () => {
     };
   }, [episodes]);
 
+  useEffect(() => {
+    // Listen for events from iOS
+    const handleIosEvent = (event: CustomEvent) => {
+      console.log("Received handle_next_episode event from iOS", event);
+      autoPlayNextEpisode();
+    };
+
+    window.addEventListener('handle_next_episode', handleIosEvent as EventListener);
+
+    return () => {
+      window.removeEventListener('handle_next_episode', handleIosEvent as EventListener);
+    };
+  }, []);
+
   const refresh = () => {
     setIsPlayerLoading(true);
     setWholePageError(false);
