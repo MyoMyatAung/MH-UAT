@@ -91,6 +91,7 @@ const Favorite = () => {
 
         <>
           <Main
+            setCurrentPage={setcurrentPage}
             currentPage={currentPage}
             setcurrentType={setcurrentType}
             currentType={currentType}
