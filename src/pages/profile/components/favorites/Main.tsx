@@ -21,6 +21,7 @@ interface MainProps {
   onTypeClick: any;
   currentPage: any;
   refetch: any;
+  setCurrentPage: any;
 }
 
 const Main: React.FC<MainProps> = ({
@@ -34,6 +35,7 @@ const Main: React.FC<MainProps> = ({
   setMovies,
   onTypeClick,
   refetch,
+  setCurrentPage
 }) => {
   const navigate = useNavigate();
   const [selectedMovies, setSelectedMovies] = useState<string[]>([]);
@@ -68,14 +70,21 @@ const Main: React.FC<MainProps> = ({
     setIsLoadingDelete(true);
     try {
       await deleteCollect({ ids: deleteMovies.join(",") }).unwrap(); // Call the delete mutation
-      await refetch();
-      // dispatch(deleteFavData(selectedMovies));
-      setMovies((prevMovies: any[]) =>
-        prevMovies.filter((movie) => !selectedMovies.includes(movie.movie_id))
-      );
+      // Reset list state so the UI reloads from page 1
+      setCurrentPage(1); // Reset to first page
+      setMovies([]); // Clear loaded movies so new data will be fetched
       setSelectedMovies([]);
+      setDeleteMovies([]);
       setIsEditMode(false);
       setShowConfirmation(false);
+      // trigger a refetch if available to immediately reload page 1
+      if (refetch) {
+        try {
+          await refetch();
+        } catch (e) {
+          // swallow refetch errors - UI is already reset
+        }
+      }
       setIsLoadingDelete(false);
     } catch (error) {
       dispatch(showToast({ message: "服务器开小差了", type: "error" }));
@@ -101,6 +110,7 @@ const Main: React.FC<MainProps> = ({
 
   const selectAllMovies = () => {
     setSelectedMovies(movies?.map((x) => x.movie_id) || []);
+    setDeleteMovies(movies?.map((x) => x.id) || []);
   };
 
   return (

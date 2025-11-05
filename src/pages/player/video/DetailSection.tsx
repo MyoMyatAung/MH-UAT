@@ -19,7 +19,7 @@ import { setAuthModel } from "../../../features/login/ModelSlice";
 import FeedbackComponent from "./Feedback";
 import AdsSection from "./AdsSection";
 import { DetailSectionProps } from "../../../model/videoModel";
-import { useGetListQuery } from "../../../pages/profile/services/profileApi";
+import { useCollectMovieMutation, useGetListQuery } from "../../../pages/profile/services/profileApi";
 import NewAds from "../../../components/NewAds";
 import Fire from "../../../assets/Fire.png";
 import copy from "copy-to-clipboard";
@@ -45,6 +45,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
   const [hasMore, setHasMore] = useState(false);
   const [showModal, setShowModal] = useState(false); // For triggering modal
   const dispatch = useDispatch();
+  const [collectMovie] = useCollectMovieMutation();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isStarred, setIsStarred] = useState<boolean>(
     movieDetail && movieDetail.is_collect ? true : false
@@ -92,28 +94,34 @@ const DetailSection: React.FC<DetailSectionProps> = ({
     setIsLoading(true);
     try {
       // Toggle collection API call
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/movie/collect/action`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: authorization,
-          },
-          body: JSON.stringify(
-            convertToSecurePayload({
-              movie_id: id,
-              state: isStarred ? 0 : 1,
-            })
-          ),
-        }
-      );
-      if (response.ok) {
-        refetch();
-        setIsStarred(!isStarred);
-      } else {
-        alert("收藏操作失败，请稍后重试");
-      }
+      // const response = await fetch(
+      //   `${process.env.REACT_APP_API_URL}/movie/collect/action`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: authorization,
+      //     },
+      //     body: JSON.stringify(
+      //       convertToSecurePayload({
+      //         movie_id: id,
+      //         state: isStarred ? 0 : 1,
+      //       })
+      //     ),
+      //   }
+      // );
+      // if (response.ok) {
+      //   refetch();
+      //   setIsStarred(!isStarred);
+      // } else {
+      //   alert("收藏操作失败，请稍后重试");
+      // }
+      await collectMovie({
+        movie_id: id,
+        is_collect: !isStarred,
+      }).unwrap();
+      refetch();
+      setIsStarred(!isStarred);
     } catch (error) {
       console.error("Error toggling star:", error);
       alert("收藏操作失败，请稍后重试");
@@ -302,9 +310,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
 
       {/* Tab content */}
       <div
-        className={`bg-background rounded-b-lg p-1 ${
-          activeTab === "tab-1" && "p-4"
-        }`}
+        className={`bg-background rounded-b-lg p-1 ${activeTab === "tab-1" && "p-4"
+          }`}
       >
         {activeTab === "tab-1" && (
           <div id="tab-1" className="block">
@@ -373,12 +380,12 @@ const DetailSection: React.FC<DetailSectionProps> = ({
 
         {visible && (
           <div
-          className={`text-[12px] fixed w-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 py-3 px-5 flex items-center justify-center gap-1 rounded-full toast text-white text-center z-[9999999999999999999]`}
-        >
-          <img src={icon} className="w-6 h-6" alt="" />
-          <span className=" text-[13px]">链接已复制 </span>
-        </div>
-      )}
+            className={`text-[12px] fixed w-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 py-3 px-5 flex items-center justify-center gap-1 rounded-full toast text-white text-center z-[9999999999999999999]`}
+          >
+            <img src={icon} className="w-6 h-6" alt="" />
+            <span className=" text-[13px]">链接已复制 </span>
+          </div>
+        )}
 
         {activeTab === "tab-2" ? (
           <div id="tab-2" className="block">
@@ -470,9 +477,9 @@ const DetailSection: React.FC<DetailSectionProps> = ({
                       <span key={index} className="text-white">
                         {actor.name || "Unknown"}
                         {index <
-                        movieDetail.members.filter(
-                          (member) => member.type === 1
-                        ).length -
+                          movieDetail.members.filter(
+                            (member) => member.type === 1
+                          ).length -
                           1
                           ? ", "
                           : ""}
@@ -540,9 +547,8 @@ const DetailSection: React.FC<DetailSectionProps> = ({
         <button
           onClick={() => handleShare()}
           disabled={isLoading}
-          className={`ml-2 flex items-center rounded-full px-5 py-2 relative min-w-[170px] justify-center ${
-            isLoading ? 'opacity-70 cursor-not-allowed' : ''
-          }`}
+          className={`ml-2 flex items-center rounded-full px-5 py-2 relative min-w-[170px] justify-center ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+            }`}
           style={{
             background:
               "linear-gradient(271deg, rgba(254,228,179,0.06) 0%, rgba(255,217,147,0.06) 100%)",
