@@ -144,8 +144,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             },
             {
               html: `<div id="next-episode-control" style="display: none; justify-content: flex-end; z-index: 1000;">
-                <button style="background: #161619CC; color: #FF6A33; font-size: 12px; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer;">
-                  下一集
+                <button class="flex items-center gap-1" style="background: #161619CC; color: #FF6A33; font-size: 12px; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer;">
+                  <span>下一集</span>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12 4V12H10.6667V8.00016L4 12V4L10.6667 7.99969V4H12Z" fill="#FF6A33"/>
+</svg>
                 </button>
                 </div>`,
               click() {
