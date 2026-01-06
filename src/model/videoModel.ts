@@ -48,6 +48,7 @@ export interface VideoPlayerProps {
   handleVideoError: (videlUrl: string) => void;
   autoPlayNextEpisode: () => void;
   hasNextEpisode?: boolean;
+  onTimeUpdate?: (time: number) => void;
 }
 
 export interface PlayFrom {
